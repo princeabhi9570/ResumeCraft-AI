@@ -26,9 +26,7 @@ bind("email", "preview-email", "Email Address");
 bind("phone", "preview-phone", "Phone Number");
 bind("location", "preview-location", "Your Location");
 bind("about", "preview-about", "Write something about yourself...");
-bind("education", "preview-education", "Your Education");
-bind("skills", "preview-skills", "Your Skills");
-bind("experience", "preview-experience", "Your Experience");
+
 
 // ===============================
 // Profile Photo Upload
@@ -122,82 +120,102 @@ if (downloadBtn) {
 // ===============================
 
 const skillInput = document.getElementById("skillInput");
-
 const addSkill = document.getElementById("addSkill");
-
 const previewSkills = document.getElementById("preview-skills");
 
-if(addSkill){
+if (addSkill) {
 
-addSkill.addEventListener("click",function(){
+    addSkill.addEventListener("click", function () {
 
-const value=skillInput.value.trim();
+        const value = skillInput.value.trim();
 
-if(value==="") return;
+        if (value === "") return;
 
-const li=document.createElement("li");
+        const li = document.createElement("li");
 
-li.textContent=value;
+        li.innerHTML = `
+            ${value}
+            <button class="delete-btn">❌</button>
+        `;
 
-previewSkills.appendChild(li);
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            li.remove();
+        });
 
-skillInput.value="";
+        previewSkills.appendChild(li);
 
-});
+        skillInput.value = "";
 
-}// ===============================
+    });
+
+}
+
+// ===============================
 // Dynamic Education
 // ===============================
 
 const educationInput = document.getElementById("educationInput");
-
 const addEducation = document.getElementById("addEducation");
-
 const previewEducation = document.getElementById("preview-education");
 
-if(addEducation){
+if (addEducation) {
 
-addEducation.addEventListener("click",function(){
+    addEducation.addEventListener("click", function () {
 
-const value = educationInput.value.trim();
+        const value = educationInput.value.trim();
 
-if(value==="") return;
+        if (value === "") return;
 
-const li=document.createElement("li");
+        const li = document.createElement("li");
 
-li.textContent=value;
+        li.innerHTML = `
+            ${value}
+            <button class="delete-btn">❌</button>
+        `;
 
-previewEducation.appendChild(li);
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            li.remove();
+        });
 
-educationInput.value="";
+        previewEducation.appendChild(li);
 
-});
+        educationInput.value = "";
 
-}// ===============================
+    });
+
+}
+
+
+// ===============================
 // Dynamic Experience
 // ===============================
 
 const experienceInput = document.getElementById("experienceInput");
-
 const addExperience = document.getElementById("addExperience");
-
 const previewExperience = document.getElementById("preview-experience");
 
-if(addExperience){
+if (addExperience) {
 
-    addExperience.addEventListener("click",function(){
+    addExperience.addEventListener("click", function () {
 
         const value = experienceInput.value.trim();
 
-        if(value==="") return;
+        if (value === "") return;
 
         const li = document.createElement("li");
 
-        li.textContent = value;
+        li.innerHTML = `
+            ${value}
+            <button class="delete-btn">❌</button>
+        `;
+
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            li.remove();
+        });
 
         previewExperience.appendChild(li);
 
-        experienceInput.value="";
+        experienceInput.value = "";
 
     });
 
