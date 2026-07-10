@@ -1,58 +1,120 @@
+// ===============================
+// Live Resume Preview
+// ===============================
+
 function bind(inputId, previewId, placeholder) {
+
     const input = document.getElementById(inputId);
     const preview = document.getElementById(previewId);
 
-    input.addEventListener("input", () => {
-        preview.textContent = input.value || placeholder;
+    if (!input || !preview) return;
+
+    input.addEventListener("input", function () {
+
+        if (input.value.trim() === "") {
+            preview.textContent = placeholder;
+        } else {
+            preview.textContent = input.value;
+        }
+
     });
+
 }
 
 bind("name", "preview-name", "Your Name");
 bind("email", "preview-email", "Email Address");
 bind("phone", "preview-phone", "Phone Number");
+bind("location", "preview-location", "Your Location");
 bind("about", "preview-about", "Write something about yourself...");
-bind("skills", "preview-skills", "Your Skills");
 bind("education", "preview-education", "Your Education");
+bind("skills", "preview-skills", "Your Skills");
 bind("experience", "preview-experience", "Your Experience");
 
-document.getElementById("downloadBtn").addEventListener("click", function () {
+// ===============================
+// Profile Photo Upload
+// ===============================
 
-    const element = document.getElementById("resume");
+const photoInput = document.getElementById("photo");
 
-    const options = {
-        margin: 0.5,
-        filename: "Resume.pdf",
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: {
-            scale: 2
-        },
-        jsPDF: {
-            unit: "in",
-            format: "a4",
-            orientation: "portrait"
+if (photoInput) {
+
+    photoInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            document.getElementById("preview-photo").src = e.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+// ===============================
+// Download Resume PDF
+// ===============================
+
+const downloadBtn = document.getElementById("downloadBtn");
+
+if (downloadBtn) {
+
+    downloadBtn.addEventListener("click", function () {
+
+        const resume = document.getElementById("resume");
+
+        if (!resume) {
+            alert("Resume section not found.");
+            return;
         }
-    };
 
-    html2pdf().set(options).from(element).save();
+        const opt = {
 
-});const photo = document.getElementById("photo");
+            margin: 0,
 
-photo.addEventListener("change", function(){
+            filename: "ResumeCraftAI-Resume.pdf",
 
-const file = this.files[0];
+            image: {
+                type: "jpeg",
+                quality: 1
+            },
 
-if(file){
+            html2canvas: {
 
-const reader = new FileReader();
+                scale: 3,
 
-reader.onload=function(e){
+                useCORS: true,
 
-document.getElementById("preview-photo").src=e.target.result;
+                allowTaint: true,
+
+                scrollY: 0
+
+            },
+
+            jsPDF: {
+
+                unit: "mm",
+
+                format: "a4",
+
+                orientation: "portrait"
+
+            }
+
+        };
+
+        html2pdf()
+            .set(opt)
+            .from(resume)
+            .save();
+
+    });
 
 }
-
-reader.readAsDataURL(file);
-
-}
-
-});
