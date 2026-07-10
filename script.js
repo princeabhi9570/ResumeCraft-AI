@@ -145,4 +145,32 @@ skillInput.value="";
 
 });
 
+}// ===============================
+// Dynamic Education
+// ===============================
+
+const educationInput = document.getElementById("educationInput");
+
+const addEducation = document.getElementById("addEducation");
+
+const previewEducation = document.getElementById("preview-education");
+
+if(addEducation){
+
+addEducation.addEventListener("click",function(){
+
+const value = educationInput.value.trim();
+
+if(value==="") return;
+
+const li=document.createElement("li");
+
+li.textContent=value;
+
+previewEducation.appendChild(li);
+
+educationInput.value="";
+
+});
+
 }

@@ -205,11 +205,20 @@ accept="image/*">
         id="about"
         placeholder="Write something about yourself..."></textarea>
 
-        <input
-        type="text"
-        id="education"
-        placeholder="Education">
+        <div class="education-section">
 
+<input
+type="text"
+id="educationInput"
+placeholder="Enter Education">
+
+<button
+type="button"
+id="addEducation">
++ Add Education
+</button>
+
+</div>
         <div class="skill-section">
 
 <input
@@ -274,9 +283,9 @@ alt="Profile Photo">
 
         <h3>EDUCATION</h3>
 
-        <p id="preview-education">
-            Your Education
-        </p>
+       <ul id="preview-education">
+
+</ul>
 
         <hr>
 

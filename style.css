@@ -483,4 +483,54 @@ margin:8px 0;
 
 font-size:16px;
 
+}.education-section{
+
+display:flex;
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
+
+.education-section input{
+
+flex:1;
+
+}
+
+.education-section button{
+
+padding:12px 20px;
+
+background:#10b981;
+
+color:#fff;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+.education-section button:hover{
+
+background:#059669;
+
+}
+
+#preview-education{
+
+padding-left:20px;
+
+}
+
+#preview-education li{
+
+margin:8px 0;
+
 }
