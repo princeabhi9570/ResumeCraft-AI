@@ -117,4 +117,32 @@ if (downloadBtn) {
 
     });
 
+}// ===============================
+// Dynamic Skills
+// ===============================
+
+const skillInput = document.getElementById("skillInput");
+
+const addSkill = document.getElementById("addSkill");
+
+const previewSkills = document.getElementById("preview-skills");
+
+if(addSkill){
+
+addSkill.addEventListener("click",function(){
+
+const value=skillInput.value.trim();
+
+if(value==="") return;
+
+const li=document.createElement("li");
+
+li.textContent=value;
+
+previewSkills.appendChild(li);
+
+skillInput.value="";
+
+});
+
 }

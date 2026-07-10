@@ -210,11 +210,20 @@ accept="image/*">
         id="education"
         placeholder="Education">
 
-        <input
-        type="text"
-        id="skills"
-        placeholder="Skills (HTML, CSS, JavaScript)">
+        <div class="skill-section">
 
+<input
+type="text"
+id="skillInput"
+placeholder="Enter Skill">
+
+<button
+type="button"
+id="addSkill">
++ Add Skill
+</button>
+
+</div>
         <input
         type="text"
         id="experience"
@@ -273,9 +282,9 @@ alt="Profile Photo">
 
         <h3>SKILLS</h3>
 
-        <p id="preview-skills">
-            HTML • CSS • JavaScript
-        </p>
+        <ul id="preview-skills">
+
+</ul>
 
         <hr>
 
