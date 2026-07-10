@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,14 +10,18 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
+
+<!-- ================= NAVBAR ================= -->
 
 <nav>
 
@@ -27,11 +33,11 @@ ResumeCraft AI
 
 <li><a href="#">Home</a></li>
 
-<li><a href="#">Templates</a></li>
+<li><a href="#templates">Templates</a></li>
 
-<li><a href="#">Features</a></li>
+<li><a href="#features">Features</a></li>
 
-<li><a href="#">Contact</a></li>
+<li><a href="#contact">Contact</a></li>
 
 </ul>
 
@@ -40,6 +46,8 @@ Login
 </button>
 
 </nav>
+
+<!-- ================= HERO ================= -->
 
 <section class="hero">
 
@@ -72,39 +80,61 @@ Watch Demo
 </div>
 
 </section>
-<section class="features">
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features" id="features">
 
 <h2>Why Choose ResumeCraft AI?</h2>
 
 <div class="feature-container">
 
 <div class="card">
+
 <i class="fa-solid fa-robot"></i>
+
 <h3>AI Resume Builder</h3>
+
 <p>Create a professional resume with AI assistance in minutes.</p>
+
 </div>
 
 <div class="card">
+
 <i class="fa-solid fa-file-pdf"></i>
+
 <h3>PDF Download</h3>
+
 <p>Download your resume instantly in high-quality PDF format.</p>
+
 </div>
 
 <div class="card">
+
 <i class="fa-solid fa-chart-line"></i>
+
 <h3>ATS Friendly</h3>
+
 <p>Designed to pass Applicant Tracking Systems used by recruiters.</p>
+
 </div>
 
 <div class="card">
+
 <i class="fa-solid fa-mobile-screen"></i>
+
 <h3>Responsive</h3>
+
 <p>Works perfectly on mobile, tablet, and desktop devices.</p>
+
 </div>
 
 </div>
 
 </section>
+
+<!-- ================= STATS ================= -->
+
 <section class="stats">
 
 <div class="stat-box">
@@ -129,41 +159,150 @@ Watch Demo
 
 </section>
 
-<section class="templates">
+<!-- ================= TEMPLATES ================= -->
+
+<section class="templates" id="templates">
 
 <h2>Professional Resume Templates</h2>
 
 <div class="template-grid">
 
 <div class="template-card">
+
 <div class="template-preview"></div>
+
 <h3>Modern</h3>
+
 </div>
 
 <div class="template-card">
+
 <div class="template-preview"></div>
+
 <h3>Classic</h3>
+
 </div>
 
 <div class="template-card">
+
 <div class="template-preview"></div>
+
 <h3>Corporate</h3>
+
 </div>
 
 </div>
 
 </section>
 
-<footer>
+<!-- ================= RESUME BUILDER ================= -->
 
-<h2>ResumeCraft AI</h2>
+<section class="builder" id="builder">
 
-<p>Create Professional Resume in Minutes.</p>
+<h2>Create Your Resume</h2>
 
-<p>© 2026 ResumeCraft AI. All Rights Reserved.</p>
+<div class="builder-container">
+
+<div class="form">
+
+<input
+type="text"
+id="name"
+placeholder="Full Name"
+>
+
+<input
+type="email"
+id="email"
+placeholder="Email Address"
+>
+
+<input
+type="text"
+id="phone"
+placeholder="Phone Number"
+>
+
+<textarea
+id="about"
+placeholder="About Yourself">
+</textarea>
+
+</div>
+
+<div class="preview">
+
+<h1 id="preview-name">
+Your Name
+</h1>
+
+<p id="preview-email">
+Email Address
+</p>
+
+<p id="preview-phone">
+Phone Number
+</p>
+
+<p id="preview-about">
+    <hr>
+
+<h3>Skills</h3>
+
+<p id="preview-skills">Your Skills</p>
+
+<h3>Education</h3>
+
+<p id="preview-education">Your Education</p>
+
+<h3>Experience</h3>
+
+<p id="preview-experience">Your Experience</p>
+Write something about yourself...
+</p><input
+type="text"
+id="skills"
+placeholder="Skills (HTML, CSS, JavaScript)"
+>
+
+<input
+type="text"
+id="education"
+placeholder="Education"
+>
+
+<input
+type="text"
+id="experience"
+placeholder="Experience"
+>
+<button id="downloadBtn">Download Resume</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer id="contact">
+
+<h2>
+ResumeCraft AI
+</h2>
+
+<p>
+Create Professional Resume in Minutes.
+</p>
+
+<p>
+© 2026 ResumeCraft AI. All Rights Reserved.
+</p>
 
 </footer>
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
