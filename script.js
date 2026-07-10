@@ -35,4 +35,24 @@ document.getElementById("downloadBtn").addEventListener("click", function () {
 
     html2pdf().set(options).from(element).save();
 
+});const photo = document.getElementById("photo");
+
+photo.addEventListener("change", function(){
+
+const file = this.files[0];
+
+if(file){
+
+const reader = new FileReader();
+
+reader.onload=function(e){
+
+document.getElementById("preview-photo").src=e.target.result;
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
 });
