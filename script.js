@@ -15,6 +15,24 @@ bind("skills", "preview-skills", "Your Skills");
 bind("education", "preview-education", "Your Education");
 bind("experience", "preview-experience", "Your Experience");
 
-document.getElementById("downloadBtn").addEventListener("click", () => {
-    window.print();
+document.getElementById("downloadBtn").addEventListener("click", function () {
+
+    const element = document.getElementById("resume");
+
+    const options = {
+        margin: 0.5,
+        filename: "Resume.pdf",
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: "in",
+            format: "a4",
+            orientation: "portrait"
+        }
+    };
+
+    html2pdf().set(options).from(element).save();
+
 });
