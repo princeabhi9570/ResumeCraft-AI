@@ -533,4 +533,54 @@ padding-left:20px;
 
 margin:8px 0;
 
+}.experience-section{
+
+display:flex;
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
+
+.experience-section input{
+
+flex:1;
+
+}
+
+.experience-section button{
+
+padding:12px 20px;
+
+background:#f97316;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+.experience-section button:hover{
+
+background:#ea580c;
+
+}
+
+#preview-experience{
+
+padding-left:20px;
+
+}
+
+#preview-experience li{
+
+margin:8px 0;
+
 }

@@ -173,4 +173,32 @@ educationInput.value="";
 
 });
 
+}// ===============================
+// Dynamic Experience
+// ===============================
+
+const experienceInput = document.getElementById("experienceInput");
+
+const addExperience = document.getElementById("addExperience");
+
+const previewExperience = document.getElementById("preview-experience");
+
+if(addExperience){
+
+    addExperience.addEventListener("click",function(){
+
+        const value = experienceInput.value.trim();
+
+        if(value==="") return;
+
+        const li = document.createElement("li");
+
+        li.textContent = value;
+
+        previewExperience.appendChild(li);
+
+        experienceInput.value="";
+
+    });
+
 }
