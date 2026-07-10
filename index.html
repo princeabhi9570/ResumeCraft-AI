@@ -30,15 +30,10 @@ ResumeCraft AI
 </div>
 
 <ul>
-
 <li><a href="#">Home</a></li>
-
 <li><a href="#templates">Templates</a></li>
-
-<li><a href="#features">Features</a></li>
-
+<li><a href="#builder">Resume Builder</a></li>
 <li><a href="#contact">Contact</a></li>
-
 </ul>
 
 <button class="login-btn">
@@ -57,6 +52,7 @@ Login
 
 <p>
 Build an ATS-Friendly Resume in just 2 Minutes.
+Generate a modern and professional resume instantly.
 </p>
 
 <div class="buttons">
@@ -90,43 +86,27 @@ Watch Demo
 <div class="feature-container">
 
 <div class="card">
-
 <i class="fa-solid fa-robot"></i>
-
 <h3>AI Resume Builder</h3>
-
-<p>Create a professional resume with AI assistance in minutes.</p>
-
+<p>Create a professional ATS-friendly resume within minutes using AI.</p>
 </div>
 
 <div class="card">
-
 <i class="fa-solid fa-file-pdf"></i>
-
 <h3>PDF Download</h3>
-
 <p>Download your resume instantly in high-quality PDF format.</p>
-
 </div>
 
 <div class="card">
-
 <i class="fa-solid fa-chart-line"></i>
-
 <h3>ATS Friendly</h3>
-
-<p>Designed to pass Applicant Tracking Systems used by recruiters.</p>
-
+<p>Optimized to pass Applicant Tracking Systems used by recruiters.</p>
 </div>
 
 <div class="card">
-
 <i class="fa-solid fa-mobile-screen"></i>
-
-<h3>Responsive</h3>
-
-<p>Works perfectly on mobile, tablet, and desktop devices.</p>
-
+<h3>Responsive Design</h3>
+<p>Works perfectly on desktop, tablet and mobile devices.</p>
 </div>
 
 </div>
@@ -154,7 +134,7 @@ Watch Demo
 
 <div class="stat-box">
 <h2>24/7</h2>
-<p>Support</p>
+<p>Customer Support</p>
 </div>
 
 </section>
@@ -168,34 +148,23 @@ Watch Demo
 <div class="template-grid">
 
 <div class="template-card">
-
 <div class="template-preview"></div>
-
-<h3>Modern</h3>
-
+<h3>Modern Resume</h3>
 </div>
 
 <div class="template-card">
-
 <div class="template-preview"></div>
-
-<h3>Classic</h3>
-
+<h3>Classic Resume</h3>
 </div>
 
 <div class="template-card">
-
 <div class="template-preview"></div>
-
-<h3>Corporate</h3>
-
+<h3>Corporate Resume</h3>
 </div>
 
 </div>
 
-</section>
-
-<!-- ================= RESUME BUILDER ================= -->
+</section><!-- ================= RESUME BUILDER ================= -->
 
 <section class="builder" id="builder">
 
@@ -203,81 +172,108 @@ Watch Demo
 
 <div class="builder-container">
 
-<div class="form">
+    <!-- ================= LEFT FORM ================= -->
 
-<input
-type="text"
-id="name"
-placeholder="Full Name"
->
+    <div class="form">
 
-<input
-type="email"
-id="email"
-placeholder="Email Address"
->
+        <input
+        type="text"
+        id="name"
+        placeholder="Full Name">
 
-<input
-type="text"
-id="phone"
-placeholder="Phone Number"
->
+        <input
+        type="email"
+        id="email"
+        placeholder="Email Address">
 
-<textarea
-id="about"
-placeholder="About Yourself">
-</textarea>
+        <input
+        type="text"
+        id="phone"
+        placeholder="Phone Number">
 
-</div>
+        <input
+        type="text"
+        id="location"
+        placeholder="Location">
 
-<div class="preview">
+        <textarea
+        id="about"
+        placeholder="Write something about yourself..."></textarea>
 
-<h1 id="preview-name">
-Your Name
-</h1>
+        <input
+        type="text"
+        id="education"
+        placeholder="Education">
 
-<p id="preview-email">
-Email Address
-</p>
+        <input
+        type="text"
+        id="skills"
+        placeholder="Skills (HTML, CSS, JavaScript)">
 
-<p id="preview-phone">
-Phone Number
-</p>
+        <input
+        type="text"
+        id="experience"
+        placeholder="Experience">
 
-<p id="preview-about">
-    <hr>
+        <button id="downloadBtn">
+            Download Resume
+        </button>
 
-<h3>Skills</h3>
+    </div>
 
-<p id="preview-skills">Your Skills</p>
+    <!-- ================= RIGHT PREVIEW ================= -->
 
-<h3>Education</h3>
+    <div class="preview">
 
-<p id="preview-education">Your Education</p>
+        <h1 id="preview-name">
+            Your Name
+        </h1>
 
-<h3>Experience</h3>
+        <p>
+            📧 <span id="preview-email">Email Address</span>
+        </p>
 
-<p id="preview-experience">Your Experience</p>
-Write something about yourself...
-</p><input
-type="text"
-id="skills"
-placeholder="Skills (HTML, CSS, JavaScript)"
->
+        <p>
+            📱 <span id="preview-phone">Phone Number</span>
+        </p>
 
-<input
-type="text"
-id="education"
-placeholder="Education"
->
+        <p>
+            📍 <span id="preview-location">Your Location</span>
+        </p>
 
-<input
-type="text"
-id="experience"
-placeholder="Experience"
->
-<button id="downloadBtn">Download Resume</button>
-</div>
+        <hr>
+
+        <h3>ABOUT</h3>
+
+        <p id="preview-about">
+            Write something about yourself...
+        </p>
+
+        <hr>
+
+        <h3>EDUCATION</h3>
+
+        <p id="preview-education">
+            Your Education
+        </p>
+
+        <hr>
+
+        <h3>SKILLS</h3>
+
+        <p id="preview-skills">
+            HTML • CSS • JavaScript
+        </p>
+
+        <hr>
+
+        <h3>EXPERIENCE</h3>
+
+        <p id="preview-experience">
+            Fresher
+        </p>
+
+    </div>
 
 </div>
 
@@ -292,7 +288,7 @@ ResumeCraft AI
 </h2>
 
 <p>
-Create Professional Resume in Minutes.
+Create Professional ATS-Friendly Resume in Minutes.
 </p>
 
 <p>
