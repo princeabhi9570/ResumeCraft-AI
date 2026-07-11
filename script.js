@@ -1,46 +1,146 @@
-// ========================================
-// ResumeCraft AI v3
-// ========================================
+/*=========================================
+ ResumeCraft Pro v2.0
+ JavaScript Part 1
+==========================================*/
 
-// -------- Live Preview --------
+// ==========================================
+// Resume Data Model
+// ==========================================
 
-function bind(inputId, previewId, placeholder){
+const resumeData = {
+  personal: {
+    fullName: "",
+    jobTitle: "",
+    email: "",
+    phone: "",
+    location: "",
+    website: "",
+    summary: "",
+    image: ""
+  },
 
-const input=document.getElementById(inputId);
+  skills: [],
 
-const preview=document.getElementById(previewId);
+  education: [],
 
-if(!input||!preview) return;
+  experience: [],
 
-preview.textContent=input.value||placeholder;
+  projects: [],
 
-input.addEventListener("input",()=>{
+  certificates: [],
 
-preview.textContent=input.value.trim()||placeholder;
+  languages: [],
 
-});
+  social: {
+    linkedin: "",
+    github: "",
+    portfolio: ""
+  }
+};
+
+// ==========================================
+// Inputs
+// ==========================================
+
+const fullName = document.getElementById("fullName");
+const jobTitle = document.getElementById("jobTitle");
+const email = document.getElementById("email");
+const phone = document.getElementById("phone");
+const locationInput = document.getElementById("location");
+const website = document.getElementById("website");
+const summary = document.getElementById("summary");
+const profileImage = document.getElementById("profileImage");
+
+// ==========================================
+// Preview Elements
+// ==========================================
+
+const previewName = document.getElementById("previewName");
+const previewJobTitle = document.getElementById("previewJobTitle");
+const previewEmail = document.getElementById("previewEmail");
+const previewPhone = document.getElementById("previewPhone");
+const previewLocation = document.getElementById("previewLocation");
+const previewWebsite = document.getElementById("previewWebsite");
+const previewSummary = document.getElementById("previewSummary");
+const previewImage = document.getElementById("previewImage");
+
+// ==========================================
+// Update Resume Object
+// ==========================================
+
+function updatePersonalData(){
+
+resumeData.personal.fullName=fullName.value;
+
+resumeData.personal.jobTitle=jobTitle.value;
+
+resumeData.personal.email=email.value;
+
+resumeData.personal.phone=phone.value;
+
+resumeData.personal.location=locationInput.value;
+
+resumeData.personal.website=website.value;
+
+resumeData.personal.summary=summary.value;
+
+updatePreview();
 
 }
 
-bind("name","preview-name","Your Name");
+// ==========================================
+// Update Live Preview
+// ==========================================
 
-bind("email","preview-email","Email Address");
+function updatePreview(){
 
-bind("phone","preview-phone","Phone Number");
+previewName.textContent=
+resumeData.personal.fullName || "Your Name";
 
-bind("location","preview-location","Location");
+previewJobTitle.textContent=
+resumeData.personal.jobTitle || "Your Profession";
 
-bind("about","preview-about","Write about yourself...");
+previewEmail.textContent=
+resumeData.personal.email || "example@gmail.com";
 
-// -------- Profile Photo --------
+previewPhone.textContent=
+resumeData.personal.phone || "+91 9876543210";
 
-const photo=document.getElementById("photo");
+previewLocation.textContent=
+resumeData.personal.location || "India";
 
-const previewPhoto=document.getElementById("preview-photo");
+previewWebsite.textContent=
+resumeData.personal.website || "www.portfolio.com";
 
-if(photo){
+previewSummary.textContent=
+resumeData.personal.summary ||
+"Your Professional Summary Appears Here.";
 
-photo.addEventListener("change",function(){
+}
+
+// ==========================================
+// Live Events
+// ==========================================
+
+[
+fullName,
+jobTitle,
+email,
+phone,
+locationInput,
+website,
+summary
+].forEach(input=>{
+
+input.addEventListener("input",updatePersonalData);
+
+});
+
+// ==========================================
+// Image Upload
+// ==========================================
+
+profileImage.addEventListener("change",function(){
 
 const file=this.files[0];
 
@@ -50,523 +150,1245 @@ const reader=new FileReader();
 
 reader.onload=function(e){
 
-previewPhoto.src=e.target.result;
+resumeData.personal.image=e.target.result;
 
-};
+previewImage.src=e.target.result;
+
+}
 
 reader.readAsDataURL(file);
 
 });
 
-}
+// ==========================================
+// Generate Resume
+// ==========================================
 
-// -------- Template Change --------
+const generateBtn=document.getElementById("generateResume");
 
-const templateItems=document.querySelectorAll(".template-item");
+generateBtn.addEventListener("click",()=>{
 
-const resume=document.getElementById("resume");
+updatePersonalData();
 
-templateItems.forEach(item=>{
-
-item.addEventListener("click",()=>{
-
-templateItems.forEach(card=>{
-
-card.classList.remove("active-template");
+showToast("Resume Generated Successfully!");
 
 });
 
-item.classList.add("active-template");
-
-resume.className="preview";
-
-resume.classList.add(item.dataset.template);
-
-});
-
-});
-
-// -------- Helper Function --------
-
-function addItem(inputId,listId){
-
-const input=document.getElementById(inputId);
-
-const list=document.getElementById(listId);
-
-if(!input||!list) return;
-
-const value=input.value.trim();
-
-if(value==="") return;
-
-const li=document.createElement("li");
-
-li.innerHTML=`
-${value}
-<button class="delete-btn">✖</button>
-`;
-
-li.querySelector("button").onclick=()=>{
-
-li.remove();
-
-};
-
-list.appendChild(li);
-
-input.value="";
-
-}// ========================================
-// Dynamic Education
-// ========================================
-
-const addEducation=document.getElementById("addEducation");
-
-if(addEducation){
-
-addEducation.addEventListener("click",()=>{
-
-addItem("educationInput","preview-education");
-
-showToast("Education Added");
-
-});
-
-}
-
-// ========================================
-// Dynamic Skills
-// ========================================
-
-const addSkill=document.getElementById("addSkill");
-
-if(addSkill){
-
-addSkill.addEventListener("click",()=>{
-
-addItem("skillInput","preview-skills");
-
-showToast("Skill Added");
-
-});
-
-}
-
-// ========================================
-// Dynamic Experience
-// ========================================
-
-const addExperience=document.getElementById("addExperience");
-
-if(addExperience){
-
-addExperience.addEventListener("click",()=>{
-
-addItem("experienceInput","preview-experience");
-
-showToast("Experience Added");
-
-});
-
-}
-
-// ========================================
-// Dynamic Projects
-// ========================================
-
-const addProject=document.getElementById("addProject");
-
-if(addProject){
-
-addProject.addEventListener("click",()=>{
-
-const title=document.getElementById("projectTitle").value.trim();
-
-const desc=document.getElementById("projectDesc").value.trim();
-
-if(title===""||desc==="") return;
-
-const box=document.createElement("div");
-
-box.className="project-item";
-
-box.innerHTML=`
-
-<h4>${title}</h4>
-
-<p>${desc}</p>
-
-<button class="delete-btn">✖</button>
-
-`;
-
-box.querySelector("button").onclick=()=>{
-
-box.remove();
-
-showToast("Project Removed");
-
-};
-
-document.getElementById("preview-projects").appendChild(box);
-
-document.getElementById("projectTitle").value="";
-
-document.getElementById("projectDesc").value="";
-
-showToast("Project Added");
-
-});
-
-}
-
-// ========================================
-// Toast Notification
-// ========================================
+// ==========================================
+// Toast
+// ==========================================
 
 function showToast(message){
 
-const toast=document.createElement("div");
+const toast=document.getElementById("toast");
 
-toast.className="toast";
-
-toast.innerHTML=message;
-
-document.body.appendChild(toast);
-
-setTimeout(()=>{
+toast.innerText=message;
 
 toast.classList.add("show");
 
-},100);
-
 setTimeout(()=>{
 
-toast.remove();
+toast.classList.remove("show");
 
-},2500);
-
-}// ========================================
-// AI Resume Generator (Demo)
-// ========================================
-
-const aiGenerate=document.getElementById("aiGenerate");
-
-if(aiGenerate){
-
-aiGenerate.addEventListener("click",()=>{
-
-document.getElementById("about").value=
-"Motivated and detail-oriented professional with strong problem-solving skills and a passion for continuous learning.";
-
-document.getElementById("preview-about").textContent=
-document.getElementById("about").value;
-
-showToast("AI Resume Generated");
-
-});
+},3000);
 
 }
 
-// ========================================
-// ATS Score Checker
-// ========================================
+// ==========================================
+// Initial Preview
+// ==========================================
 
-const checkATS=document.getElementById("checkATS");
+updatePreview();
 
-if(checkATS){
+console.log("ResumeCraft Pro Loaded");/*=========================================
+ ResumeCraft Pro v2.0
+ JavaScript Part 2
+==========================================*/
 
-checkATS.addEventListener("click",()=>{
+// ==========================================
+// Containers
+// ==========================================
 
-let score=0;
+const skillsContainer = document.getElementById("skillsContainer");
+const educationContainer = document.getElementById("educationContainer");
+const experienceContainer = document.getElementById("experienceContainer");
+const projectsContainer = document.getElementById("projectsContainer");
 
-if(document.getElementById("name").value.trim()) score+=15;
+// ==========================================
+// Preview Containers
+// ==========================================
 
-if(document.getElementById("email").value.trim()) score+=10;
+const previewSkills = document.getElementById("previewSkills");
+const previewEducation = document.getElementById("previewEducation");
+const previewExperience = document.getElementById("previewExperience");
+const previewProjects = document.getElementById("previewProjects");
 
-if(document.getElementById("phone").value.trim()) score+=10;
+// ==========================================
+// Analytics
+// ==========================================
 
-if(document.getElementById("location").value.trim()) score+=5;
+const skillCount = document.getElementById("skillCount");
+const projectCount = document.getElementById("projectCount");
+const educationCount = document.getElementById("educationCount");
+const experienceCount = document.getElementById("experienceCount");
 
-if(document.getElementById("about").value.trim()) score+=20;
+// ==========================================
+// Update Analytics
+// ==========================================
 
-if(document.getElementById("preview-education").children.length>0) score+=15;
+function updateAnalytics(){
 
-if(document.getElementById("preview-skills").children.length>0) score+=15;
+skillCount.textContent = resumeData.skills.length;
 
-if(document.getElementById("preview-experience").children.length>0) score+=10;
+projectCount.textContent = resumeData.projects.length;
 
-document.getElementById("scoreValue").textContent=score+"%";
+educationCount.textContent = resumeData.education.length;
 
-showToast("ATS Score : "+score+"%");
-
-});
+experienceCount.textContent = resumeData.experience.length;
 
 }
 
-// ========================================
-// Download PDF
-// ========================================
+// ==========================================
+// Skills
+// ==========================================
 
-const downloadBtn=document.getElementById("downloadBtn");
+function updateSkills(){
 
-if(downloadBtn){
+const inputs=document.querySelectorAll(".skill-input");
 
-downloadBtn.addEventListener("click",()=>{
+resumeData.skills=[];
 
-const resume=document.getElementById("resume");
+previewSkills.innerHTML="";
 
-const opt={
+inputs.forEach(input=>{
 
-margin:0,
+const value=input.value.trim();
 
-filename:"ResumeCraftAI-Resume.pdf",
+if(value!=""){
 
-image:{type:"jpeg",quality:1},
+resumeData.skills.push(value);
 
-html2canvas:{
+const li=document.createElement("li");
 
-scale:3,
+li.textContent=value;
 
-useCORS:true
+previewSkills.appendChild(li);
 
+}
+
+});
+
+updateAnalytics();
+
+}
+
+document.addEventListener("input",function(e){
+
+if(e.target.classList.contains("skill-input")){
+
+updateSkills();
+
+}
+
+});
+
+document.getElementById("addSkill").addEventListener("click",()=>{
+
+const input=document.createElement("input");
+
+input.type="text";
+
+input.placeholder="Skill";
+
+input.className="skill-input";
+
+skillsContainer.appendChild(input);
+
+});
+
+// ==========================================
+// Education
+// ==========================================
+
+function updateEducation(){
+
+resumeData.education=[];
+
+previewEducation.innerHTML="";
+
+document.querySelectorAll(".education-item").forEach(card=>{
+
+const degree=card.querySelector(".degree").value;
+
+const college=card.querySelector(".college").value;
+
+const year=card.querySelector(".eduYear").value;
+
+const desc=card.querySelector(".eduDescription").value;
+
+if(degree!=""){
+
+resumeData.education.push({
+
+degree,
+
+college,
+
+year,
+
+desc
+
+});
+
+const div=document.createElement("div");
+
+div.innerHTML=`
+
+<h4>${degree}</h4>
+
+<p>${college}</p>
+
+<p>${year}</p>
+
+<p>${desc}</p>
+
+`;
+
+previewEducation.appendChild(div);
+
+}
+
+});
+
+updateAnalytics();
+
+}
+
+document.addEventListener("input",(e)=>{
+
+if(
+
+e.target.classList.contains("degree") ||
+
+e.target.classList.contains("college") ||
+
+e.target.classList.contains("eduYear") ||
+
+e.target.classList.contains("eduDescription")
+
+){
+
+updateEducation();
+
+}
+
+});
+
+document.getElementById("addEducation").onclick=()=>{
+
+educationContainer.insertAdjacentHTML("beforeend",`
+
+<div class="education-item">
+
+<input type="text" class="degree" placeholder="Degree">
+
+<input type="text" class="college" placeholder="College">
+
+<input type="text" class="eduYear" placeholder="Year">
+
+<textarea class="eduDescription" placeholder="Description"></textarea>
+
+</div>
+
+`);
+
+};
+
+// ==========================================
+// Experience
+// ==========================================
+
+function updateExperience(){
+
+resumeData.experience=[];
+
+previewExperience.innerHTML="";
+
+document.querySelectorAll(".experience-item").forEach(card=>{
+
+const company=card.querySelector(".company").value;
+
+const position=card.querySelector(".position").value;
+
+const year=card.querySelector(".experienceYear").value;
+
+const desc=card.querySelector(".experienceDescription").value;
+
+if(position!=""){
+
+resumeData.experience.push({
+
+company,
+
+position,
+
+year,
+
+desc
+
+});
+
+const div=document.createElement("div");
+
+div.innerHTML=`
+
+<h4>${position}</h4>
+
+<p>${company}</p>
+
+<p>${year}</p>
+
+<p>${desc}</p>
+
+`;
+
+previewExperience.appendChild(div);
+
+}
+
+});
+
+updateAnalytics();
+
+}
+
+document.addEventListener("input",(e)=>{
+
+if(
+
+e.target.classList.contains("company") ||
+
+e.target.classList.contains("position") ||
+
+e.target.classList.contains("experienceYear") ||
+
+e.target.classList.contains("experienceDescription")
+
+){
+
+updateExperience();
+
+}
+
+});
+
+document.getElementById("addExperience").onclick=()=>{
+
+experienceContainer.insertAdjacentHTML("beforeend",`
+
+<div class="experience-item">
+
+<input class="company" placeholder="Company">
+
+<input class="position" placeholder="Position">
+
+<input class="experienceYear" placeholder="Duration">
+
+<textarea class="experienceDescription" placeholder="Description"></textarea>
+
+</div>
+
+`);
+
+};
+
+// ==========================================
+// Projects
+// ==========================================
+
+function updateProjects(){
+
+resumeData.projects=[];
+
+previewProjects.innerHTML="";
+
+document.querySelectorAll(".project-item").forEach(card=>{
+
+const name=card.querySelector(".projectName").value;
+
+const tech=card.querySelector(".projectTech").value;
+
+const desc=card.querySelector(".projectDescription").value;
+
+if(name!=""){
+
+resumeData.projects.push({
+
+name,
+
+tech,
+
+desc
+
+});
+
+const div=document.createElement("div");
+
+div.innerHTML=`
+
+<h4>${name}</h4>
+
+<p>${tech}</p>
+
+<p>${desc}</p>
+
+`;
+
+previewProjects.appendChild(div);
+
+}
+
+});
+
+updateAnalytics();
+
+}
+
+document.addEventListener("input",(e)=>{
+
+if(
+
+e.target.classList.contains("projectName") ||
+
+e.target.classList.contains("projectTech") ||
+
+e.target.classList.contains("projectDescription")
+
+){
+
+updateProjects();
+
+}
+
+});
+
+document.getElementById("addProject").onclick=()=>{
+
+projectsContainer.insertAdjacentHTML("beforeend",`
+
+<div class="project-item">
+
+<input class="projectName" placeholder="Project Name">
+
+<input class="projectTech" placeholder="Technology">
+
+<textarea class="projectDescription" placeholder="Description"></textarea>
+
+</div>
+
+`);
+
+};
+
+// ==========================================
+// Initialize
+// ==========================================
+
+updateSkills();
+
+updateEducation();
+
+updateExperience();
+
+updateProjects();
+
+updateAnalytics();
+
+console.log("Dynamic Resume Builder Loaded");/*=========================================
+ ResumeCraft Pro v2.0
+ JavaScript Part 3
+==========================================*/
+
+// ==========================================
+// Local Storage
+// ==========================================
+
+const STORAGE_KEY = "resumeCraftData";
+
+function saveResume() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(resumeData)
+    );
+
+    showToast("Resume Saved Successfully");
+
+}
+
+function loadResume() {
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+
+    Object.assign(resumeData, data);
+
+    // Personal
+
+    fullName.value = data.personal.fullName || "";
+    jobTitle.value = data.personal.jobTitle || "";
+    email.value = data.personal.email || "";
+    phone.value = data.personal.phone || "";
+    locationInput.value = data.personal.location || "";
+    website.value = data.personal.website || "";
+    summary.value = data.personal.summary || "";
+
+    updatePersonalData();
+
+    // Skills
+
+    skillsContainer.innerHTML = "";
+
+    (data.skills || []).forEach(skill => {
+
+        const input = document.createElement("input");
+
+        input.type = "text";
+
+        input.className = "skill-input";
+
+        input.value = skill;
+
+        input.placeholder = "Skill";
+
+        skillsContainer.appendChild(input);
+
+    });
+
+    if ((data.skills || []).length === 0) {
+
+        skillsContainer.innerHTML =
+        `<input type="text"
+        class="skill-input"
+        placeholder="Skill">`;
+
+    }
+
+    updateSkills();
+
+}
+
+// ==========================================
+// Auto Save
+// ==========================================
+
+document.addEventListener("input", () => {
+
+    saveResume();
+
+});
+
+// ==========================================
+// Save Button
+// ==========================================
+
+const saveBtn = document.getElementById("saveResume");
+
+saveBtn.addEventListener("click", () => {
+
+    saveResume();
+
+});
+
+// ==========================================
+// Export JSON
+// ==========================================
+
+const exportBtn =
+document.getElementById("exportResume");
+
+exportBtn.addEventListener("click", () => {
+
+    const blob = new Blob(
+
+        [JSON.stringify(resumeData, null, 2)],
+
+        {
+
+            type: "application/json"
+
+        }
+
+    );
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "ResumeCraft.json";
+
+    link.click();
+
+    showToast("Resume Exported");
+
+});
+
+// ==========================================
+// Import JSON
+// ==========================================
+
+const importBtn =
+document.getElementById("importResume");
+
+const importInput =
+document.createElement("input");
+
+importInput.type = "file";
+
+importInput.accept = ".json";
+
+importBtn.onclick = () => {
+
+    importInput.click();
+
+};
+
+importInput.onchange = function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+        const json = JSON.parse(e.target.result);
+
+        localStorage.setItem(
+
+            STORAGE_KEY,
+
+            JSON.stringify(json)
+
+        );
+
+        location.reload();
+
+    };
+
+    reader.readAsText(file);
+
+};
+
+// ==========================================
+// Dark Mode
+// ==========================================
+
+const themeBtn =
+document.getElementById("themeToggle");
+
+function loadTheme() {
+
+    const theme =
+
+    localStorage.getItem("theme");
+
+    if (theme === "light") {
+
+        document.body.classList.add("light");
+
+    }
+
+}
+
+themeBtn.onclick = () => {
+
+    document.body.classList.toggle("light");
+
+    if (
+
+        document.body.classList.contains("light")
+
+    ) {
+
+        localStorage.setItem(
+
+            "theme",
+
+            "light"
+
+        );
+
+    } else {
+
+        localStorage.setItem(
+
+            "theme",
+
+            "dark"
+
+        );
+
+    }
+
+};
+
+// ==========================================
+// Scroll Top
+// ==========================================
+
+const scrollTopBtn =
+document.getElementById("scrollTop");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 300) {
+
+        scrollTopBtn.style.display = "block";
+
+    }
+
+    else {
+
+        scrollTopBtn.style.display = "none";
+
+    }
+
+});
+
+scrollTopBtn.onclick = () => {
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+};
+
+// ==========================================
+// Loader
+// ==========================================
+
+const loader =
+document.getElementById("loader");
+
+function showLoader() {
+
+    loader.classList.add("active");
+
+}
+
+function hideLoader() {
+
+    loader.classList.remove("active");
+
+}
+
+// ==========================================
+// Generate Resume
+// ==========================================
+
+generateBtn.onclick = () => {
+
+    showLoader();
+
+    setTimeout(() => {
+
+        hideLoader();
+
+        saveResume();
+
+        showToast(
+
+            "Resume Generated Successfully"
+
+        );
+
+    }, 1200);
+
+};
+
+// ==========================================
+// Load Saved Data
+// ==========================================
+
+window.addEventListener("load", () => {
+
+    loadTheme();
+
+    loadResume();
+
+});
+
+console.log("Storage System Loaded");/*=========================================
+ ResumeCraft Pro v2.0
+ JavaScript Part 4
+ ATS + Print + PDF + Validation
+==========================================*/
+
+// ==========================================
+// ATS Score
+// ==========================================
+
+const atsScore = document.getElementById("atsScore");
+const checkATSBtn = document.getElementById("checkATS");
+
+function calculateATS() {
+
+    let score = 0;
+
+    if (resumeData.personal.fullName.trim() !== "") score += 10;
+    if (resumeData.personal.jobTitle.trim() !== "") score += 10;
+    if (resumeData.personal.email.trim() !== "") score += 10;
+    if (resumeData.personal.phone.trim() !== "") score += 10;
+    if (resumeData.personal.summary.trim().length > 50) score += 15;
+
+    if (resumeData.skills.length >= 5) score += 15;
+
+    if (resumeData.education.length >= 1) score += 10;
+
+    if (resumeData.experience.length >= 1) score += 10;
+
+    if (resumeData.projects.length >= 1) score += 10;
+
+    score = Math.min(score, 100);
+
+    atsScore.textContent = score + "%";
+
+    return score;
+}
+
+checkATSBtn.addEventListener("click", () => {
+
+    const score = calculateATS();
+
+    if (score >= 90) {
+
+        showToast("Excellent ATS Resume ✅");
+
+    } else if (score >= 70) {
+
+        showToast("Good Resume 👍");
+
+    } else {
+
+        showToast("Improve Your Resume ⚠");
+
+    }
+
+});
+
+// ==========================================
+// Resume Validation
+// ==========================================
+
+function validateResume() {
+
+    let errors = [];
+
+    if (!resumeData.personal.fullName)
+        errors.push("Enter your name.");
+
+    if (!resumeData.personal.email)
+        errors.push("Enter email.");
+
+    if (!resumeData.personal.phone)
+        errors.push("Enter phone.");
+
+    if (resumeData.skills.length === 0)
+        errors.push("Add at least one skill.");
+
+    if (resumeData.education.length === 0)
+        errors.push("Add education.");
+
+    return errors;
+}
+
+// ==========================================
+// Print Resume
+// ==========================================
+
+const printBtn = document.getElementById("printResumeBtn");
+
+printBtn.addEventListener("click", () => {
+
+    const errors = validateResume();
+
+    if (errors.length > 0) {
+
+        alert(errors.join("\n"));
+
+        return;
+
+    }
+
+    window.print();
+
+});
+
+// ==========================================
+// PDF Download
+// ==========================================
+
+const pdfBtn = document.getElementById("downloadResumePDF");
+
+pdfBtn.addEventListener("click", () => {
+
+    const resume = document.getElementById("resumePaper");
+
+    if (typeof html2pdf === "undefined") {
+
+        alert("html2pdf library missing.");
+
+        return;
+
+    }
+
+    html2pdf()
+
+        .from(resume)
+
+        .set({
+
+            margin: 0.3,
+
+            filename: "ResumeCraft.pdf",
+
+            image: {
+
+                type: "jpeg",
+
+                quality: 1
+
+            },
+
+            html2canvas: {
+
+                scale: 2
+
+            },
+
+            jsPDF: {
+
+                unit: "in",
+
+                format: "a4",
+
+                orientation: "portrait"
+
+            }
+
+        })
+
+        .save();
+
+});
+
+// ==========================================
+// Resume Statistics
+// ==========================================
+
+function refreshStatistics() {
+
+    skillCount.textContent = resumeData.skills.length;
+
+    projectCount.textContent = resumeData.projects.length;
+
+    educationCount.textContent = resumeData.education.length;
+
+    experienceCount.textContent = resumeData.experience.length;
+
+}
+
+setInterval(refreshStatistics, 1000);
+
+// ==========================================
+// Word Counter
+// ==========================================
+
+function countWords(text) {
+
+    return text
+        .trim()
+        .split(/\s+/)
+        .filter(word => word !== "")
+        .length;
+
+}
+
+summary.addEventListener("input", () => {
+
+    const words = countWords(summary.value);
+
+    console.log("Summary Words:", words);
+
+});
+
+// ==========================================
+// Auto ATS Update
+// ==========================================
+
+setInterval(() => {
+
+    calculateATS();
+
+}, 2000);
+
+// ==========================================
+// Resume Completion
+// ==========================================
+
+function getCompletionPercentage() {
+
+    let total = 8;
+
+    let completed = 0;
+
+    if (resumeData.personal.fullName) completed++;
+    if (resumeData.personal.jobTitle) completed++;
+    if (resumeData.personal.email) completed++;
+    if (resumeData.personal.phone) completed++;
+    if (resumeData.personal.summary) completed++;
+    if (resumeData.skills.length) completed++;
+    if (resumeData.education.length) completed++;
+    if (resumeData.projects.length) completed++;
+
+    return Math.round((completed / total) * 100);
+
+}
+
+setInterval(() => {
+
+    console.log(
+        "Resume Completion:",
+        getCompletionPercentage() + "%"
+    );
+
+}, 3000);
+
+console.log("ATS Module Loaded");/*=========================================
+ ResumeCraft Pro v2.0
+ JavaScript Part 5 (FINAL)
+ AI + Final Features
+==========================================*/
+
+// ==========================================
+// Gemini API
+// ==========================================
+
+const GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
+
+const AI_URL =
+`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+// ==========================================
+// Generate AI Summary
+// ==========================================
+
+async function generateAISummary(){
+
+const prompt=document.getElementById("aiPrompt").value;
+
+if(prompt==""){
+
+showToast("Enter Prompt");
+
+return;
+
+}
+
+showLoader();
+
+try{
+
+const response=await fetch(AI_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
 },
 
-jsPDF:{
+body:JSON.stringify({
 
-unit:"mm",
+contents:[{
 
-format:"a4",
+parts:[{
 
-orientation:"portrait"
+text:
+`Write a professional resume summary.
+
+User:
+
+${prompt}`
+
+}]
+
+}]
+
+})
+
+});
+
+const data=await response.json();
+
+hideLoader();
+
+const result=
+
+data.candidates[0].content.parts[0].text;
+
+summary.value=result;
+
+updatePersonalData();
+
+showToast("AI Summary Generated");
+
+showSuccessPopup();
+
+}
+
+catch(e){
+
+hideLoader();
+
+console.error(e);
+
+showToast("AI Error");
+
+}
+
+}
+
+// ==========================================
+// AI Button
+// ==========================================
+
+const generateAIBtn=
+
+document.getElementById("generateAI");
+
+if(generateAIBtn){
+
+generateAIBtn.onclick=generateAISummary;
+
+}
+
+// ==========================================
+// Success Popup
+// ==========================================
+
+const popup=
+
+document.getElementById("successPopup");
+
+const closePopup=
+
+document.getElementById("closePopup");
+
+function showSuccessPopup(){
+
+popup.classList.add("active");
+
+}
+
+if(closePopup){
+
+closePopup.onclick=()=>{
+
+popup.classList.remove("active");
+
+};
+
+}
+
+// ==========================================
+// AI Modal
+// ==========================================
+
+const aiModal=
+
+document.getElementById("aiModal");
+
+const openAI=
+
+document.getElementById("openAI");
+
+const closeAI=
+
+document.querySelector(".close-modal");
+
+if(openAI){
+
+openAI.onclick=()=>{
+
+aiModal.classList.add("active");
+
+};
+
+}
+
+if(closeAI){
+
+closeAI.onclick=()=>{
+
+aiModal.classList.remove("active");
+
+};
+
+}
+
+window.onclick=function(e){
+
+if(e.target==aiModal){
+
+aiModal.classList.remove("active");
 
 }
 
 };
 
-html2pdf().set(opt).from(resume).save();
+// ==========================================
+// Resume Completion Progress
+// ==========================================
 
-showToast("PDF Download Started");
+function updateCompletionBar(){
 
-});
+const progress=
 
-}
+getCompletionPercentage();
 
-// ========================================
-// Reset Resume
-// ========================================
+console.log(
 
-const resetBtn=document.getElementById("resetBtn");
+"Resume Completion:",
 
-if(resetBtn){
-
-resetBtn.addEventListener("click",()=>{
-
-if(!confirm("Reset Resume?")) return;
-
-location.reload();
-
-});
-
-}
-
-// ========================================
-// Dark Mode
-// ========================================
-
-const darkBtn=document.getElementById("darkModeBtn");
-
-if(darkBtn){
-
-darkBtn.addEventListener("click",()=>{
-
-document.body.classList.toggle("dark");
-
-localStorage.setItem(
-
-"theme",
-
-document.body.classList.contains("dark")
-
-?"dark"
-
-:"light"
+progress+"%"
 
 );
 
-});
-
 }
 
-if(localStorage.getItem("theme")==="dark"){
+// ==========================================
+// Auto Save Every 30 Seconds
+// ==========================================
 
-document.body.classList.add("dark");
+setInterval(()=>{
 
-}
+saveResume();
 
-// ========================================
-// Auto Save
-// ========================================
+},30000);
 
-["name","email","phone","location","about"].forEach(id=>{
-
-const input=document.getElementById(id);
-
-if(!input) return;
-
-const saved=localStorage.getItem(id);
-
-if(saved){
-
-input.value=saved;
-
-const preview=document.getElementById("preview-"+id);
-
-if(preview){
-
-preview.textContent=saved;
-
-}
-
-}
-
-input.addEventListener("input",()=>{
-
-localStorage.setItem(id,input.value);
-
-});
-
-});// ========================================
-// Print Resume
-// ========================================
-
-const printBtn=document.createElement("button");
-
-printBtn.innerHTML="🖨 Print Resume";
-
-printBtn.type="button";
-
-printBtn.id="printBtn";
-
-const downloadButton=document.getElementById("downloadBtn");
-
-if(downloadButton){
-
-downloadButton.parentNode.insertBefore(printBtn,downloadButton.nextSibling);
-
-}
-
-printBtn.addEventListener("click",()=>{
-
-window.print();
-
-showToast("Opening Print Preview");
-
-});
-
-// ========================================
-// Export Resume JSON
-// ========================================
-
-function exportResume(){
-
-const data={
-
-name:document.getElementById("name").value,
-
-email:document.getElementById("email").value,
-
-phone:document.getElementById("phone").value,
-
-location:document.getElementById("location").value,
-
-about:document.getElementById("about").value,
-
-education:[...document.querySelectorAll("#preview-education li")].map(li=>li.firstChild.textContent.trim()),
-
-skills:[...document.querySelectorAll("#preview-skills li")].map(li=>li.firstChild.textContent.trim()),
-
-experience:[...document.querySelectorAll("#preview-experience li")].map(li=>li.firstChild.textContent.trim())
-
-};
-
-const blob=new Blob(
-
-[JSON.stringify(data,null,2)],
-
-{type:"application/json"}
-
-);
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-
-link.download="resume.json";
-
-link.click();
-
-URL.revokeObjectURL(link.href);
-
-showToast("Resume Exported");
-
-}
-
-// ========================================
-// Export Button
-// ========================================
-
-const exportBtn=document.createElement("button");
-
-exportBtn.type="button";
-
-exportBtn.id="exportBtn";
-
-exportBtn.innerHTML="⬇ Export JSON";
-
-if(printBtn){
-
-printBtn.parentNode.insertBefore(exportBtn,printBtn.nextSibling);
-
-}
-
-exportBtn.addEventListener("click",exportResume);
-
-// ========================================
-// Copy Resume
-// ========================================
-
-const copyBtn=document.createElement("button");
-
-copyBtn.type="button";
-
-copyBtn.id="copyBtn";
-
-copyBtn.innerHTML="📋 Copy Resume";
-
-if(exportBtn){
-
-exportBtn.parentNode.insertBefore(copyBtn,exportBtn.nextSibling);
-
-}
-
-copyBtn.addEventListener("click",()=>{
-
-navigator.clipboard.writeText(
-
-document.getElementById("resume").innerText
-
-);
-
-showToast("Resume Copied");
-
-});
-
-// ========================================
+// ==========================================
 // Keyboard Shortcut
-// Ctrl + S = Download PDF
-// ========================================
+// Ctrl + S
+// ==========================================
 
 document.addEventListener("keydown",(e)=>{
 
@@ -574,205 +1396,56 @@ if(e.ctrlKey && e.key==="s"){
 
 e.preventDefault();
 
-document.getElementById("downloadBtn").click();
+saveResume();
+
+showToast("Resume Saved");
 
 }
 
 });
 
-// ========================================
-// Drag & Drop Photo
-// ========================================
+// ==========================================
+// Welcome Message
+// ==========================================
 
-const photoBox=document.querySelector(".photo-box");
+window.addEventListener("load",()=>{
 
-if(photoBox){
+setTimeout(()=>{
 
-photoBox.addEventListener("dragover",(e)=>{
+showToast(
 
-e.preventDefault();
+"Welcome to ResumeCraft Pro"
 
-});
+);
 
-photoBox.addEventListener("drop",(e)=>{
-
-e.preventDefault();
-
-const file=e.dataTransfer.files[0];
-
-if(!file) return;
-
-const reader=new FileReader();
-
-reader.onload=function(event){
-
-document.getElementById("preview-photo").src=event.target.result;
-
-};
-
-reader.readAsDataURL(file);
+},1200);
 
 });
 
-}// ========================================
-// Resume Progress Bar
-// ========================================
+// ==========================================
+// Footer Year
+// ==========================================
 
-function updateProgress(){
+const footerYear=
 
-let total=8;
-let filled=0;
+document.getElementById("year");
 
-if(document.getElementById("name").value.trim()) filled++;
-if(document.getElementById("email").value.trim()) filled++;
-if(document.getElementById("phone").value.trim()) filled++;
-if(document.getElementById("location").value.trim()) filled++;
-if(document.getElementById("about").value.trim()) filled++;
-if(document.getElementById("preview-education").children.length>0) filled++;
-if(document.getElementById("preview-skills").children.length>0) filled++;
-if(document.getElementById("preview-experience").children.length>0) filled++;
+if(footerYear){
 
-const percent=Math.round((filled/total)*100);
+footerYear.innerText=
 
-let bar=document.getElementById("progressBar");
-
-if(!bar){
-
-const container=document.createElement("div");
-
-container.style.marginBottom="20px";
-
-container.innerHTML=`
-
-<h3>Resume Completion</h3>
-
-<div style="width:100%;height:18px;background:#ddd;border-radius:20px;overflow:hidden;">
-
-<div id="progressBar"
-style="height:100%;width:${percent}%;background:#22c55e;transition:.4s;"></div>
-
-</div>
-
-<p id="progressText">${percent}% Complete</p>
-
-`;
-
-document.querySelector(".form").prepend(container);
-
-}else{
-
-bar.style.width=percent+"%";
-
-document.getElementById("progressText").innerHTML=percent+"% Complete";
+new Date().getFullYear();
 
 }
 
-}
+// ==========================================
+// Auto Update
+// ==========================================
 
-setInterval(updateProgress,500);
+setInterval(()=>{
 
-// ========================================
-// Import Resume JSON
-// ========================================
+updateCompletionBar();
 
-const importBtn=document.createElement("button");
+},5000);
 
-importBtn.innerHTML="📂 Import JSON";
-
-importBtn.type="button";
-
-document.querySelector(".form").appendChild(importBtn);
-
-const importInput=document.createElement("input");
-
-importInput.type="file";
-
-importInput.accept=".json";
-
-importInput.style.display="none";
-
-document.body.appendChild(importInput);
-
-importBtn.onclick=()=>{
-
-importInput.click();
-
-};
-
-importInput.onchange=function(){
-
-const file=this.files[0];
-
-if(!file) return;
-
-const reader=new FileReader();
-
-reader.onload=function(e){
-
-const data=JSON.parse(e.target.result);
-
-document.getElementById("name").value=data.name||"";
-document.getElementById("email").value=data.email||"";
-document.getElementById("phone").value=data.phone||"";
-document.getElementById("location").value=data.location||"";
-document.getElementById("about").value=data.about||"";
-
-document.getElementById("name").dispatchEvent(new Event("input"));
-document.getElementById("email").dispatchEvent(new Event("input"));
-document.getElementById("phone").dispatchEvent(new Event("input"));
-document.getElementById("location").dispatchEvent(new Event("input"));
-document.getElementById("about").dispatchEvent(new Event("input"));
-
-showToast("Resume Imported");
-
-};
-
-reader.readAsText(file);
-
-};
-
-// ========================================
-// Demo AI Suggestions
-// ========================================
-
-const suggestions=[
-
-"Strong Communication Skills",
-
-"Problem Solving",
-
-"Leadership",
-
-"Team Collaboration",
-
-"Time Management",
-
-"React.js",
-
-"Node.js",
-
-"Python",
-
-"Java",
-
-"SQL"
-
-];
-
-const skillInput=document.getElementById("skillInput");
-
-if(skillInput){
-
-skillInput.addEventListener("focus",()=>{
-
-console.log("AI Suggestions:",suggestions);
-
-});
-
-}
-
-// ========================================
-// Console Message
-// ========================================
-
-console.log("ResumeCraft AI v3 Loaded Successfully 🚀");
+console.log("ResumeCraft Pro v2.0 Loaded Successfully");
