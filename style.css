@@ -714,4 +714,47 @@ border-left:8px solid #059669;
 
 background:#f8fafc;
 
+}.template-selector{
+
+margin:20px 0;
+text-align:center;
+
+}
+
+#templateSelect{
+
+padding:12px;
+width:300px;
+font-size:16px;
+border-radius:8px;
+border:2px solid #2563eb;
+
+}.preview.modern{
+
+border-left:10px solid #2563eb;
+
+}
+
+.preview.ats{
+
+border-left:10px solid black;
+
+}
+
+.preview.corporate{
+
+border-left:10px solid green;
+
+}
+
+.preview.creative{
+
+border-left:10px solid orange;
+
+}
+
+.preview.minimal{
+
+border-left:10px solid gray;
+
 }

@@ -295,4 +295,20 @@ resume.classList.add(button.dataset.template);
 
 });
 
+});// Template Switch
+
+const templateSelect = document.getElementById("templateSelect");
+
+const resume = document.getElementById("resume");
+
+if(templateSelect){
+
+templateSelect.addEventListener("change",function(){
+
+resume.className="preview";
+
+resume.classList.add(this.value);
+
 });
+
+}
