@@ -275,4 +275,24 @@ location.reload();
 
 });
 
-}
+}// ===============================
+// Template Switcher
+// ===============================
+
+const templateButtons=document.querySelectorAll(".template-btn");
+
+const resume=document.getElementById("resume");
+
+templateButtons.forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+resume.classList.remove("modern");
+resume.classList.remove("classic");
+resume.classList.remove("corporate");
+
+resume.classList.add(button.dataset.template);
+
+});
+
+});

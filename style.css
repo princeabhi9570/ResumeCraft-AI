@@ -649,4 +649,69 @@ font-weight:600;
 
 background:#dc2626;
 
+}/* ===========================
+Template Selector
+=========================== */
+
+.template-selector{
+
+margin:30px 0;
+text-align:center;
+
+}
+
+.template-buttons{
+
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+
+}
+
+.template-btn{
+
+padding:12px 25px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+font-size:16px;
+font-weight:600;
+transition:.3s;
+
+}
+
+.template-btn:hover{
+
+background:#1d4ed8;
+transform:translateY(-2px);
+
+}
+
+/* ===========================
+Templates
+=========================== */
+
+.modern{
+
+border-left:8px solid #2563eb;
+
+}
+
+.classic{
+
+border-left:8px solid #374151;
+
+font-family:"Times New Roman",serif;
+
+}
+
+.corporate{
+
+border-left:8px solid #059669;
+
+background:#f8fafc;
+
 }
