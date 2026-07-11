@@ -311,4 +311,37 @@ resume.classList.add(this.value);
 
 });
 
+}// ===============================
+// Dynamic Experience
+// ===============================
+
+const experienceInput = document.getElementById("experienceInput");
+const addExperience = document.getElementById("addExperience");
+const previewExperience = document.getElementById("preview-experience");
+
+if (addExperience) {
+
+    addExperience.addEventListener("click", function () {
+
+        const value = experienceInput.value.trim();
+
+        if (value === "") return;
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+            ${value}
+            <button class="delete-btn">❌</button>
+        `;
+
+        li.querySelector(".delete-btn").addEventListener("click", function () {
+            li.remove();
+        });
+
+        previewExperience.appendChild(li);
+
+        experienceInput.value = "";
+
+    });
+
 }
