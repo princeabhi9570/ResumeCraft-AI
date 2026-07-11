@@ -786,4 +786,98 @@ cursor:pointer;
 
 background:#1d4ed8;
 
+}/* ==============================
+Template Gallery
+============================== */
+
+.template-gallery{
+
+margin:30px 0;
+
+}
+
+.template-gallery h3{
+
+text-align:center;
+
+margin-bottom:20px;
+
+}
+
+.template-list{
+
+display:flex;
+
+gap:20px;
+
+justify-content:center;
+
+flex-wrap:wrap;
+
+}
+
+.template-item{
+
+cursor:pointer;
+
+text-align:center;
+
+transition:.3s;
+
+}
+
+.template-item:hover{
+
+transform:scale(1.05);
+
+}
+
+.thumb{
+
+width:140px;
+
+height:190px;
+
+border-radius:10px;
+
+border:3px solid #ddd;
+
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
+}
+
+/* Thumbnail Designs */
+
+.modern-thumb{
+
+background:linear-gradient(to right,#2563eb 20%,white 20%);
+
+}
+
+.ats-thumb{
+
+background:white;
+
+border:2px solid black;
+
+}
+
+.corporate-thumb{
+
+background:linear-gradient(to bottom,#059669 15%,white 15%);
+
+}
+
+.creative-thumb{
+
+background:#fff7ed;
+
+border:3px dashed orange;
+
+}
+
+.minimal-thumb{
+
+background:#f8fafc;
+
 }

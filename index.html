@@ -171,23 +171,53 @@ Watch Demo
 
 </div>
 <h2>Create Your Resume</h2>
-<div class="template-selector">
+<div class="template-gallery">
 
 <h3>Select Resume Template</h3>
 
-<select id="templateSelect">
+<div class="template-list">
 
-<option value="modern">Modern</option>
+<div class="template-item" data-template="modern">
 
-<option value="ats">ATS Professional</option>
+<div class="thumb modern-thumb"></div>
 
-<option value="corporate">Corporate</option>
+<p>Modern</p>
 
-<option value="creative">Creative</option>
+</div>
 
-<option value="minimal">Minimal</option>
+<div class="template-item" data-template="ats">
 
-</select>
+<div class="thumb ats-thumb"></div>
+
+<p>ATS</p>
+
+</div>
+
+<div class="template-item" data-template="corporate">
+
+<div class="thumb corporate-thumb"></div>
+
+<p>Corporate</p>
+
+</div>
+
+<div class="template-item" data-template="creative">
+
+<div class="thumb creative-thumb"></div>
+
+<p>Creative</p>
+
+</div>
+
+<div class="template-item" data-template="minimal">
+
+<div class="thumb minimal-thumb"></div>
+
+<p>Minimal</p>
+
+</div>
+
+</div>
 
 </div>
 <div class="builder-container">
@@ -255,11 +285,20 @@ id="addSkill">
 </div>
         <div class="experience-section">
 
+<div class="experience-section">
+
 <input
 type="text"
 id="experienceInput"
 placeholder="Enter Experience">
 
+<button
+type="button"
+id="addExperience">
++ Add Experience
+</button>
+
+</div>
 <button
 type="button"
 id="addExperience">
@@ -333,8 +372,9 @@ alt="Profile Photo">
 
         <h3>EXPERIENCE</h3>
 
-        <ul id="preview-experience">
+<ul id="preview-experience">
 
+</ul>
 </ul>
 
     </div>

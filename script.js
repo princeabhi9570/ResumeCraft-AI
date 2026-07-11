@@ -297,17 +297,23 @@ resume.classList.add(button.dataset.template);
 
 });// Template Switch
 
-const templateSelect = document.getElementById("templateSelect");
+// ===============================
+// Template Gallery
+// ===============================
+
+const templateItems = document.querySelectorAll(".template-item");
 
 const resume = document.getElementById("resume");
 
-if(templateSelect){
+templateItems.forEach(item => {
 
-templateSelect.addEventListener("change",function(){
+    item.addEventListener("click", () => {
 
-resume.className="preview";
+        resume.className = "preview";
 
-resume.classList.add(this.value);
+        resume.classList.add(item.dataset.template);
+
+    });
 
 });
 
