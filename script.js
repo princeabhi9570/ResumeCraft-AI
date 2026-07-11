@@ -239,18 +239,24 @@ toast.classList.remove("show");
 // Dark Mode
 // =====================================
 
-const themeToggle=document.getElementById("themeToggle");
+const themeToggle = document.getElementById("themeToggle");
 
-themeToggle.addEventListener("click",()=>{
+if (themeToggle) {
 
-document.body.classList.toggle("dark");
+    themeToggle.addEventListener("click", () => {
 
-localStorage.setItem(
-"theme",
-document.body.classList.contains("dark")
-);
+        document.body.classList.toggle("dark");
 
-});
+        localStorage.setItem(
+            "theme",
+            document.body.classList.contains("dark")
+        );
+
+    });
+
+}
+
+}
 
 if(localStorage.getItem("theme")==="true"){
 
@@ -452,4 +458,50 @@ localStorage.removeItem("ResumeCraftData");
 
 location.reload();
 
+});// =========================
+// PDF Download
+// =========================
+
+const downloadBtn = document.getElementById("downloadResumePDF");
+
+if(downloadBtn){
+
+downloadBtn.addEventListener("click",()=>{
+
+const element=document.getElementById("resumePaper");
+
+if(!element){
+
+alert("Resume preview not found.");
+
+return;
+
+}
+
+html2pdf().set({
+
+margin:5,
+
+filename:"Resume.pdf",
+
+image:{
+type:"jpeg",
+quality:1
+},
+
+html2canvas:{
+scale:2,
+useCORS:true
+},
+
+jsPDF:{
+unit:"mm",
+format:"a4",
+orientation:"portrait"
+}
+
+}).from(element).save();
+
 });
+
+}
