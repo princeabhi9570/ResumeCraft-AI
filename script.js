@@ -350,4 +350,45 @@ if (addExperience) {
 
     });
 
+}// ===============================
+// Dynamic Projects
+// ===============================
+
+const projectTitle = document.getElementById("projectTitle");
+const projectDesc = document.getElementById("projectDesc");
+const addProject = document.getElementById("addProject");
+const previewProjects = document.getElementById("preview-projects");
+
+if(addProject){
+
+addProject.addEventListener("click",function(){
+
+const title = projectTitle.value.trim();
+const desc = projectDesc.value.trim();
+
+if(title==="" || desc==="") return;
+
+const card=document.createElement("div");
+
+card.className="project-card";
+
+card.innerHTML=`
+<h4>${title}</h4>
+<p>${desc}</p>
+<button>❌</button>
+`;
+
+card.querySelector("button").addEventListener("click",function(){
+
+card.remove();
+
+});
+
+previewProjects.appendChild(card);
+
+projectTitle.value="";
+projectDesc.value="";
+
+});
+
 }
