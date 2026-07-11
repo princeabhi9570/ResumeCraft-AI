@@ -256,7 +256,6 @@ if (themeToggle) {
 
 }
 
-}
 
 if(localStorage.getItem("theme")==="true"){
 
@@ -503,5 +502,19 @@ orientation:"portrait"
 }).from(element).save();
 
 });
+
+}console.log("Script Loaded");
+
+const pdfBtn = document.getElementById("downloadResumePDF");
+
+console.log(pdfBtn);
+
+if (pdfBtn) {
+
+    pdfBtn.addEventListener("click", function () {
+
+        alert("Button Working");
+
+    });
 
 }
