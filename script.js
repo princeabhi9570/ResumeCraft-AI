@@ -1,146 +1,56 @@
-/*=========================================
- ResumeCraft Pro v2.0
- JavaScript Part 1
-==========================================*/
+// =====================================
+// ResumeCraft AI v4
+// PART-1
+// =====================================
 
-// ==========================================
-// Resume Data Model
-// ==========================================
+// ---------- Elements ----------
 
-const resumeData = {
-  personal: {
-    fullName: "",
-    jobTitle: "",
-    email: "",
-    phone: "",
-    location: "",
-    website: "",
-    summary: "",
-    image: ""
-  },
+const resumePaper = document.getElementById("resumePaper");
 
-  skills: [],
-
-  education: [],
-
-  experience: [],
-
-  projects: [],
-
-  certificates: [],
-
-  languages: [],
-
-  social: {
-    linkedin: "",
-    github: "",
-    portfolio: ""
-  }
-};
-
-// ==========================================
-// Inputs
-// ==========================================
-
-const fullName = document.getElementById("fullName");
-const jobTitle = document.getElementById("jobTitle");
-const email = document.getElementById("email");
-const phone = document.getElementById("phone");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const phoneInput = document.getElementById("phone");
 const locationInput = document.getElementById("location");
-const website = document.getElementById("website");
-const summary = document.getElementById("summary");
-const profileImage = document.getElementById("profileImage");
+const aboutInput = document.getElementById("about");
 
-// ==========================================
-// Preview Elements
-// ==========================================
+const previewName = document.getElementById("preview-name");
+const previewEmail = document.getElementById("preview-email");
+const previewPhone = document.getElementById("preview-phone");
+const previewLocation = document.getElementById("preview-location");
+const previewAbout = document.getElementById("preview-about");
 
-const previewName = document.getElementById("previewName");
-const previewJobTitle = document.getElementById("previewJobTitle");
-const previewEmail = document.getElementById("previewEmail");
-const previewPhone = document.getElementById("previewPhone");
-const previewLocation = document.getElementById("previewLocation");
-const previewWebsite = document.getElementById("previewWebsite");
-const previewSummary = document.getElementById("previewSummary");
-const previewImage = document.getElementById("previewImage");
+// ---------- Live Preview ----------
 
-// ==========================================
-// Update Resume Object
-// ==========================================
+function livePreview(input, preview, placeholder){
 
-function updatePersonalData(){
+if(!input || !preview) return;
 
-resumeData.personal.fullName=fullName.value;
+input.addEventListener("input",()=>{
 
-resumeData.personal.jobTitle=jobTitle.value;
-
-resumeData.personal.email=email.value;
-
-resumeData.personal.phone=phone.value;
-
-resumeData.personal.location=locationInput.value;
-
-resumeData.personal.website=website.value;
-
-resumeData.personal.summary=summary.value;
-
-updatePreview();
-
-}
-
-// ==========================================
-// Update Live Preview
-// ==========================================
-
-function updatePreview(){
-
-previewName.textContent=
-resumeData.personal.fullName || "Your Name";
-
-previewJobTitle.textContent=
-resumeData.personal.jobTitle || "Your Profession";
-
-previewEmail.textContent=
-resumeData.personal.email || "example@gmail.com";
-
-previewPhone.textContent=
-resumeData.personal.phone || "+91 9876543210";
-
-previewLocation.textContent=
-resumeData.personal.location || "India";
-
-previewWebsite.textContent=
-resumeData.personal.website || "www.portfolio.com";
-
-previewSummary.textContent=
-resumeData.personal.summary ||
-"Your Professional Summary Appears Here.";
-
-}
-
-// ==========================================
-// Live Events
-// ==========================================
-
-[
-fullName,
-jobTitle,
-email,
-phone,
-locationInput,
-website,
-summary
-].forEach(input=>{
-
-input.addEventListener("input",updatePersonalData);
+preview.textContent =
+input.value.trim() || placeholder;
 
 });
 
-// ==========================================
-// Image Upload
-// ==========================================
+}
 
-profileImage.addEventListener("change",function(){
+livePreview(nameInput,previewName,"Your Name");
+
+livePreview(emailInput,previewEmail,"example@email.com");
+
+livePreview(phoneInput,previewPhone,"+91 9876543210");
+
+livePreview(locationInput,previewLocation,"Your Location");
+
+livePreview(aboutInput,previewAbout,"Write something about yourself...");
+
+// ---------- Profile Photo ----------
+
+const photo=document.getElementById("photo");
+
+const previewPhoto=document.getElementById("preview-photo");
+
+photo.addEventListener("change",function(){
 
 const file=this.files[0];
 
@@ -150,39 +60,170 @@ const reader=new FileReader();
 
 reader.onload=function(e){
 
-resumeData.personal.image=e.target.result;
+previewPhoto.src=e.target.result;
 
-previewImage.src=e.target.result;
-
-}
+};
 
 reader.readAsDataURL(file);
 
 });
 
-// ==========================================
-// Generate Resume
-// ==========================================
+// =====================================
+// Education
+// =====================================
 
-const generateBtn=document.getElementById("generateResume");
+const educationInput=document.getElementById("educationInput");
 
-generateBtn.addEventListener("click",()=>{
+const addEducation=document.getElementById("addEducation");
 
-updatePersonalData();
+const educationList=document.getElementById("educationList");
 
-showToast("Resume Generated Successfully!");
+const previewEducation=document.getElementById("preview-education");
+
+addEducation.addEventListener("click",()=>{
+
+const value=educationInput.value.trim();
+
+if(value==="") return;
+
+const li=document.createElement("li");
+
+li.textContent=value;
+
+educationList.appendChild(li);
+
+const previewLi=document.createElement("li");
+
+previewLi.textContent=value;
+
+previewEducation.appendChild(previewLi);
+
+educationInput.value="";
 
 });
 
-// ==========================================
-// Toast
-// ==========================================
+// =====================================
+// Skills
+// =====================================
+
+const skillInput=document.getElementById("skillInput");
+
+const addSkill=document.getElementById("addSkill");
+
+const skillList=document.getElementById("skillList");
+
+const previewSkills=document.getElementById("preview-skills");
+
+addSkill.addEventListener("click",()=>{
+
+const value=skillInput.value.trim();
+
+if(value==="") return;
+
+const li=document.createElement("li");
+
+li.textContent=value;
+
+skillList.appendChild(li);
+
+const previewLi=document.createElement("li");
+
+previewLi.textContent=value;
+
+previewSkills.appendChild(previewLi);
+
+skillInput.value="";
+
+});
+
+// =====================================
+// Experience
+// =====================================
+
+const experienceInput=document.getElementById("experienceInput");
+
+const addExperience=document.getElementById("addExperience");
+
+const experienceList=document.getElementById("experienceList");
+
+const previewExperience=document.getElementById("preview-experience");
+
+addExperience.addEventListener("click",()=>{
+
+const value=experienceInput.value.trim();
+
+if(value==="") return;
+
+const li=document.createElement("li");
+
+li.textContent=value;
+
+experienceList.appendChild(li);
+
+const previewLi=document.createElement("li");
+
+previewLi.textContent=value;
+
+previewExperience.appendChild(previewLi);
+
+experienceInput.value="";
+
+});
+
+// =====================================
+// Projects
+// =====================================
+
+const projectTitle=document.getElementById("projectTitle");
+
+const projectDesc=document.getElementById("projectDesc");
+
+const addProject=document.getElementById("addProject");
+
+const projectList=document.getElementById("projectList");
+
+const previewProjects=document.getElementById("preview-projects");
+
+addProject.addEventListener("click",()=>{
+
+const title=projectTitle.value.trim();
+
+const desc=projectDesc.value.trim();
+
+if(title==="" || desc==="") return;
+
+const li=document.createElement("li");
+
+li.innerHTML=`<strong>${title}</strong><br>${desc}`;
+
+projectList.appendChild(li);
+
+const box=document.createElement("div");
+
+box.innerHTML=`
+<h4>${title}</h4>
+<p>${desc}</p>
+`;
+
+previewProjects.appendChild(box);
+
+projectTitle.value="";
+projectDesc.value="";
+
+});// =====================================
+// ResumeCraft AI v4
+// PART-2
+// Dark Mode • Template • Auto Save
+// Export • Import • Reset
+// =====================================
+
+// ---------- Toast ----------
 
 function showToast(message){
 
 const toast=document.getElementById("toast");
 
-toast.innerText=message;
+toast.textContent=message;
 
 toast.classList.add("show");
 
@@ -190,1262 +231,225 @@ setTimeout(()=>{
 
 toast.classList.remove("show");
 
-},3000);
+},2500);
 
 }
 
-// ==========================================
-// Initial Preview
-// ==========================================
-
-updatePreview();
-
-console.log("ResumeCraft Pro Loaded");/*=========================================
- ResumeCraft Pro v2.0
- JavaScript Part 2
-==========================================*/
-
-// ==========================================
-// Containers
-// ==========================================
-
-const skillsContainer = document.getElementById("skillsContainer");
-const educationContainer = document.getElementById("educationContainer");
-const experienceContainer = document.getElementById("experienceContainer");
-const projectsContainer = document.getElementById("projectsContainer");
-
-// ==========================================
-// Preview Containers
-// ==========================================
-
-const previewSkills = document.getElementById("previewSkills");
-const previewEducation = document.getElementById("previewEducation");
-const previewExperience = document.getElementById("previewExperience");
-const previewProjects = document.getElementById("previewProjects");
-
-// ==========================================
-// Analytics
-// ==========================================
-
-const skillCount = document.getElementById("skillCount");
-const projectCount = document.getElementById("projectCount");
-const educationCount = document.getElementById("educationCount");
-const experienceCount = document.getElementById("experienceCount");
-
-// ==========================================
-// Update Analytics
-// ==========================================
-
-function updateAnalytics(){
-
-skillCount.textContent = resumeData.skills.length;
-
-projectCount.textContent = resumeData.projects.length;
-
-educationCount.textContent = resumeData.education.length;
-
-experienceCount.textContent = resumeData.experience.length;
-
-}
-
-// ==========================================
-// Skills
-// ==========================================
-
-function updateSkills(){
-
-const inputs=document.querySelectorAll(".skill-input");
-
-resumeData.skills=[];
-
-previewSkills.innerHTML="";
-
-inputs.forEach(input=>{
-
-const value=input.value.trim();
-
-if(value!=""){
-
-resumeData.skills.push(value);
-
-const li=document.createElement("li");
-
-li.textContent=value;
-
-previewSkills.appendChild(li);
-
-}
-
-});
-
-updateAnalytics();
-
-}
-
-document.addEventListener("input",function(e){
-
-if(e.target.classList.contains("skill-input")){
-
-updateSkills();
-
-}
-
-});
-
-document.getElementById("addSkill").addEventListener("click",()=>{
-
-const input=document.createElement("input");
-
-input.type="text";
-
-input.placeholder="Skill";
-
-input.className="skill-input";
-
-skillsContainer.appendChild(input);
-
-});
-
-// ==========================================
-// Education
-// ==========================================
-
-function updateEducation(){
-
-resumeData.education=[];
-
-previewEducation.innerHTML="";
-
-document.querySelectorAll(".education-item").forEach(card=>{
-
-const degree=card.querySelector(".degree").value;
-
-const college=card.querySelector(".college").value;
-
-const year=card.querySelector(".eduYear").value;
-
-const desc=card.querySelector(".eduDescription").value;
-
-if(degree!=""){
-
-resumeData.education.push({
-
-degree,
-
-college,
-
-year,
-
-desc
-
-});
-
-const div=document.createElement("div");
-
-div.innerHTML=`
-
-<h4>${degree}</h4>
-
-<p>${college}</p>
-
-<p>${year}</p>
-
-<p>${desc}</p>
-
-`;
-
-previewEducation.appendChild(div);
-
-}
-
-});
-
-updateAnalytics();
-
-}
-
-document.addEventListener("input",(e)=>{
-
-if(
-
-e.target.classList.contains("degree") ||
-
-e.target.classList.contains("college") ||
-
-e.target.classList.contains("eduYear") ||
-
-e.target.classList.contains("eduDescription")
-
-){
-
-updateEducation();
-
-}
-
-});
-
-document.getElementById("addEducation").onclick=()=>{
-
-educationContainer.insertAdjacentHTML("beforeend",`
-
-<div class="education-item">
-
-<input type="text" class="degree" placeholder="Degree">
-
-<input type="text" class="college" placeholder="College">
-
-<input type="text" class="eduYear" placeholder="Year">
-
-<textarea class="eduDescription" placeholder="Description"></textarea>
-
-</div>
-
-`);
-
-};
-
-// ==========================================
-// Experience
-// ==========================================
-
-function updateExperience(){
-
-resumeData.experience=[];
-
-previewExperience.innerHTML="";
-
-document.querySelectorAll(".experience-item").forEach(card=>{
-
-const company=card.querySelector(".company").value;
-
-const position=card.querySelector(".position").value;
-
-const year=card.querySelector(".experienceYear").value;
-
-const desc=card.querySelector(".experienceDescription").value;
-
-if(position!=""){
-
-resumeData.experience.push({
-
-company,
-
-position,
-
-year,
-
-desc
-
-});
-
-const div=document.createElement("div");
-
-div.innerHTML=`
-
-<h4>${position}</h4>
-
-<p>${company}</p>
-
-<p>${year}</p>
-
-<p>${desc}</p>
-
-`;
-
-previewExperience.appendChild(div);
-
-}
-
-});
-
-updateAnalytics();
-
-}
-
-document.addEventListener("input",(e)=>{
-
-if(
-
-e.target.classList.contains("company") ||
-
-e.target.classList.contains("position") ||
-
-e.target.classList.contains("experienceYear") ||
-
-e.target.classList.contains("experienceDescription")
-
-){
-
-updateExperience();
-
-}
-
-});
-
-document.getElementById("addExperience").onclick=()=>{
-
-experienceContainer.insertAdjacentHTML("beforeend",`
-
-<div class="experience-item">
-
-<input class="company" placeholder="Company">
-
-<input class="position" placeholder="Position">
-
-<input class="experienceYear" placeholder="Duration">
-
-<textarea class="experienceDescription" placeholder="Description"></textarea>
-
-</div>
-
-`);
-
-};
-
-// ==========================================
-// Projects
-// ==========================================
-
-function updateProjects(){
-
-resumeData.projects=[];
-
-previewProjects.innerHTML="";
-
-document.querySelectorAll(".project-item").forEach(card=>{
-
-const name=card.querySelector(".projectName").value;
-
-const tech=card.querySelector(".projectTech").value;
-
-const desc=card.querySelector(".projectDescription").value;
-
-if(name!=""){
-
-resumeData.projects.push({
-
-name,
-
-tech,
-
-desc
-
-});
-
-const div=document.createElement("div");
-
-div.innerHTML=`
-
-<h4>${name}</h4>
-
-<p>${tech}</p>
-
-<p>${desc}</p>
-
-`;
-
-previewProjects.appendChild(div);
-
-}
-
-});
-
-updateAnalytics();
-
-}
-
-document.addEventListener("input",(e)=>{
-
-if(
-
-e.target.classList.contains("projectName") ||
-
-e.target.classList.contains("projectTech") ||
-
-e.target.classList.contains("projectDescription")
-
-){
-
-updateProjects();
-
-}
-
-});
-
-document.getElementById("addProject").onclick=()=>{
-
-projectsContainer.insertAdjacentHTML("beforeend",`
-
-<div class="project-item">
-
-<input class="projectName" placeholder="Project Name">
-
-<input class="projectTech" placeholder="Technology">
-
-<textarea class="projectDescription" placeholder="Description"></textarea>
-
-</div>
-
-`);
-
-};
-
-// ==========================================
-// Initialize
-// ==========================================
-
-updateSkills();
-
-updateEducation();
-
-updateExperience();
-
-updateProjects();
-
-updateAnalytics();
-
-console.log("Dynamic Resume Builder Loaded");/*=========================================
- ResumeCraft Pro v2.0
- JavaScript Part 3
-==========================================*/
-
-// ==========================================
-// Local Storage
-// ==========================================
-
-const STORAGE_KEY = "resumeCraftData";
-
-function saveResume() {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(resumeData)
-    );
-
-    showToast("Resume Saved Successfully");
-
-}
-
-function loadResume() {
-
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (!saved) return;
-
-    const data = JSON.parse(saved);
-
-    Object.assign(resumeData, data);
-
-    // Personal
-
-    fullName.value = data.personal.fullName || "";
-    jobTitle.value = data.personal.jobTitle || "";
-    email.value = data.personal.email || "";
-    phone.value = data.personal.phone || "";
-    locationInput.value = data.personal.location || "";
-    website.value = data.personal.website || "";
-    summary.value = data.personal.summary || "";
-
-    updatePersonalData();
-
-    // Skills
-
-    skillsContainer.innerHTML = "";
-
-    (data.skills || []).forEach(skill => {
-
-        const input = document.createElement("input");
-
-        input.type = "text";
-
-        input.className = "skill-input";
-
-        input.value = skill;
-
-        input.placeholder = "Skill";
-
-        skillsContainer.appendChild(input);
-
-    });
-
-    if ((data.skills || []).length === 0) {
-
-        skillsContainer.innerHTML =
-        `<input type="text"
-        class="skill-input"
-        placeholder="Skill">`;
-
-    }
-
-    updateSkills();
-
-}
-
-// ==========================================
-// Auto Save
-// ==========================================
-
-document.addEventListener("input", () => {
-
-    saveResume();
-
-});
-
-// ==========================================
-// Save Button
-// ==========================================
-
-const saveBtn = document.getElementById("saveResume");
-
-saveBtn.addEventListener("click", () => {
-
-    saveResume();
-
-});
-
-// ==========================================
-// Export JSON
-// ==========================================
-
-const exportBtn =
-document.getElementById("exportResume");
-
-exportBtn.addEventListener("click", () => {
-
-    const blob = new Blob(
-
-        [JSON.stringify(resumeData, null, 2)],
-
-        {
-
-            type: "application/json"
-
-        }
-
-    );
-
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-
-    link.download = "ResumeCraft.json";
-
-    link.click();
-
-    showToast("Resume Exported");
-
-});
-
-// ==========================================
-// Import JSON
-// ==========================================
-
-const importBtn =
-document.getElementById("importResume");
-
-const importInput =
-document.createElement("input");
-
-importInput.type = "file";
-
-importInput.accept = ".json";
-
-importBtn.onclick = () => {
-
-    importInput.click();
-
-};
-
-importInput.onchange = function () {
-
-    const file = this.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-
-        const json = JSON.parse(e.target.result);
-
-        localStorage.setItem(
-
-            STORAGE_KEY,
-
-            JSON.stringify(json)
-
-        );
-
-        location.reload();
-
-    };
-
-    reader.readAsText(file);
-
-};
-
-// ==========================================
+// =====================================
 // Dark Mode
-// ==========================================
+// =====================================
 
-const themeBtn =
-document.getElementById("themeToggle");
+const themeToggle=document.getElementById("themeToggle");
 
-function loadTheme() {
+themeToggle.addEventListener("click",()=>{
 
-    const theme =
+document.body.classList.toggle("dark");
 
-    localStorage.getItem("theme");
-
-    if (theme === "light") {
-
-        document.body.classList.add("light");
-
-    }
-
-}
-
-themeBtn.onclick = () => {
-
-    document.body.classList.toggle("light");
-
-    if (
-
-        document.body.classList.contains("light")
-
-    ) {
-
-        localStorage.setItem(
-
-            "theme",
-
-            "light"
-
-        );
-
-    } else {
-
-        localStorage.setItem(
-
-            "theme",
-
-            "dark"
-
-        );
-
-    }
-
-};
-
-// ==========================================
-// Scroll Top
-// ==========================================
-
-const scrollTopBtn =
-document.getElementById("scrollTop");
-
-window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 300) {
-
-        scrollTopBtn.style.display = "block";
-
-    }
-
-    else {
-
-        scrollTopBtn.style.display = "none";
-
-    }
-
-});
-
-scrollTopBtn.onclick = () => {
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
-};
-
-// ==========================================
-// Loader
-// ==========================================
-
-const loader =
-document.getElementById("loader");
-
-function showLoader() {
-
-    loader.classList.add("active");
-
-}
-
-function hideLoader() {
-
-    loader.classList.remove("active");
-
-}
-
-// ==========================================
-// Generate Resume
-// ==========================================
-
-generateBtn.onclick = () => {
-
-    showLoader();
-
-    setTimeout(() => {
-
-        hideLoader();
-
-        saveResume();
-
-        showToast(
-
-            "Resume Generated Successfully"
-
-        );
-
-    }, 1200);
-
-};
-
-// ==========================================
-// Load Saved Data
-// ==========================================
-
-window.addEventListener("load", () => {
-
-    loadTheme();
-
-    loadResume();
-
-});
-
-console.log("Storage System Loaded");/*=========================================
- ResumeCraft Pro v2.0
- JavaScript Part 4
- ATS + Print + PDF + Validation
-==========================================*/
-
-// ==========================================
-// ATS Score
-// ==========================================
-
-const atsScore = document.getElementById("atsScore");
-const checkATSBtn = document.getElementById("checkATS");
-
-function calculateATS() {
-
-    let score = 0;
-
-    if (resumeData.personal.fullName.trim() !== "") score += 10;
-    if (resumeData.personal.jobTitle.trim() !== "") score += 10;
-    if (resumeData.personal.email.trim() !== "") score += 10;
-    if (resumeData.personal.phone.trim() !== "") score += 10;
-    if (resumeData.personal.summary.trim().length > 50) score += 15;
-
-    if (resumeData.skills.length >= 5) score += 15;
-
-    if (resumeData.education.length >= 1) score += 10;
-
-    if (resumeData.experience.length >= 1) score += 10;
-
-    if (resumeData.projects.length >= 1) score += 10;
-
-    score = Math.min(score, 100);
-
-    atsScore.textContent = score + "%";
-
-    return score;
-}
-
-checkATSBtn.addEventListener("click", () => {
-
-    const score = calculateATS();
-
-    if (score >= 90) {
-
-        showToast("Excellent ATS Resume ✅");
-
-    } else if (score >= 70) {
-
-        showToast("Good Resume 👍");
-
-    } else {
-
-        showToast("Improve Your Resume ⚠");
-
-    }
-
-});
-
-// ==========================================
-// Resume Validation
-// ==========================================
-
-function validateResume() {
-
-    let errors = [];
-
-    if (!resumeData.personal.fullName)
-        errors.push("Enter your name.");
-
-    if (!resumeData.personal.email)
-        errors.push("Enter email.");
-
-    if (!resumeData.personal.phone)
-        errors.push("Enter phone.");
-
-    if (resumeData.skills.length === 0)
-        errors.push("Add at least one skill.");
-
-    if (resumeData.education.length === 0)
-        errors.push("Add education.");
-
-    return errors;
-}
-
-// ==========================================
-// Print Resume
-// ==========================================
-
-const printBtn = document.getElementById("printResumeBtn");
-
-printBtn.addEventListener("click", () => {
-
-    const errors = validateResume();
-
-    if (errors.length > 0) {
-
-        alert(errors.join("\n"));
-
-        return;
-
-    }
-
-    window.print();
-
-});
-
-// ==========================================
-// PDF Download
-// ==========================================
-
-const pdfBtn = document.getElementById("downloadResumePDF");
-
-pdfBtn.addEventListener("click", () => {
-
-    const resume = document.getElementById("resumePaper");
-
-    if (typeof html2pdf === "undefined") {
-
-        alert("html2pdf library missing.");
-
-        return;
-
-    }
-
-    html2pdf()
-
-        .from(resume)
-
-        .set({
-
-            margin: 0.3,
-
-            filename: "ResumeCraft.pdf",
-
-            image: {
-
-                type: "jpeg",
-
-                quality: 1
-
-            },
-
-            html2canvas: {
-
-                scale: 2
-
-            },
-
-            jsPDF: {
-
-                unit: "in",
-
-                format: "a4",
-
-                orientation: "portrait"
-
-            }
-
-        })
-
-        .save();
-
-});
-
-// ==========================================
-// Resume Statistics
-// ==========================================
-
-function refreshStatistics() {
-
-    skillCount.textContent = resumeData.skills.length;
-
-    projectCount.textContent = resumeData.projects.length;
-
-    educationCount.textContent = resumeData.education.length;
-
-    experienceCount.textContent = resumeData.experience.length;
-
-}
-
-setInterval(refreshStatistics, 1000);
-
-// ==========================================
-// Word Counter
-// ==========================================
-
-function countWords(text) {
-
-    return text
-        .trim()
-        .split(/\s+/)
-        .filter(word => word !== "")
-        .length;
-
-}
-
-summary.addEventListener("input", () => {
-
-    const words = countWords(summary.value);
-
-    console.log("Summary Words:", words);
-
-});
-
-// ==========================================
-// Auto ATS Update
-// ==========================================
-
-setInterval(() => {
-
-    calculateATS();
-
-}, 2000);
-
-// ==========================================
-// Resume Completion
-// ==========================================
-
-function getCompletionPercentage() {
-
-    let total = 8;
-
-    let completed = 0;
-
-    if (resumeData.personal.fullName) completed++;
-    if (resumeData.personal.jobTitle) completed++;
-    if (resumeData.personal.email) completed++;
-    if (resumeData.personal.phone) completed++;
-    if (resumeData.personal.summary) completed++;
-    if (resumeData.skills.length) completed++;
-    if (resumeData.education.length) completed++;
-    if (resumeData.projects.length) completed++;
-
-    return Math.round((completed / total) * 100);
-
-}
-
-setInterval(() => {
-
-    console.log(
-        "Resume Completion:",
-        getCompletionPercentage() + "%"
-    );
-
-}, 3000);
-
-console.log("ATS Module Loaded");/*=========================================
- ResumeCraft Pro v2.0
- JavaScript Part 5 (FINAL)
- AI + Final Features
-==========================================*/
-
-// ==========================================
-// Gemini API
-// ==========================================
-
-const GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
-
-const AI_URL =
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-// ==========================================
-// Generate AI Summary
-// ==========================================
-
-async function generateAISummary(){
-
-const prompt=document.getElementById("aiPrompt").value;
-
-if(prompt==""){
-
-showToast("Enter Prompt");
-
-return;
-
-}
-
-showLoader();
-
-try{
-
-const response=await fetch(AI_URL,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-contents:[{
-
-parts:[{
-
-text:
-`Write a professional resume summary.
-
-User:
-
-${prompt}`
-
-}]
-
-}]
-
-})
-
-});
-
-const data=await response.json();
-
-hideLoader();
-
-const result=
-
-data.candidates[0].content.parts[0].text;
-
-summary.value=result;
-
-updatePersonalData();
-
-showToast("AI Summary Generated");
-
-showSuccessPopup();
-
-}
-
-catch(e){
-
-hideLoader();
-
-console.error(e);
-
-showToast("AI Error");
-
-}
-
-}
-
-// ==========================================
-// AI Button
-// ==========================================
-
-const generateAIBtn=
-
-document.getElementById("generateAI");
-
-if(generateAIBtn){
-
-generateAIBtn.onclick=generateAISummary;
-
-}
-
-// ==========================================
-// Success Popup
-// ==========================================
-
-const popup=
-
-document.getElementById("successPopup");
-
-const closePopup=
-
-document.getElementById("closePopup");
-
-function showSuccessPopup(){
-
-popup.classList.add("active");
-
-}
-
-if(closePopup){
-
-closePopup.onclick=()=>{
-
-popup.classList.remove("active");
-
-};
-
-}
-
-// ==========================================
-// AI Modal
-// ==========================================
-
-const aiModal=
-
-document.getElementById("aiModal");
-
-const openAI=
-
-document.getElementById("openAI");
-
-const closeAI=
-
-document.querySelector(".close-modal");
-
-if(openAI){
-
-openAI.onclick=()=>{
-
-aiModal.classList.add("active");
-
-};
-
-}
-
-if(closeAI){
-
-closeAI.onclick=()=>{
-
-aiModal.classList.remove("active");
-
-};
-
-}
-
-window.onclick=function(e){
-
-if(e.target==aiModal){
-
-aiModal.classList.remove("active");
-
-}
-
-};
-
-// ==========================================
-// Resume Completion Progress
-// ==========================================
-
-function updateCompletionBar(){
-
-const progress=
-
-getCompletionPercentage();
-
-console.log(
-
-"Resume Completion:",
-
-progress+"%"
-
+localStorage.setItem(
+"theme",
+document.body.classList.contains("dark")
 );
 
+});
+
+if(localStorage.getItem("theme")==="true"){
+
+document.body.classList.add("dark");
+
 }
 
-// ==========================================
-// Auto Save Every 30 Seconds
-// ==========================================
+// =====================================
+// Resume Templates
+// =====================================
 
-setInterval(()=>{
+const templateItems=document.querySelectorAll(".template-item");
 
-saveResume();
+templateItems.forEach(item=>{
 
-},30000);
+item.addEventListener("click",()=>{
 
-// ==========================================
-// Keyboard Shortcut
-// Ctrl + S
-// ==========================================
+templateItems.forEach(i=>i.classList.remove("active"));
 
-document.addEventListener("keydown",(e)=>{
+item.classList.add("active");
 
-if(e.ctrlKey && e.key==="s"){
+resumePaper.className="resume-paper";
 
-e.preventDefault();
+resumePaper.classList.add(item.dataset.template);
 
-saveResume();
+showToast(item.dataset.template+" Template Selected");
+
+});
+
+});
+
+// =====================================
+// Save Resume
+// =====================================
+
+const saveBtn=document.getElementById("saveResume");
+
+saveBtn.addEventListener("click",()=>{
+
+const data={
+
+name:nameInput.value,
+
+email:emailInput.value,
+
+phone:phoneInput.value,
+
+location:locationInput.value,
+
+about:aboutInput.value,
+
+photo:previewPhoto.src,
+
+education:previewEducation.innerHTML,
+
+skills:previewSkills.innerHTML,
+
+experience:previewExperience.innerHTML,
+
+projects:previewProjects.innerHTML
+
+};
+
+localStorage.setItem(
+
+"ResumeCraftData",
+
+JSON.stringify(data)
+
+);
 
 showToast("Resume Saved");
 
-}
-
 });
 
-// ==========================================
-// Welcome Message
-// ==========================================
+// =====================================
+// Auto Load
+// =====================================
 
 window.addEventListener("load",()=>{
 
-setTimeout(()=>{
+const saved=
 
-showToast(
+JSON.parse(localStorage.getItem("ResumeCraftData"));
 
-"Welcome to ResumeCraft Pro"
+if(!saved) return;
 
-);
+nameInput.value=saved.name;
 
-},1200);
+emailInput.value=saved.email;
+
+phoneInput.value=saved.phone;
+
+locationInput.value=saved.location;
+
+aboutInput.value=saved.about;
+
+previewName.textContent=saved.name;
+
+previewEmail.textContent=saved.email;
+
+previewPhone.textContent=saved.phone;
+
+previewLocation.textContent=saved.location;
+
+previewAbout.textContent=saved.about;
+
+previewPhoto.src=saved.photo;
+
+previewEducation.innerHTML=saved.education;
+
+previewSkills.innerHTML=saved.skills;
+
+previewExperience.innerHTML=saved.experience;
+
+previewProjects.innerHTML=saved.projects;
 
 });
 
-// ==========================================
-// Footer Year
-// ==========================================
+// =====================================
+// Export Resume
+// =====================================
 
-const footerYear=
+const exportBtn=document.getElementById("exportResume");
 
-document.getElementById("year");
+exportBtn.addEventListener("click",()=>{
 
-if(footerYear){
+const data=localStorage.getItem("ResumeCraftData");
 
-footerYear.innerText=
+const blob=new Blob([data],{
 
-new Date().getFullYear();
+type:"application/json"
 
-}
+});
 
-// ==========================================
-// Auto Update
-// ==========================================
+const link=document.createElement("a");
 
-setInterval(()=>{
+link.href=URL.createObjectURL(blob);
 
-updateCompletionBar();
+link.download="ResumeCraft.json";
 
-},5000);
+link.click();
 
-console.log("ResumeCraft Pro v2.0 Loaded Successfully");
+showToast("Resume Exported");
+
+});
+
+// =====================================
+// Import Resume
+// =====================================
+
+const importBtn=document.getElementById("importResume");
+
+const importFile=document.getElementById("importResumeFile");
+
+importBtn.addEventListener("click",()=>{
+
+importFile.click();
+
+});
+
+importFile.addEventListener("change",e=>{
+
+const file=e.target.files[0];
+
+if(!file) return;
+
+const reader=new FileReader();
+
+reader.onload=function(){
+
+localStorage.setItem(
+
+"ResumeCraftData",
+
+reader.result
+
+);
+
+location.reload();
+
+};
+
+reader.readAsText(file);
+
+});
+
+// =====================================
+// Reset Resume
+// =====================================
+
+const resetBtn=document.getElementById("resetResume");
+
+resetBtn.addEventListener("click",()=>{
+
+if(!confirm("Reset Resume?")) return;
+
+localStorage.removeItem("ResumeCraftData");
+
+location.reload();
+
+});
