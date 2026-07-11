@@ -621,4 +621,32 @@ align-items:center;
 
 margin:10px 0;
 
+}#resetBtn{
+
+margin-top:10px;
+
+width:100%;
+
+padding:12px;
+
+background:#ef4444;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-size:16px;
+
+font-weight:600;
+
+}
+
+#resetBtn:hover{
+
+background:#dc2626;
+
 }

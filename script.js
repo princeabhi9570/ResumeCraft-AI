@@ -219,4 +219,60 @@ if (addExperience) {
 
     });
 
+}// ===============================
+// AUTO SAVE
+// ===============================
+
+const fields = [
+"name",
+"email",
+"phone",
+"location",
+"about"
+];
+
+fields.forEach(function(id){
+
+const input=document.getElementById(id);
+
+if(!input) return;
+
+const saved=localStorage.getItem(id);
+
+if(saved){
+
+input.value=saved;
+
+const preview=document.getElementById("preview-"+id);
+
+if(preview){
+
+preview.textContent=saved;
+
+}
+
+}
+
+input.addEventListener("input",function(){
+
+localStorage.setItem(id,input.value);
+
+});
+
+});// ===============================
+// RESET
+// ===============================
+
+const resetBtn=document.getElementById("resetBtn");
+
+if(resetBtn){
+
+resetBtn.addEventListener("click",function(){
+
+localStorage.clear();
+
+location.reload();
+
+});
+
 }
