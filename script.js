@@ -25,10 +25,6 @@ const fieldMap = [
   ['email', 'previewEmail', 'example@email.com'],
   ['phone', 'previewPhone', '+91 9876543210'],
   ['address', 'previewAddress', 'Your Address'],
-  ['linkedin', 'previewLinkedin', 'linkedin.com/in/username'],
-  ['github', 'previewGithub', 'github.com/username'],
-  ['portfolio', 'previewPortfolio', 'portfolio.com'],
-  ['website', 'previewWebsite', 'yourwebsite.com'],
   ['summary', 'previewSummary', 'Write a sharp, results-focused summary that highlights your strengths, achievements, and domain expertise.']
 ];
 
@@ -320,10 +316,9 @@ function bindActions() {
     aiOutput.textContent = `Suggested keywords: ${keywords.join(', ')}.`;
   });
 
-  document.getElementById('downloadResumePDF').addEventListener('click', () => {
-    const opt = { margin: 0.2, filename: 'resume.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
-    html2pdf().set(opt).from(resumePaper).save();
-    showToast('PDF download started');
+  document.getElementById('downloadResumePDF').addEventListener('click', async () => {
+    showToast('Generating PDF...');
+    await exportResumeToPDF();
   });
 
   document.getElementById('printResume').addEventListener('click', () => {
@@ -383,6 +378,62 @@ function addListItem(containerId, previewId, placeholder) {
 function setTemplate(template) {
   resumePaper.className = `resume-paper ${template}`;
   templateItems.forEach(item => item.classList.toggle('active', item.dataset.template === template));
+}
+
+async function exportResumeToPDF() {
+  if (!window.html2canvas || !window.jspdf?.jsPDF) {
+    showToast('PDF library failed to load');
+    return;
+  }
+
+  const source = resumePaper;
+  const images = Array.from(source.querySelectorAll('img'));
+
+  await Promise.all(images.map(img => new Promise(resolve => {
+    if (img.complete && img.naturalWidth) {
+      resolve();
+      return;
+    }
+    img.onload = resolve;
+    img.onerror = resolve;
+  })));
+
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
+
+  const canvas = await window.html2canvas(source, {
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    backgroundColor: '#ffffff',
+    scrollX: 0,
+    scrollY: 0
+  });
+
+  const imgData = canvas.toDataURL('image/png');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+  const margin = 8;
+  const contentWidth = pdfWidth - margin * 2;
+  const contentHeight = (canvas.height * contentWidth) / canvas.width;
+  let heightLeft = contentHeight;
+  let position = margin;
+
+  pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
+  heightLeft -= pdfHeight - margin * 2;
+
+  while (heightLeft > 0) {
+    pdf.addPage();
+    position = margin - ((pdfHeight - margin * 2) * Math.ceil(Math.abs(heightLeft) / (pdfHeight - margin * 2)));
+    pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
+    heightLeft -= pdfHeight - margin * 2;
+  }
+
+  pdf.save('resume.pdf');
+  showToast('PDF downloaded');
 }
 
 function getSuggestedKeywords() {
