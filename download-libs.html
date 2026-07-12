@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Libraries</title>
+</head>
+<body>
+    <h1>Downloading libraries...</h1>
+    <p>This page will download the required libraries to your local folder.</p>
+    <div id="status"></div>
+    
+    <script>
+        async function downloadFile(url, filename) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                document.getElementById('status').innerHTML += `<p>✓ Downloaded ${filename}</p>`;
+            } catch (error) {
+                document.getElementById('status').innerHTML += `<p>✗ Failed to download ${filename}: ${error.message}</p>`;
+            }
+        }
+        
+        async function downloadAll() {
+            await downloadFile(
+                'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+                'html2canvas.min.js'
+            );
+            await downloadFile(
+                'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                'jspdf.umd.min.js'
+            );
+            document.getElementById('status').innerHTML += '<p><strong>Download complete! Refresh your resume page.</strong></p>';
+        }
+        
+        downloadAll();
+    </script>
+</body>
+</html>
