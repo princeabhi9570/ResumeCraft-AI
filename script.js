@@ -18,6 +18,17 @@ const lineSpacing = document.getElementById('lineSpacing');
 const lineSpacingValue = document.getElementById('lineSpacingValue');
 const swatches = document.querySelectorAll('.swatch');
 const templateItems = document.querySelectorAll('.template-item');
+const sectionHeadingMap = {
+  educationSection: 'Education',
+  skillsSection: 'Skills',
+  experienceSection: 'Experience',
+  projectsSection: 'Projects',
+  certificationsSection: 'Certifications',
+  languagesSection: 'Languages',
+  achievementsSection: 'Achievements',
+  interestsSection: 'Interests',
+  referencesSection: 'References'
+};
 
 const fieldMap = [
   ['name', 'previewName', 'Your Name'],
@@ -48,6 +59,7 @@ window.addEventListener('load', () => {
   bindActions();
   loadData();
   updateResumeDisplay();
+  ensureSectionHeadings();
   syncResumePreview();
   calculateATS();
   applyTheme();
@@ -136,8 +148,20 @@ function loadData() {
   }
 
   updateResumeDisplay();
+  ensureSectionHeadings();
   syncResumePreview();
   calculateATS();
+}
+
+function ensureSectionHeadings() {
+  document.querySelectorAll('.resume-section h2').forEach(heading => {
+    const sectionId = heading.closest('.resume-section')?.id;
+    const lockedTitle = sectionHeadingMap[sectionId];
+    if (lockedTitle) {
+      heading.textContent = lockedTitle;
+      heading.setAttribute('data-locked-title', lockedTitle);
+    }
+  });
 }
 
 function syncResumePreview() {
@@ -349,8 +373,7 @@ function bindActions() {
   });
 
   document.getElementById('printResume').addEventListener('click', () => {
-    document.body.classList.add('printing');
-    setTimeout(() => window.print(), 100);
+    printResume();
   });
 
   document.getElementById('resetResume').addEventListener('click', () => {
@@ -408,14 +431,50 @@ function setTemplate(template) {
   templateItems.forEach(item => item.classList.toggle('active', item.dataset.template === template));
 }
 
+function waitForRender() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTimeout(resolve, 150);
+      });
+    });
+  });
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  try {
+    link.click();
+  } catch (error) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+function buildFallbackPdf() {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const text = resumePaper.innerText.replace(/\s+/g, ' ').trim();
+  const lines = pdf.splitTextToSize(text, 180);
+  pdf.text(lines, 14, 20);
+  return pdf;
+}
+
 async function exportResumeToPDF() {
   if (!window.html2canvas || !window.jspdf?.jsPDF) {
     showToast('PDF library failed to load');
-    return;
+    return null;
   }
 
+  ensureSectionHeadings();
   syncResumePreview();
-  await new Promise(resolve => setTimeout(resolve, 250));
+  await waitForRender();
 
   const source = resumePaper;
   const images = Array.from(source.querySelectorAll('img'));
@@ -466,12 +525,44 @@ async function exportResumeToPDF() {
       heightLeft -= pdfHeight - margin * 2;
     }
 
-    pdf.save('resume.pdf');
+    const blob = pdf.output('blob');
+    downloadBlob(blob, 'resume.pdf');
     showToast('PDF downloaded');
+    return blob;
   } catch (error) {
     console.error('PDF generation failed:', error);
-    showToast('PDF generation failed. Please try again.');
+    const fallbackPdf = buildFallbackPdf();
+    const fallbackBlob = fallbackPdf.output('blob');
+    downloadBlob(fallbackBlob, 'resume.pdf');
+    showToast('PDF downloaded');
+    return fallbackBlob;
   }
+}
+
+function printResume() {
+  ensureSectionHeadings();
+  syncResumePreview();
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  document.body.appendChild(iframe);
+
+  iframe.onload = () => {
+    const printDocument = iframe.contentWindow.document;
+    const printClassName = resumePaper.className || 'resume-paper modern';
+    printDocument.open();
+    printDocument.write(`<!DOCTYPE html><html><head><title>Resume</title><link rel="stylesheet" href="style.css" /><style>@page{size:A4;margin:8mm;} body{margin:0;background:#fff;} .resume-panel{position:static;} .resume-paper{box-shadow:none;border-radius:0;min-height:auto;}</style></head><body><div class="resume-panel"><div class="${printClassName}">${resumePaper.innerHTML}</div></div></body></html>`);
+    printDocument.close();
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
 }
 
 function getSuggestedKeywords() {
@@ -536,3 +627,6 @@ function applyTheme() {
     themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
   }
 }
+
+window.exportResumeToPDF = exportResumeToPDF;
+window.printResume = printResume;
