@@ -48,6 +48,7 @@ window.addEventListener('load', () => {
   bindActions();
   loadData();
   updateResumeDisplay();
+  syncResumePreview();
   calculateATS();
   applyTheme();
 });
@@ -95,7 +96,10 @@ function saveData() {
 
 function loadData() {
   const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-  if (!saved) return;
+  if (!saved) {
+    syncResumePreview();
+    return;
+  }
 
   fieldMap.forEach(([id]) => {
     const input = document.getElementById(id);
@@ -132,7 +136,35 @@ function loadData() {
   }
 
   updateResumeDisplay();
+  syncResumePreview();
   calculateATS();
+}
+
+function syncResumePreview() {
+  const name = document.getElementById('name')?.value.trim() || 'Your Name';
+  const jobTitle = document.getElementById('jobTitle')?.value.trim() || 'Professional Title';
+  const email = document.getElementById('email')?.value.trim() || 'example@email.com';
+  const phone = document.getElementById('phone')?.value.trim() || '+91 9876543210';
+  const address = document.getElementById('address')?.value.trim() || 'Your Address';
+  const summary = document.getElementById('summary')?.value.trim() || 'Write a sharp, results-focused summary that highlights your strengths, achievements, and domain expertise.';
+
+  const previewName = document.getElementById('previewName');
+  const previewJobTitle = document.getElementById('previewJobTitle');
+  const previewEmail = document.getElementById('previewEmail');
+  const previewPhone = document.getElementById('previewPhone');
+  const previewAddress = document.getElementById('previewAddress');
+  const previewSummary = document.getElementById('previewSummary');
+
+  if (previewName) previewName.textContent = name;
+  if (previewJobTitle) previewJobTitle.textContent = jobTitle;
+  if (previewEmail) previewEmail.textContent = email;
+  if (previewPhone) previewPhone.textContent = phone;
+  if (previewAddress) previewAddress.textContent = address;
+  if (previewSummary) previewSummary.textContent = summary;
+
+  if (summaryCount) {
+    summaryCount.textContent = (document.getElementById('summary')?.value || '').length;
+  }
 }
 
 function bindInputs() {
@@ -141,12 +173,7 @@ function bindInputs() {
     const preview = document.getElementById(previewId);
     if (!input || !preview) return;
     input.addEventListener('input', () => {
-      if (id === 'summary') {
-        preview.textContent = input.value.trim() || fallback;
-        summaryCount.textContent = input.value.length;
-      } else {
-        preview.textContent = input.value.trim() || fallback;
-      }
+      syncResumePreview();
       saveData();
       calculateATS();
       updateResumeDisplay();
@@ -322,7 +349,8 @@ function bindActions() {
   });
 
   document.getElementById('printResume').addEventListener('click', () => {
-    window.print();
+    document.body.classList.add('printing');
+    setTimeout(() => window.print(), 100);
   });
 
   document.getElementById('resetResume').addEventListener('click', () => {
@@ -386,6 +414,9 @@ async function exportResumeToPDF() {
     return;
   }
 
+  syncResumePreview();
+  await new Promise(resolve => setTimeout(resolve, 250));
+
   const source = resumePaper;
   const images = Array.from(source.querySelectorAll('img'));
 
@@ -402,38 +433,45 @@ async function exportResumeToPDF() {
     await document.fonts.ready;
   }
 
-  const canvas = await window.html2canvas(source, {
-    scale: 2,
-    useCORS: true,
-    logging: false,
-    backgroundColor: '#ffffff',
-    scrollX: 0,
-    scrollY: 0
-  });
+  try {
+    const canvas = await window.html2canvas(source, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: source.scrollWidth,
+      windowHeight: source.scrollHeight
+    });
 
-  const imgData = canvas.toDataURL('image/png');
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
-  const margin = 8;
-  const contentWidth = pdfWidth - margin * 2;
-  const contentHeight = (canvas.height * contentWidth) / canvas.width;
-  let heightLeft = contentHeight;
-  let position = margin;
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const margin = 8;
+    const contentWidth = pdfWidth - margin * 2;
+    const contentHeight = (canvas.height * contentWidth) / canvas.width;
+    let heightLeft = contentHeight;
+    let position = margin;
 
-  pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
-  heightLeft -= pdfHeight - margin * 2;
-
-  while (heightLeft > 0) {
-    pdf.addPage();
-    position = margin - ((pdfHeight - margin * 2) * Math.ceil(Math.abs(heightLeft) / (pdfHeight - margin * 2)));
     pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
     heightLeft -= pdfHeight - margin * 2;
-  }
 
-  pdf.save('resume.pdf');
-  showToast('PDF downloaded');
+    while (heightLeft > 0) {
+      pdf.addPage();
+      position = margin - (pdfHeight - margin * 2) * Math.ceil(Math.abs(heightLeft) / (pdfHeight - margin * 2));
+      pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
+      heightLeft -= pdfHeight - margin * 2;
+    }
+
+    pdf.save('resume.pdf');
+    showToast('PDF downloaded');
+  } catch (error) {
+    console.error('PDF generation failed:', error);
+    showToast('PDF generation failed. Please try again.');
+  }
 }
 
 function getSuggestedKeywords() {
