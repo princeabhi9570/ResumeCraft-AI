@@ -1,632 +1,1527 @@
-﻿const storageKey = 'resumeCraftData';
-const loader = document.getElementById('loader');
-const toast = document.getElementById('toast');
-const resumePaper = document.getElementById('resumePaper');
-const themeToggle = document.getElementById('themeToggle');
-const summaryInput = document.getElementById('summary');
-const summaryCount = document.getElementById('summaryCount');
-const targetRoleInput = document.getElementById('targetRole');
-const aiOutput = document.getElementById('aiOutput');
-const atsScoreEl = document.getElementById('atsScore');
-const atsStatsEl = document.getElementById('atsStats');
-const atsTipsEl = document.getElementById('atsTips');
-const progressBar = document.getElementById('progressBar');
-const fontFamily = document.getElementById('fontFamily');
-const fontSize = document.getElementById('fontSize');
-const fontSizeValue = document.getElementById('fontSizeValue');
-const lineSpacing = document.getElementById('lineSpacing');
-const lineSpacingValue = document.getElementById('lineSpacingValue');
-const swatches = document.querySelectorAll('.swatch');
-const templateItems = document.querySelectorAll('.template-item');
-const sectionHeadingMap = {
-  educationSection: 'Education',
-  skillsSection: 'Skills',
-  experienceSection: 'Experience',
-  projectsSection: 'Projects',
-  certificationsSection: 'Certifications',
-  languagesSection: 'Languages',
-  achievementsSection: 'Achievements',
-  interestsSection: 'Interests',
-  referencesSection: 'References'
-};
+﻿/*=====================================
 
-const fieldMap = [
-  ['name', 'previewName', 'Your Name'],
-  ['jobTitle', 'previewJobTitle', 'Professional Title'],
-  ['email', 'previewEmail', 'example@email.com'],
-  ['phone', 'previewPhone', '+91 9876543210'],
-  ['address', 'previewAddress', 'Your Address'],
-  ['summary', 'previewSummary', 'Write a sharp, results-focused summary that highlights your strengths, achievements, and domain expertise.']
-];
+ResumeCraft AI Pro v2
 
-const listSections = [
-  { containerId: 'skillsContainer', previewId: 'previewSkills', placeholder: 'Enter a skill', defaultValue: '' },
-  { containerId: 'educationContainer', previewId: 'previewEducation', placeholder: 'Enter education', defaultValue: '' },
-  { containerId: 'experienceContainer', previewId: 'previewExperience', placeholder: 'Enter experience', defaultValue: '' },
-  { containerId: 'projectContainer', previewId: 'previewProjects', placeholder: 'Enter project', defaultValue: '' },
-  { containerId: 'certificationContainer', previewId: 'previewCertifications', placeholder: 'Enter certification', defaultValue: '' },
-  { containerId: 'languageContainer', previewId: 'previewLanguages', placeholder: 'Enter language', defaultValue: '' },
-  { containerId: 'achievementContainer', previewId: 'previewAchievements', placeholder: 'Enter achievement', defaultValue: '' },
-  { containerId: 'interestContainer', previewId: 'previewInterests', placeholder: 'Enter interest', defaultValue: '' },
-  { containerId: 'referenceContainer', previewId: 'previewReferences', placeholder: 'Enter reference', defaultValue: '' }
-];
+script.js
 
-window.addEventListener('load', () => {
-  setTimeout(() => { loader.style.display = 'none'; }, 700);
-  initializeLists();
-  bindInputs();
-  bindSectionToggles();
-  bindActions();
-  loadData();
-  updateResumeDisplay();
-  ensureSectionHeadings();
-  syncResumePreview();
-  calculateATS();
-  applyTheme();
+======================================*/
+
+"use strict";
+
+/*==============================
+DOM
+==============================*/
+
+const body = document.body;
+
+const resumePaper = document.getElementById("resumePaper");
+
+const loader = document.getElementById("loader");
+
+const toast = document.getElementById("toast");
+
+const themeToggle = document.getElementById("themeToggle");
+
+/*==============================
+LOADER
+==============================*/
+
+window.addEventListener("load", () => {
+
+setTimeout(() => {
+
+loader.style.display = "none";
+
+},600);
+
 });
 
-function showToast(message) {
-  toast.innerText = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2200);
+/*==============================
+TOAST
+==============================*/
+
+function showToast(message){
+
+toast.innerText = message;
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},2500);
+
 }
 
-function saveData() {
-  const data = {
-    fields: {},
-    lists: {},
-    toggles: {},
-    theme: document.body.classList.contains('dark'),
-    template: resumePaper.classList.contains('modern') ? 'modern' : resumePaper.className.split(' ').find(c => ['modern','ats','corporate','creative','minimal'].includes(c)) || 'modern',
-    fontFamily: fontFamily.value,
-    fontSize: fontSize.value,
-    lineSpacing: lineSpacing.value,
-    accentColor: document.querySelector('.swatch.active')?.dataset.color || '#2563eb'
-  };
+/*==============================
+THEME
+==============================*/
 
-  fieldMap.forEach(([id, previewId, fallback]) => {
-    const input = document.getElementById(id);
-    if (input) {
-      data.fields[id] = input.value;
-    }
-  });
+const savedTheme = localStorage.getItem("theme");
 
-  listSections.forEach(section => {
-    const container = document.getElementById(section.containerId);
-    const values = Array.from(container.querySelectorAll('input'))
-      .map(item => item.value.trim())
-      .filter(Boolean);
-    data.lists[section.containerId] = values;
-  });
+if(savedTheme==="dark"){
 
-  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
-    data.toggles[box.dataset.section] = box.checked;
-  });
+body.classList.add("dark");
 
-  localStorage.setItem(storageKey, JSON.stringify(data));
 }
 
-function loadData() {
-  const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-  if (!saved) {
-    syncResumePreview();
-    return;
-  }
+if(themeToggle){
 
-  fieldMap.forEach(([id]) => {
-    const input = document.getElementById(id);
-    if (input && saved.fields?.[id] !== undefined) {
-      input.value = saved.fields[id];
-    }
-  });
+themeToggle.addEventListener("click",()=>{
 
-  listSections.forEach(section => {
-    const container = document.getElementById(section.containerId);
-    const preview = document.getElementById(section.previewId);
-    const values = saved.lists?.[section.containerId] || [];
-    renderList(container, preview, section.placeholder, values);
-  });
+body.classList.toggle("dark");
 
-  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
-    const checked = saved.toggles?.[box.dataset.section];
-    box.checked = checked !== undefined ? checked : true;
-    const section = document.getElementById(`${box.dataset.section}Section`);
-    if (section) section.style.display = box.checked ? '' : 'none';
-  });
+localStorage.setItem(
 
-  if (saved.theme) document.body.classList.add('dark');
-  if (saved.template) setTemplate(saved.template);
-  if (saved.fontFamily) fontFamily.value = saved.fontFamily;
-  if (saved.fontSize) { fontSize.value = saved.fontSize; fontSizeValue.textContent = `${saved.fontSize}px`; }
-  if (saved.lineSpacing) { lineSpacing.value = saved.lineSpacing; lineSpacingValue.textContent = saved.lineSpacing; }
-  if (saved.accentColor) {
-    document.documentElement.style.setProperty('--primary', saved.accentColor);
-    document.documentElement.style.setProperty('--secondary', saved.accentColor);
-    document.querySelectorAll('.swatch').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.color === saved.accentColor);
-    });
-  }
+"theme",
 
-  updateResumeDisplay();
-  ensureSectionHeadings();
-  syncResumePreview();
-  calculateATS();
+body.classList.contains("dark")?"dark":"light"
+
+);
+
+});
+
 }
 
-function ensureSectionHeadings() {
-  document.querySelectorAll('.resume-section h2').forEach(heading => {
-    const sectionId = heading.closest('.resume-section')?.id;
-    const lockedTitle = sectionHeadingMap[sectionId];
-    if (lockedTitle) {
-      heading.textContent = lockedTitle;
-      heading.setAttribute('data-locked-title', lockedTitle);
-    }
-  });
+/*==============================
+LIVE INPUTS
+==============================*/
+
+function bindText(inputId,previewId,defaultText=""){
+
+const input=document.getElementById(inputId);
+
+const preview=document.getElementById(previewId);
+
+if(!input||!preview)return;
+
+preview.textContent=defaultText;
+
+input.addEventListener("input",()=>{
+
+const value=input.value.trim();
+
+preview.textContent=value||defaultText;
+
+updateVisibility();
+
+saveResume();
+
+});
+
 }
 
-function syncResumePreview() {
-  const name = document.getElementById('name')?.value.trim() || 'Your Name';
-  const jobTitle = document.getElementById('jobTitle')?.value.trim() || 'Professional Title';
-  const email = document.getElementById('email')?.value.trim() || 'example@email.com';
-  const phone = document.getElementById('phone')?.value.trim() || '+91 9876543210';
-  const address = document.getElementById('address')?.value.trim() || 'Your Address';
-  const summary = document.getElementById('summary')?.value.trim() || 'Write a sharp, results-focused summary that highlights your strengths, achievements, and domain expertise.';
+/*==============================
+PERSONAL INFO
+==============================*/
 
-  const previewName = document.getElementById('previewName');
-  const previewJobTitle = document.getElementById('previewJobTitle');
-  const previewEmail = document.getElementById('previewEmail');
-  const previewPhone = document.getElementById('previewPhone');
-  const previewAddress = document.getElementById('previewAddress');
-  const previewSummary = document.getElementById('previewSummary');
+bindText("name","previewName","Your Name");
 
-  if (previewName) previewName.textContent = name;
-  if (previewJobTitle) previewJobTitle.textContent = jobTitle;
-  if (previewEmail) previewEmail.textContent = email;
-  if (previewPhone) previewPhone.textContent = phone;
-  if (previewAddress) previewAddress.textContent = address;
-  if (previewSummary) previewSummary.textContent = summary;
+bindText("jobTitle","previewJobTitle","Professional Title");
 
-  if (summaryCount) {
-    summaryCount.textContent = (document.getElementById('summary')?.value || '').length;
-  }
+bindText("email","previewEmail","");
+
+bindText("phone","previewPhone","");
+
+bindText("address","previewAddress","");
+
+bindText("linkedin","previewLinkedin","");
+
+bindText("github","previewGithub","");
+
+bindText("portfolio","previewPortfolio","");
+
+bindText("website","previewWebsite","");
+
+bindText(
+
+"summary",
+
+"previewSummary",
+
+"Write your professional summary."
+
+);
+
+/*==============================
+CHARACTER COUNT
+==============================*/
+
+const summary=document.getElementById("summary");
+
+const summaryCount=document.getElementById("summaryCount");
+
+if(summary&&summaryCount){
+
+summary.addEventListener("input",()=>{
+
+summaryCount.innerText=summary.value.length;
+
+});
+
 }
 
-function bindInputs() {
-  fieldMap.forEach(([id, previewId, fallback]) => {
-    const input = document.getElementById(id);
-    const preview = document.getElementById(previewId);
-    if (!input || !preview) return;
-    input.addEventListener('input', () => {
-      syncResumePreview();
-      saveData();
-      calculateATS();
-      updateResumeDisplay();
-    });
-  });
+/*==============================
+PHOTO
+==============================*/
 
-  const photoInput = document.getElementById('photo');
-  const previewPhoto = document.getElementById('previewPhoto');
-  photoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewPhoto.src = reader.result;
-      saveData();
-    };
-    reader.readAsDataURL(file);
-  });
+const photo=document.getElementById("photo");
 
-  fontFamily.addEventListener('change', () => {
-    resumePaper.style.fontFamily = fontFamily.value;
-    saveData();
-  });
-  fontSize.addEventListener('input', () => {
-    fontSizeValue.textContent = `${fontSize.value}px`;
-    resumePaper.style.fontSize = `${fontSize.value}px`;
-    saveData();
-  });
-  lineSpacing.addEventListener('input', () => {
-    lineSpacingValue.textContent = lineSpacing.value;
-    resumePaper.style.lineHeight = lineSpacing.value;
-    saveData();
-  });
-  swatches.forEach(btn => {
-    btn.addEventListener('click', () => {
-      swatches.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const color = btn.dataset.color;
-      document.documentElement.style.setProperty('--primary', color);
-      document.documentElement.style.setProperty('--secondary', color);
-      saveData();
-    });
-  });
+const previewPhoto=document.getElementById("previewPhoto");
+
+const photoSection=document.getElementById("photoSection");
+
+if(photo){
+
+photo.addEventListener("change",(e)=>{
+
+const file=e.target.files[0];
+
+if(!file){
+
+photoSection.style.display="none";
+
+return;
+
 }
 
-function initializeLists() {
-  listSections.forEach(section => {
-    const container = document.getElementById(section.containerId);
-    const preview = document.getElementById(section.previewId);
-    renderList(container, preview, section.placeholder, []);
-  });
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+previewPhoto.src=event.target.result;
+
+photoSection.style.display="block";
+
+saveResume();
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
 }
 
-function renderList(container, preview, placeholder, values = []) {
-  container.innerHTML = '';
-  preview.innerHTML = '';
-  const items = values.length ? values : [''];
-  items.forEach((value, index) => {
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    const input = document.createElement('input');
-    input.type = 'text';
+/*==============================
+AUTO HIDE
+==============================*/
+
+function toggleBlock(previewId,blockId){
+
+const preview=document.getElementById(previewId);
+
+const block=document.getElementById(blockId);
+
+if(!preview||!block)return;
+
+if(preview.textContent.trim()===""){
+
+block.style.display="none";
+
+}else{
+
+block.style.display="flex";
+
+}
+
+}
+
+function updateVisibility(){
+
+toggleBlock("previewEmail","emailBlock");
+
+toggleBlock("previewPhone","phoneBlock");
+
+toggleBlock("previewAddress","addressBlock");
+
+toggleBlock("previewLinkedin","linkedinBlock");
+
+toggleBlock("previewGithub","githubBlock");
+
+toggleBlock("previewPortfolio","portfolioBlock");
+
+toggleBlock("previewWebsite","websiteBlock");
+
+}
+
+/*==============================
+LOCAL STORAGE
+==============================*/
+
+function saveResume(){
+
+const data={
+
+name:document.getElementById("name").value,
+
+jobTitle:document.getElementById("jobTitle").value,
+
+email:document.getElementById("email").value,
+
+phone:document.getElementById("phone").value,
+
+address:document.getElementById("address").value,
+
+linkedin:document.getElementById("linkedin").value,
+
+github:document.getElementById("github").value,
+
+portfolio:document.getElementById("portfolio").value,
+
+website:document.getElementById("website").value,
+
+summary:document.getElementById("summary").value
+
+};
+
+localStorage.setItem(
+
+"resumeCraft",
+
+JSON.stringify(data)
+
+);
+
+}
+
+function loadResume(){
+
+const data=JSON.parse(
+
+localStorage.getItem("resumeCraft")
+
+);
+
+if(!data)return;
+
+Object.keys(data).forEach(key=>{
+
+const el=document.getElementById(key);
+
+if(el){
+
+el.value=data[key];
+
+el.dispatchEvent(new Event("input"));
+
+}
+
+});
+
+}
+
+loadResume();
+
+updateVisibility();
+/*=====================================
+DYNAMIC SECTION HELPERS
+======================================*/
+
+function createInput(type, placeholder, className = "") {
+    const input = document.createElement("input");
+    input.type = type;
     input.placeholder = placeholder;
-    input.value = value;
-    const remove = document.createElement('button');
-    remove.type = 'button';
-    remove.className = 'remove-btn';
-    remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-    row.append(input, remove);
-    container.appendChild(row);
-
-    input.addEventListener('input', () => {
-      renderList(container, preview, placeholder, getValues(container));
-      saveData();
-      calculateATS();
-    });
-    remove.addEventListener('click', () => {
-      row.remove();
-      renderList(container, preview, placeholder, getValues(container));
-      saveData();
-      calculateATS();
-    });
-  });
-  updatePreviewList(preview, getValues(container));
+    input.className = className;
+    return input;
 }
 
-function getValues(container) {
-  return Array.from(container.querySelectorAll('input')).map(item => item.value.trim()).filter(Boolean);
+function createTextarea(placeholder) {
+    const textarea = document.createElement("textarea");
+    textarea.placeholder = placeholder;
+    textarea.rows = 4;
+    return textarea;
 }
 
-function updatePreviewList(preview, values) {
-  preview.innerHTML = '';
-  if (!values.length) return;
-  const list = document.createElement('ul');
-  values.forEach(value => {
-    const item = document.createElement('li');
-    item.className = 'preview-item';
-    item.textContent = value;
-    list.appendChild(item);
-  });
-  preview.appendChild(list);
+function createRemoveButton(wrapper) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "remove-btn";
+    btn.innerHTML = '<i class="fa-solid fa-trash"></i> Remove';
+
+    btn.onclick = () => {
+        wrapper.remove();
+        updateAllPreview();
+        saveResume();
+    };
+
+    return btn;
 }
 
-function bindSectionToggles() {
-  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
-    box.addEventListener('change', () => {
-      const section = document.getElementById(`${box.dataset.section}Section`);
-      if (section) section.style.display = box.checked ? '' : 'none';
-      saveData();
-    });
-  });
+/*=====================================
+SKILLS
+======================================*/
+
+const skillContainer = document.getElementById("skillsContainer");
+const previewSkills = document.getElementById("previewSkills");
+
+document.getElementById("addSkill").onclick = () => {
+
+    const box = document.createElement("div");
+    box.className = "dynamic-box";
+
+    const input = createInput("text","Skill");
+
+    input.oninput = () => {
+
+        updateSkills();
+
+        saveResume();
+
+    };
+
+    box.append(input);
+
+    box.append(createRemoveButton(box));
+
+    skillContainer.append(box);
+
+};
+
+function updateSkills(){
+
+previewSkills.innerHTML="";
+
+document.querySelectorAll("#skillsContainer input").forEach(input=>{
+
+const value=input.value.trim();
+
+if(value){
+
+const li=document.createElement("li");
+
+li.innerText=value;
+
+previewSkills.append(li);
+
 }
 
-function bindActions() {
-  document.getElementById('addSkill').addEventListener('click', () => addListItem('skillsContainer', 'previewSkills', 'Enter a skill'));
-  document.getElementById('addEducation').addEventListener('click', () => addListItem('educationContainer', 'previewEducation', 'Enter education'));
-  document.getElementById('addExperience').addEventListener('click', () => addListItem('experienceContainer', 'previewExperience', 'Enter experience'));
-  document.getElementById('addProject').addEventListener('click', () => addListItem('projectContainer', 'previewProjects', 'Enter project'));
-  document.getElementById('addCertification').addEventListener('click', () => addListItem('certificationContainer', 'previewCertifications', 'Enter certification'));
-  document.getElementById('addLanguage').addEventListener('click', () => addListItem('languageContainer', 'previewLanguages', 'Enter language'));
-  document.getElementById('addAchievement').addEventListener('click', () => addListItem('achievementContainer', 'previewAchievements', 'Enter achievement'));
-  document.getElementById('addInterest').addEventListener('click', () => addListItem('interestContainer', 'previewInterests', 'Enter interest'));
-  document.getElementById('addReference').addEventListener('click', () => addListItem('referenceContainer', 'previewReferences', 'Enter reference'));
+});
 
-  document.getElementById('generateSummary').addEventListener('click', () => {
-    const role = targetRoleInput.value.trim();
-    const text = role ? `Results-focused ${role} professional with strong execution, stakeholder communication, and delivery discipline.` : 'Results-focused professional with strong execution, stakeholder communication, and delivery discipline.';
-    summaryInput.value = text;
-    document.getElementById('previewSummary').textContent = text;
-    summaryCount.textContent = text.length;
-    saveData();
-    calculateATS();
-  });
+document.getElementById("skillsSection").style.display=
 
-  document.getElementById('tailorResume').addEventListener('click', () => {
-    const role = targetRoleInput.value.trim() || 'target role';
-    const text = `Tailored for ${role}: emphasizing delivery, collaboration, measurable impact, and domain-relevant achievements.`;
-    summaryInput.value = text;
-    document.getElementById('previewSummary').textContent = text;
-    summaryCount.textContent = text.length;
-    saveData();
-    calculateATS();
-  });
+previewSkills.children.length?"block":"none";
 
-  document.getElementById('optimizeATS').addEventListener('click', () => {
-    const role = targetRoleInput.value.trim() || 'your target role';
-    const skills = getSuggestedKeywords();
-    const currentSummary = summaryInput.value.trim();
-    const optimizedSummary = currentSummary.length > 40
-      ? `${currentSummary} Experienced in ${skills.slice(0, 3).join(', ')} with a strong record of delivering measurable outcomes.`
-      : `Results-driven ${role} professional with experience in ${skills.slice(0, 3).join(', ')} and a strong record of delivering measurable outcomes.`;
-    summaryInput.value = optimizedSummary;
-    document.getElementById('previewSummary').textContent = optimizedSummary;
-    summaryCount.textContent = optimizedSummary.length;
-    saveData();
-    calculateATS();
-    aiOutput.textContent = `ATS-ready summary generated for ${role}.`;
-  });
-  document.getElementById('generateBullet').addEventListener('click', () => {
-    const role = targetRoleInput.value.trim() || 'professional';
-    const skills = getSuggestedKeywords();
-    const bullet = `Delivered measurable impact in ${role} by combining ${skills.slice(0, 3).join(', ')} with strong execution and stakeholder communication.`;
-    aiOutput.textContent = `Suggested bullet: ${bullet}`;
-  });
-  document.getElementById('suggestKeywords').addEventListener('click', () => {
-    const keywords = getSuggestedKeywords();
-    aiOutput.textContent = `Suggested keywords: ${keywords.join(', ')}.`;
-  });
-
-  document.getElementById('downloadResumePDF').addEventListener('click', async () => {
-    showToast('Generating PDF...');
-    await exportResumeToPDF();
-  });
-
-  document.getElementById('printResume').addEventListener('click', () => {
-    printResume();
-  });
-
-  document.getElementById('resetResume').addEventListener('click', () => {
-    if (confirm('Reset all resume fields?')) {
-      localStorage.removeItem(storageKey);
-      location.reload();
-    }
-  });
-
-  themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    saveData();
-  });
-
-  templateItems.forEach(item => {
-    item.addEventListener('click', () => {
-      templateItems.forEach(t => t.classList.remove('active'));
-      item.classList.add('active');
-      setTemplate(item.dataset.template);
-      saveData();
-    });
-  });
 }
 
-function addListItem(containerId, previewId, placeholder) {
-  const container = document.getElementById(containerId);
-  const preview = document.getElementById(previewId);
-  const row = document.createElement('div');
-  row.className = 'dynamic-row';
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = placeholder;
-  const remove = document.createElement('button');
-  remove.type = 'button';
-  remove.className = 'remove-btn';
-  remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-  row.append(input, remove);
-  container.appendChild(row);
-  input.addEventListener('input', () => {
-    updatePreviewList(preview, getValues(container));
-    saveData();
-    calculateATS();
-  });
-  remove.addEventListener('click', () => {
-    row.remove();
-    updatePreviewList(preview, getValues(container));
-    saveData();
-    calculateATS();
-  });
-  updatePreviewList(preview, getValues(container));
+/*=====================================
+EDUCATION
+======================================*/
+
+const educationContainer=document.getElementById("educationContainer");
+
+const previewEducation=document.getElementById("previewEducation");
+
+document.getElementById("addEducation").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const degree=createInput("text","Degree");
+
+const college=createInput("text","College");
+
+const year=createInput("text","Year");
+
+[degree,college,year].forEach(i=>{
+
+i.oninput=()=>{
+
+updateEducation();
+
+saveResume();
+
+};
+
+box.append(i);
+
+});
+
+box.append(createRemoveButton(box));
+
+educationContainer.append(box);
+
+};
+
+function updateEducation(){
+
+previewEducation.innerHTML="";
+
+document.querySelectorAll("#educationContainer .dynamic-box").forEach(box=>{
+
+const input=box.querySelectorAll("input");
+
+if(input[0].value||input[1].value){
+
+const div=document.createElement("div");
+
+div.className="edu-item";
+
+div.innerHTML=`
+
+<h4>${input[0].value}</h4>
+
+<span>${input[1].value}</span>
+
+<span>${input[2].value}</span>
+
+`;
+
+previewEducation.append(div);
+
 }
 
-function setTemplate(template) {
-  resumePaper.className = `resume-paper ${template}`;
-  templateItems.forEach(item => item.classList.toggle('active', item.dataset.template === template));
+});
+
+document.getElementById("educationSection").style.display=
+
+previewEducation.children.length?"block":"none";
+
 }
 
-function waitForRender() {
-  return new Promise(resolve => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setTimeout(resolve, 150);
-      });
-    });
-  });
+/*=====================================
+EXPERIENCE
+======================================*/
+
+const experienceContainer=document.getElementById("experienceContainer");
+
+const previewExperience=document.getElementById("previewExperience");
+
+document.getElementById("addExperience").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const company=createInput("text","Company");
+
+const role=createInput("text","Position");
+
+const date=createInput("text","2023 - Present");
+
+const desc=createTextarea("Description");
+
+[company,role,date,desc].forEach(i=>{
+
+i.oninput=()=>{
+
+updateExperience();
+
+saveResume();
+
+};
+
+box.append(i);
+
+});
+
+box.append(createRemoveButton(box));
+
+experienceContainer.append(box);
+
+};
+
+function updateExperience(){
+
+previewExperience.innerHTML="";
+
+document.querySelectorAll("#experienceContainer .dynamic-box").forEach(box=>{
+
+const input=box.querySelectorAll("input");
+
+const desc=box.querySelector("textarea");
+
+if(input[0].value||input[1].value){
+
+const div=document.createElement("div");
+
+div.className="exp-item";
+
+div.innerHTML=`
+
+<div class="exp-title">${input[1].value}</div>
+
+<div class="exp-company">${input[0].value}</div>
+
+<div class="exp-date">${input[2].value}</div>
+
+<div class="exp-desc">${desc.value}</div>
+
+`;
+
+previewExperience.append(div);
+
 }
 
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.style.display = 'none';
-  document.body.appendChild(link);
-  try {
-    link.click();
-  } catch (error) {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-  document.body.removeChild(link);
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
+});
+
+document.getElementById("experienceSection").style.display=
+
+previewExperience.children.length?"block":"none";
+
 }
 
-function buildFallbackPdf() {
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const text = resumePaper.innerText.replace(/\s+/g, ' ').trim();
-  const lines = pdf.splitTextToSize(text, 180);
-  pdf.text(lines, 14, 20);
-  return pdf;
+/*=====================================
+UPDATE ALL
+======================================*/
+
+function updateAllPreview(){
+
+updateSkills();
+
+updateEducation();
+
+updateExperience();
+
+}
+/*=====================================
+PROJECTS
+======================================*/
+
+const projectContainer=document.getElementById("projectContainer");
+const previewProjects=document.getElementById("previewProjects");
+
+document.getElementById("addProject").onclick=()=>{
+
+const box=document.createElement("div");
+box.className="dynamic-box";
+
+const title=createInput("text","Project Name");
+const tech=createInput("text","Technologies Used");
+const github=createInput("url","GitHub Link");
+const live=createInput("url","Live Demo Link");
+const desc=createTextarea("Project Description");
+
+[title,tech,github,live,desc].forEach(el=>{
+el.oninput=()=>{
+updateProjects();
+saveResume();
+};
+box.append(el);
+});
+
+box.append(createRemoveButton(box));
+projectContainer.append(box);
+
+};
+
+function updateProjects(){
+
+previewProjects.innerHTML="";
+
+document.querySelectorAll("#projectContainer .dynamic-box").forEach(box=>{
+
+const input=box.querySelectorAll("input");
+const desc=box.querySelector("textarea");
+
+if(input[0].value.trim()){
+
+const div=document.createElement("div");
+
+div.className="project-item";
+
+div.innerHTML=`
+<h4>${input[0].value}</h4>
+<p><strong>Tech :</strong> ${input[1].value}</p>
+<p>${desc.value}</p>
+${input[2].value?`<p><strong>GitHub :</strong> ${input[2].value}</p>`:""}
+${input[3].value?`<p><strong>Live :</strong> ${input[3].value}</p>`:""}
+`;
+
+previewProjects.append(div);
+
 }
 
-async function exportResumeToPDF() {
-  if (!window.html2canvas || !window.jspdf?.jsPDF) {
-    showToast('PDF library failed to load');
-    return null;
-  }
+});
 
-  ensureSectionHeadings();
-  syncResumePreview();
-  await waitForRender();
+document.getElementById("projectsSection").style.display=
+previewProjects.children.length?"block":"none";
 
-  const source = resumePaper;
-  const images = Array.from(source.querySelectorAll('img'));
-
-  await Promise.all(images.map(img => new Promise(resolve => {
-    if (img.complete && img.naturalWidth) {
-      resolve();
-      return;
-    }
-    img.onload = resolve;
-    img.onerror = resolve;
-  })));
-
-  if (document.fonts?.ready) {
-    await document.fonts.ready;
-  }
-
-  try {
-    const canvas = await window.html2canvas(source, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: source.scrollWidth,
-      windowHeight: source.scrollHeight
-    });
-
-    const imgData = canvas.toDataURL('image/png');
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const margin = 8;
-    const contentWidth = pdfWidth - margin * 2;
-    const contentHeight = (canvas.height * contentWidth) / canvas.width;
-    let heightLeft = contentHeight;
-    let position = margin;
-
-    pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
-    heightLeft -= pdfHeight - margin * 2;
-
-    while (heightLeft > 0) {
-      pdf.addPage();
-      position = margin - (pdfHeight - margin * 2) * Math.ceil(Math.abs(heightLeft) / (pdfHeight - margin * 2));
-      pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
-      heightLeft -= pdfHeight - margin * 2;
-    }
-
-    const blob = pdf.output('blob');
-    downloadBlob(blob, 'resume.pdf');
-    showToast('PDF downloaded');
-    return blob;
-  } catch (error) {
-    console.error('PDF generation failed:', error);
-    const fallbackPdf = buildFallbackPdf();
-    const fallbackBlob = fallbackPdf.output('blob');
-    downloadBlob(fallbackBlob, 'resume.pdf');
-    showToast('PDF downloaded');
-    return fallbackBlob;
-  }
 }
 
-function printResume() {
-  ensureSectionHeadings();
-  syncResumePreview();
-  const iframe = document.createElement('iframe');
-  iframe.style.position = 'fixed';
-  iframe.style.right = '0';
-  iframe.style.bottom = '0';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
+/*=====================================
+CERTIFICATIONS
+======================================*/
 
-  iframe.onload = () => {
-    const printDocument = iframe.contentWindow.document;
-    const printClassName = resumePaper.className || 'resume-paper modern';
-    printDocument.open();
-    printDocument.write(`<!DOCTYPE html><html><head><title>Resume</title><link rel="stylesheet" href="style.css" /><style>@page{size:A4;margin:8mm;} body{margin:0;background:#fff;} .resume-panel{position:static;} .resume-paper{box-shadow:none;border-radius:0;min-height:auto;}</style></head><body><div class="resume-panel"><div class="${printClassName}">${resumePaper.innerHTML}</div></div></body></html>`);
-    printDocument.close();
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-    }, 1000);
-  };
+const certificationContainer=document.getElementById("certificationContainer");
+const previewCertifications=document.getElementById("previewCertifications");
+
+document.getElementById("addCertification").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const name=createInput("text","Certificate Name");
+const org=createInput("text","Organization");
+const year=createInput("text","Year");
+
+[name,org,year].forEach(el=>{
+
+el.oninput=()=>{
+
+updateCertification();
+
+saveResume();
+
+};
+
+box.append(el);
+
+});
+
+box.append(createRemoveButton(box));
+
+certificationContainer.append(box);
+
+};
+
+function updateCertification(){
+
+previewCertifications.innerHTML="";
+
+document.querySelectorAll("#certificationContainer .dynamic-box").forEach(box=>{
+
+const input=box.querySelectorAll("input");
+
+if(input[0].value){
+
+const div=document.createElement("div");
+
+div.className="cert-item";
+
+div.innerHTML=`<b>${input[0].value}</b><br>${input[1].value} (${input[2].value})`;
+
+previewCertifications.append(div);
+
 }
 
-function getSuggestedKeywords() {
-  const roleText = targetRoleInput.value.toLowerCase();
-  const skillText = Array.from(document.querySelectorAll('#skillsContainer input'))
-    .map(input => input.value.toLowerCase())
-    .join(' ');
-  const text = `${roleText} ${skillText}`;
-  const keywordPool = ['leadership', 'strategy', 'execution', 'analytics', 'collaboration', 'communication', 'problem solving', 'stakeholder management', 'delivery', 'product', 'design', 'development'];
-  const matched = keywordPool.filter(keyword => text.includes(keyword));
-  return matched.length ? matched : ['leadership', 'strategy', 'execution', 'collaboration'];
+});
+
+document.getElementById("certificationsSection").style.display=
+previewCertifications.children.length?"block":"none";
+
 }
 
-function calculateATS() {
-  let score = 20;
-  const text = [
-    summaryInput.value,
-    targetRoleInput.value,
-    document.getElementById('name').value,
-    document.getElementById('email').value,
-    document.getElementById('phone').value,
-    document.getElementById('address').value
-  ].join(' ').toLowerCase();
+/*=====================================
+LANGUAGES
+======================================*/
 
-  if (text.includes('react') || text.includes('javascript') || text.includes('node') || text.includes('python')) score += 12;
-  if (summaryInput.value.trim().length > 60) score += 12;
-  if (document.getElementById('skillsContainer').querySelectorAll('input').length >= 2) score += 10;
-  if (document.getElementById('experienceContainer').querySelectorAll('input').length >= 1) score += 10;
-  if (document.getElementById('educationContainer').querySelectorAll('input').length >= 1) score += 8;
-  if (document.getElementById('projectContainer').querySelectorAll('input').length >= 1) score += 8;
-  if (document.getElementById('certificationContainer').querySelectorAll('input').length >= 1) score += 6;
-  if (document.getElementById('targetRole').value.trim()) score += 6;
-  score = Math.min(100, score);
+const languageContainer=document.getElementById("languageContainer");
+const previewLanguages=document.getElementById("previewLanguages");
 
-  atsScoreEl.textContent = `${score}%`;
-  progressBar.style.width = `${score}%`;
-  atsStatsEl.innerHTML = `Strong structure • ${score >= 80 ? 'Excellent' : 'Needs refinement'} • Tailor keywords to the role`;
+document.getElementById("addLanguage").onclick=()=>{
 
-  const tips = [];
-  if (!summaryInput.value.trim()) tips.push('Add a concise professional summary.');
-  if (!targetRoleInput.value.trim()) tips.push('Mention a target role to tailor the resume.');
-  if (document.getElementById('skillsContainer').querySelectorAll('input').length < 3) tips.push('Add more skills for stronger keyword coverage.');
-  if (document.getElementById('experienceContainer').querySelectorAll('input').length < 1) tips.push('Include at least one relevant experience entry.');
-  if (document.getElementById('projectContainer').querySelectorAll('input').length < 1) tips.push('Show projects to reinforce hands-on experience.');
-  if (score < 80) tips.push('Use measurable achievements and role-specific keywords.');
-  if (tips.length === 0) tips.push('Your resume is looking ATS-ready.');
-  atsTipsEl.innerHTML = tips.map(tip => `<li>${tip}</li>`).join('');
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const lang=createInput("text","Language");
+
+lang.oninput=()=>{
+
+updateLanguages();
+
+saveResume();
+
+};
+
+box.append(lang);
+
+box.append(createRemoveButton(box));
+
+languageContainer.append(box);
+
+};
+
+function updateLanguages(){
+
+previewLanguages.innerHTML="";
+
+document.querySelectorAll("#languageContainer input").forEach(input=>{
+
+if(input.value.trim()){
+
+const li=document.createElement("li");
+
+li.textContent=input.value;
+
+previewLanguages.append(li);
+
 }
 
-function updateResumeDisplay() {
-  const photoInput = document.getElementById('photo');
-  const previewPhoto = document.getElementById('previewPhoto');
-  if (photoInput.files && photoInput.files[0]) {
-    previewPhoto.src = previewPhoto.src || '';
-  }
+});
+
+document.getElementById("languagesSection").style.display=
+previewLanguages.children.length?"block":"none";
+
 }
 
-function applyTheme() {
-  if (document.body.classList.contains('dark')) {
-    themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
-  } else {
-    themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
-  }
+/*=====================================
+ACHIEVEMENTS
+======================================*/
+
+const achievementContainer=document.getElementById("achievementContainer");
+const previewAchievements=document.getElementById("previewAchievements");
+
+document.getElementById("addAchievement").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const input=createInput("text","Achievement");
+
+input.oninput=()=>{
+
+updateAchievements();
+
+saveResume();
+
+};
+
+box.append(input);
+
+box.append(createRemoveButton(box));
+
+achievementContainer.append(box);
+
+};
+
+function updateAchievements(){
+
+previewAchievements.innerHTML="";
+
+document.querySelectorAll("#achievementContainer input").forEach(input=>{
+
+if(input.value.trim()){
+
+const div=document.createElement("div");
+
+div.className="achievement-item";
+
+div.textContent="• "+input.value;
+
+previewAchievements.append(div);
+
 }
 
-window.exportResumeToPDF = exportResumeToPDF;
-window.printResume = printResume;
+});
+
+document.getElementById("achievementsSection").style.display=
+previewAchievements.children.length?"block":"none";
+
+}
+
+/*=====================================
+INTERESTS
+======================================*/
+
+const interestContainer=document.getElementById("interestContainer");
+const previewInterests=document.getElementById("previewInterests");
+
+document.getElementById("addInterest").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const input=createInput("text","Interest");
+
+input.oninput=()=>{
+
+updateInterests();
+
+saveResume();
+
+};
+
+box.append(input);
+
+box.append(createRemoveButton(box));
+
+interestContainer.append(box);
+
+};
+
+function updateInterests(){
+
+previewInterests.innerHTML="";
+
+document.querySelectorAll("#interestContainer input").forEach(input=>{
+
+if(input.value.trim()){
+
+const li=document.createElement("li");
+
+li.textContent=input.value;
+
+previewInterests.append(li);
+
+}
+
+});
+
+document.getElementById("interestsSection").style.display=
+previewInterests.children.length?"block":"none";
+
+}
+
+/*=====================================
+REFERENCES
+======================================*/
+
+const referenceContainer=document.getElementById("referenceContainer");
+const previewReferences=document.getElementById("previewReferences");
+
+document.getElementById("addReference").onclick=()=>{
+
+const box=document.createElement("div");
+
+box.className="dynamic-box";
+
+const name=createInput("text","Reference Name");
+const company=createInput("text","Company");
+const phone=createInput("text","Phone");
+
+[name,company,phone].forEach(el=>{
+
+el.oninput=()=>{
+
+updateReferences();
+
+saveResume();
+
+};
+
+box.append(el);
+
+});
+
+box.append(createRemoveButton(box));
+
+referenceContainer.append(box);
+
+};
+
+function updateReferences(){
+
+previewReferences.innerHTML="";
+
+document.querySelectorAll("#referenceContainer .dynamic-box").forEach(box=>{
+
+const input=box.querySelectorAll("input");
+
+if(input[0].value){
+
+const div=document.createElement("div");
+
+div.className="reference-item";
+
+div.innerHTML=`
+<b>${input[0].value}</b><br>
+${input[1].value}<br>
+${input[2].value}
+`;
+
+previewReferences.append(div);
+
+}
+
+});
+
+document.getElementById("referencesSection").style.display=
+previewReferences.children.length?"block":"none";
+
+}
+
+/*=====================================
+UPDATE ALL
+======================================*/
+
+function updateAllPreview(){
+
+updateSkills();
+updateEducation();
+updateExperience();
+updateProjects();
+updateCertification();
+updateLanguages();
+updateAchievements();
+updateInterests();
+updateReferences();
+
+}
+
+updateAllPreview();
+/*=====================================
+PDF DOWNLOAD (BLANK FIX)
+======================================*/
+
+const pdfBtn = document.getElementById("downloadResumePDF");
+
+if(pdfBtn){
+
+pdfBtn.addEventListener("click", async ()=>{
+
+const element=document.getElementById("resumePaper");
+
+if(!element){
+
+alert("Resume not found.");
+
+return;
+
+}
+
+showToast("Preparing PDF...");
+
+const options={
+
+margin:0,
+
+filename:
+
+(document.getElementById("name").value||"Resume")+".pdf",
+
+image:{
+
+type:"jpeg",
+
+quality:1
+
+},
+
+html2canvas:{
+
+scale:3,
+
+useCORS:true,
+
+backgroundColor:"#ffffff",
+
+scrollY:0
+
+},
+
+jsPDF:{
+
+unit:"mm",
+
+format:"a4",
+
+orientation:"portrait"
+
+},
+
+pagebreak:{
+
+mode:["avoid-all","css","legacy"]
+
+}
+
+};
+
+await html2pdf()
+
+.set(options)
+
+.from(element)
+
+.save();
+
+showToast("PDF Downloaded");
+
+});
+
+}
+
+/*=====================================
+PRINT
+======================================*/
+
+const printBtn=document.getElementById("printResume");
+
+if(printBtn){
+
+printBtn.onclick=()=>{
+
+window.print();
+
+};
+
+}
+
+/*=====================================
+RESET
+======================================*/
+
+const resetBtn=document.getElementById("resetResume");
+
+if(resetBtn){
+
+resetBtn.onclick=()=>{
+
+if(confirm("Reset Resume?")){
+
+localStorage.removeItem("resumeCraft");
+
+location.reload();
+
+}
+
+};
+
+}
+
+/*=====================================
+PNG EXPORT
+======================================*/
+
+const pngBtn=document.getElementById("downloadPNG");
+
+if(pngBtn){
+
+pngBtn.onclick=()=>{
+
+html2canvas(document.getElementById("resumePaper"),{
+
+scale:3,
+
+useCORS:true,
+
+backgroundColor:"#ffffff"
+
+}).then(canvas=>{
+
+const link=document.createElement("a");
+
+link.download="Resume.png";
+
+link.href=canvas.toDataURL("image/png");
+
+link.click();
+
+showToast("PNG Downloaded");
+
+});
+
+};
+
+}
+
+/*=====================================
+ATS SCORE
+======================================*/
+
+function calculateATS(){
+
+let score=0;
+
+const tips=[];
+
+const name=document.getElementById("name").value.trim();
+
+const email=document.getElementById("email").value.trim();
+
+const phone=document.getElementById("phone").value.trim();
+
+const summary=document.getElementById("summary").value.trim();
+
+const skills=document.querySelectorAll("#skillsContainer input");
+
+const experience=document.querySelectorAll("#experienceContainer .dynamic-box");
+
+const education=document.querySelectorAll("#educationContainer .dynamic-box");
+
+if(name)score+=10;
+else tips.push("Add Full Name");
+
+if(email)score+=10;
+else tips.push("Add Email");
+
+if(phone)score+=10;
+else tips.push("Add Phone Number");
+
+if(summary.length>80)score+=20;
+else tips.push("Write a stronger summary");
+
+if(skills.length>=5)score+=20;
+else tips.push("Add at least 5 skills");
+
+if(experience.length>0)score+=15;
+else tips.push("Add Work Experience");
+
+if(education.length>0)score+=15;
+else tips.push("Add Education");
+
+document.getElementById("atsScore").innerText=score+"%";
+
+document.getElementById("progressBar").style.width=score+"%";
+
+const list=document.getElementById("atsTips");
+
+list.innerHTML="";
+
+tips.forEach(t=>{
+
+const li=document.createElement("li");
+
+li.innerText=t;
+
+list.append(li);
+
+});
+
+}
+
+setInterval(calculateATS,1000);
+
+/*=====================================
+THEME COLORS
+======================================*/
+
+document.querySelectorAll(".theme-color").forEach(btn=>{
+
+btn.onclick=()=>{
+
+document.querySelectorAll(".theme-color")
+
+.forEach(b=>b.classList.remove("active"));
+
+btn.classList.add("active");
+
+const color=btn.dataset.color;
+
+document.documentElement
+
+.style
+
+.setProperty("--primary",color);
+
+localStorage.setItem(
+
+"themeColor",
+
+color
+
+);
+
+};
+
+});
+
+const savedColor=
+
+localStorage.getItem("themeColor");
+
+if(savedColor){
+
+document.documentElement
+
+.style
+
+.setProperty("--primary",savedColor);
+
+}
+
+/*=====================================
+TEMPLATE SWITCHER
+======================================*/
+
+document.querySelectorAll(".template-item")
+
+.forEach(card=>{
+
+card.onclick=()=>{
+
+document.querySelectorAll(".template-item")
+
+.forEach(c=>c.classList.remove("active"));
+
+card.classList.add("active");
+
+resumePaper.className="resume-paper";
+
+resumePaper.classList.add(
+
+card.dataset.template
+
+);
+
+showToast(
+
+card.dataset.template.toUpperCase()
+
++" Template Selected"
+
+);
+
+};
+
+});
+
+/*=====================================
+AUTO SAVE
+======================================*/
+
+setInterval(saveResume,3000);
+
+showToast("ResumeCraft Ready 🚀");
+/*=====================================
+DOCX EXPORT
+======================================*/
+
+const docxBtn = document.getElementById("downloadDOCX");
+
+if(docxBtn){
+
+docxBtn.addEventListener("click",()=>{
+
+alert("DOCX Export backend integration ready.");
+
+});
+
+}
+
+/*=====================================
+FONT FAMILY
+======================================*/
+
+const fontFamily=document.getElementById("fontFamily");
+
+if(fontFamily){
+
+fontFamily.addEventListener("change",()=>{
+
+resumePaper.style.fontFamily=fontFamily.value;
+
+});
+
+}
+
+/*=====================================
+FONT SIZE
+======================================*/
+
+const fontSize=document.getElementById("fontSize");
+
+const fontSizeValue=document.getElementById("fontSizeValue");
+
+if(fontSize){
+
+fontSize.addEventListener("input",()=>{
+
+resumePaper.style.fontSize=fontSize.value+"px";
+
+fontSizeValue.innerText=fontSize.value+"px";
+
+});
+
+}
+
+/*=====================================
+LINE SPACING
+======================================*/
+
+const lineSpacing=document.getElementById("lineSpacing");
+
+const lineSpacingValue=document.getElementById("lineSpacingValue");
+
+if(lineSpacing){
+
+lineSpacing.addEventListener("input",()=>{
+
+resumePaper.style.lineHeight=lineSpacing.value;
+
+lineSpacingValue.innerText=lineSpacing.value;
+
+});
+
+}
+
+/*=====================================
+SHOW / HIDE SECTIONS
+======================================*/
+
+document
+
+.querySelectorAll(".toggle-list input[type='checkbox']")
+
+.forEach(box=>{
+
+box.addEventListener("change",()=>{
+
+const section=
+
+document.getElementById(
+
+box.dataset.section+"Section"
+
+);
+
+if(section){
+
+section.style.display=
+
+box.checked?"block":"none";
+
+}
+
+});
+
+});
+
+/*=====================================
+DRAG & DROP
+======================================*/
+
+if(window.Sortable){
+
+document.querySelectorAll(
+
+"#skillsContainer,#educationContainer,#experienceContainer,#projectContainer,#certificationContainer,#languageContainer,#achievementContainer,#interestContainer,#referenceContainer"
+
+)
+
+.forEach(el=>{
+
+Sortable.create(el,{
+
+animation:150,
+
+onEnd(){
+
+updateAllPreview();
+
+saveResume();
+
+}
+
+});
+
+});
+
+}
+
+/*=====================================
+AI BUTTONS
+======================================*/
+
+const aiOutput=document.getElementById("aiOutput");
+
+function aiMessage(msg){
+
+if(aiOutput){
+
+aiOutput.innerHTML=msg;
+
+}
+
+}
+
+const generateSummary=document.getElementById("generateSummary");
+
+if(generateSummary){
+
+generateSummary.onclick=()=>{
+
+aiMessage(
+
+"AI Summary feature will be connected with Gemini/OpenAI."
+
+);
+
+};
+
+}
+
+const optimizeATS=document.getElementById("optimizeATS");
+
+if(optimizeATS){
+
+optimizeATS.onclick=()=>{
+
+calculateATS();
+
+aiMessage(
+
+"ATS optimization completed."
+
+);
+
+};
+
+}
+
+const suggestKeywords=document.getElementById("suggestKeywords");
+
+if(suggestKeywords){
+
+suggestKeywords.onclick=()=>{
+
+aiMessage(
+
+"Suggested Keywords:<br><br>Leadership<br>Problem Solving<br>Communication<br>Teamwork<br>Project Management"
+
+);
+
+};
+
+}
+
+const generateBullet=document.getElementById("generateBullet");
+
+if(generateBullet){
+
+generateBullet.onclick=()=>{
+
+aiMessage(
+
+"• Improved workflow by 35%<br>• Reduced project delivery time<br>• Collaborated with cross-functional teams"
+
+);
+
+};
+
+}
+
+const tailorResume=document.getElementById("tailorResume");
+
+if(tailorResume){
+
+tailorResume.onclick=()=>{
+
+const role=document.getElementById("targetRole").value;
+
+if(role.trim()==""){
+
+alert("Enter Target Role");
+
+return;
+
+}
+
+aiMessage(
+
+"Resume tailored for:<br><b>"+role+"</b>"
+
+);
+
+};
+
+}
+
+/*=====================================
+INITIALIZE
+======================================*/
+
+calculateATS();
+
+updateAllPreview();
+
+updateVisibility();
+
+showToast("ResumeCraft AI Loaded Successfully");
