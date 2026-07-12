@@ -1,198 +1,169 @@
-﻿/*=====================================
-
-ResumeCraft AI Pro v2
-
-script.js
-
-======================================*/
+﻿/*=========================================================
+ResumeCraft AI
+SCRIPT.JS PART-1
+=========================================================*/
 
 "use strict";
 
-/*==============================
-DOM
-==============================*/
+/*=========================================================
+ELEMENTS
+=========================================================*/
 
-const body = document.body;
+const $ = (id) => document.getElementById(id);
 
-const resumePaper = document.getElementById("resumePaper");
+const resumePaper = $("resumePaper");
 
-const loader = document.getElementById("loader");
+const fullName = $("fullName");
+const jobTitle = $("jobTitle");
+const email = $("email");
+const phone = $("phone");
+const address = $("address");
 
-const toast = document.getElementById("toast");
+const linkedin = $("linkedin");
+const github = $("github");
+const portfolio = $("portfolio");
+const website = $("website");
 
-const themeToggle = document.getElementById("themeToggle");
+const summary = $("summary");
 
-/*==============================
-LOADER
-==============================*/
+const photo = $("photo");
 
-window.addEventListener("load", () => {
+const previewName = $("previewName");
+const previewJobTitle = $("previewJobTitle");
+const previewEmail = $("previewEmail");
+const previewPhone = $("previewPhone");
+const previewAddress = $("previewAddress");
 
-setTimeout(() => {
+const previewSummary = $("previewSummary");
 
-loader.style.display = "none";
+const previewLinkedin = $("previewLinkedin");
+const previewGithub = $("previewGithub");
+const previewPortfolio = $("previewPortfolio");
+const previewWebsite = $("previewWebsite");
 
-},600);
+const previewPhoto = $("previewPhoto");
 
-});
+const summaryCount = $("summaryCount");
 
-/*==============================
-TOAST
-==============================*/
+const themeToggle = $("themeToggle");
 
-function showToast(message){
+/*=========================================================
+SAFE FUNCTION
+=========================================================*/
 
-toast.innerText = message;
+function setText(el, value, fallback = "") {
 
-toast.classList.add("show");
+if (!el) return;
 
-setTimeout(()=>{
-
-toast.classList.remove("show");
-
-},2500);
-
-}
-
-/*==============================
-THEME
-==============================*/
-
-const savedTheme = localStorage.getItem("theme");
-
-if(savedTheme==="dark"){
-
-body.classList.add("dark");
+el.textContent = value.trim() || fallback;
 
 }
 
-if(themeToggle){
+function setLink(el, value) {
 
-themeToggle.addEventListener("click",()=>{
+if (!el) return;
 
-body.classList.toggle("dark");
+if (value.trim() === "") {
 
-localStorage.setItem(
-
-"theme",
-
-body.classList.contains("dark")?"dark":"light"
-
-);
-
-});
-
-}
-
-/*==============================
-LIVE INPUTS
-==============================*/
-
-function bindText(inputId,previewId,defaultText=""){
-
-const input=document.getElementById(inputId);
-
-const preview=document.getElementById(previewId);
-
-if(!input||!preview)return;
-
-preview.textContent=defaultText;
-
-input.addEventListener("input",()=>{
-
-const value=input.value.trim();
-
-preview.textContent=value||defaultText;
-
-updateVisibility();
-
-saveResume();
-
-});
-
-}
-
-/*==============================
-PERSONAL INFO
-==============================*/
-
-bindText("name","previewName","Your Name");
-
-bindText("jobTitle","previewJobTitle","Professional Title");
-
-bindText("email","previewEmail","");
-
-bindText("phone","previewPhone","");
-
-bindText("address","previewAddress","");
-
-bindText("linkedin","previewLinkedin","");
-
-bindText("github","previewGithub","");
-
-bindText("portfolio","previewPortfolio","");
-
-bindText("website","previewWebsite","");
-
-bindText(
-
-"summary",
-
-"previewSummary",
-
-"Write your professional summary."
-
-);
-
-/*==============================
-CHARACTER COUNT
-==============================*/
-
-const summary=document.getElementById("summary");
-
-const summaryCount=document.getElementById("summaryCount");
-
-if(summary&&summaryCount){
-
-summary.addEventListener("input",()=>{
-
-summaryCount.innerText=summary.value.length;
-
-});
-
-}
-
-/*==============================
-PHOTO
-==============================*/
-
-const photo=document.getElementById("photo");
-
-const previewPhoto=document.getElementById("previewPhoto");
-
-const photoSection=document.getElementById("photoSection");
-
-if(photo){
-
-photo.addEventListener("change",(e)=>{
-
-const file=e.target.files[0];
-
-if(!file){
-
-photoSection.style.display="none";
+el.style.display = "none";
 
 return;
 
 }
 
-const reader=new FileReader();
+el.style.display = "inline-block";
 
-reader.onload=function(event){
+el.href = value;
 
-previewPhoto.src=event.target.result;
+el.innerText = value;
 
-photoSection.style.display="block";
+}
+
+/*=========================================================
+LIVE INPUT
+=========================================================*/
+
+function updatePreview() {
+
+setText(previewName, fullName.value, "Your Name");
+
+setText(previewJobTitle, jobTitle.value, "Professional Title");
+
+setText(previewEmail, email.value, "");
+
+setText(previewPhone, phone.value, "");
+
+setText(previewAddress, address.value, "");
+
+setText(previewSummary, summary.value, "");
+
+setLink(previewLinkedin, linkedin.value);
+
+setLink(previewGithub, github.value);
+
+setLink(previewPortfolio, portfolio.value);
+
+setLink(previewWebsite, website.value);
+
+summaryCount.innerText = summary.value.length;
+
+saveResume();
+
+}
+
+/*=========================================================
+INPUT LISTENER
+=========================================================*/
+
+[
+fullName,
+jobTitle,
+email,
+phone,
+address,
+linkedin,
+github,
+portfolio,
+website,
+summary
+
+].forEach(input => {
+
+if (!input) return;
+
+input.addEventListener("input", updatePreview);
+
+});
+
+/*=========================================================
+PHOTO
+=========================================================*/
+
+if (photo) {
+
+photo.addEventListener("change", function () {
+
+const file = this.files[0];
+
+if (!file) {
+
+previewPhoto.style.display = "none";
+
+previewPhoto.src = "";
+
+saveResume();
+
+return;
+
+}
+
+const reader = new FileReader();
+
+reader.onload = function (e) {
+
+previewPhoto.src = e.target.result;
+
+previewPhoto.style.display = "block";
 
 saveResume();
 
@@ -204,81 +175,69 @@ reader.readAsDataURL(file);
 
 }
 
-/*==============================
-AUTO HIDE
-==============================*/
+/*=========================================================
+THEME
+=========================================================*/
 
-function toggleBlock(previewId,blockId){
+if (themeToggle) {
 
-const preview=document.getElementById(previewId);
+themeToggle.addEventListener("click", () => {
 
-const block=document.getElementById(blockId);
+document.body.classList.toggle("dark");
 
-if(!preview||!block)return;
+localStorage.setItem(
 
-if(preview.textContent.trim()===""){
+"theme",
 
-block.style.display="none";
+document.body.classList.contains("dark")
 
-}else{
+);
 
-block.style.display="flex";
-
-}
+});
 
 }
 
-function updateVisibility(){
+if (localStorage.getItem("theme") === "true") {
 
-toggleBlock("previewEmail","emailBlock");
-
-toggleBlock("previewPhone","phoneBlock");
-
-toggleBlock("previewAddress","addressBlock");
-
-toggleBlock("previewLinkedin","linkedinBlock");
-
-toggleBlock("previewGithub","githubBlock");
-
-toggleBlock("previewPortfolio","portfolioBlock");
-
-toggleBlock("previewWebsite","websiteBlock");
+document.body.classList.add("dark");
 
 }
 
-/*==============================
-LOCAL STORAGE
-==============================*/
+/*=========================================================
+AUTO SAVE
+=========================================================*/
 
-function saveResume(){
+function saveResume() {
 
-const data={
+const data = {
 
-name:document.getElementById("name").value,
+fullName: fullName.value,
 
-jobTitle:document.getElementById("jobTitle").value,
+jobTitle: jobTitle.value,
 
-email:document.getElementById("email").value,
+email: email.value,
 
-phone:document.getElementById("phone").value,
+phone: phone.value,
 
-address:document.getElementById("address").value,
+address: address.value,
 
-linkedin:document.getElementById("linkedin").value,
+linkedin: linkedin.value,
 
-github:document.getElementById("github").value,
+github: github.value,
 
-portfolio:document.getElementById("portfolio").value,
+portfolio: portfolio.value,
 
-website:document.getElementById("website").value,
+website: website.value,
 
-summary:document.getElementById("summary").value
+summary: summary.value,
+
+photo: previewPhoto.src
 
 };
 
 localStorage.setItem(
 
-"resumeCraft",
+"ResumeCraftAI",
 
 JSON.stringify(data)
 
@@ -286,96 +245,171 @@ JSON.stringify(data)
 
 }
 
-function loadResume(){
+/*=========================================================
+LOAD
+=========================================================*/
 
-const data=JSON.parse(
+function loadResume() {
 
-localStorage.getItem("resumeCraft")
+const data = JSON.parse(
+
+localStorage.getItem("ResumeCraftAI")
 
 );
 
-if(!data)return;
+if (!data) return;
 
-Object.keys(data).forEach(key=>{
+fullName.value = data.fullName || "";
 
-const el=document.getElementById(key);
+jobTitle.value = data.jobTitle || "";
 
-if(el){
+email.value = data.email || "";
 
-el.value=data[key];
+phone.value = data.phone || "";
 
-el.dispatchEvent(new Event("input"));
+address.value = data.address || "";
+
+linkedin.value = data.linkedin || "";
+
+github.value = data.github || "";
+
+portfolio.value = data.portfolio || "";
+
+website.value = data.website || "";
+
+summary.value = data.summary || "";
+
+if (data.photo) {
+
+previewPhoto.src = data.photo;
+
+previewPhoto.style.display = "block";
+
+}
+
+updatePreview();
+
+}
+
+window.addEventListener("load", loadResume);
+
+/*=========================================================
+LOADER
+=========================================================*/
+
+window.addEventListener("load", () => {
+
+const loader = document.getElementById("loader");
+
+if (loader) {
+
+loader.style.opacity = "0";
+
+setTimeout(() => {
+
+loader.style.display = "none";
+
+}, 500);
 
 }
 
 });
+/*=========================================================
+SCRIPT.JS PART-2
+Dynamic Resume Sections
+=========================================================*/
+
+const sections = {
+
+skills: [],
+education: [],
+experience: [],
+projects: [],
+certifications: [],
+languages: [],
+achievements: [],
+interests: [],
+references: []
+
+};
+
+/*=========================================================
+HELPER
+=========================================================*/
+
+function createInput(placeholder){
+
+const input=document.createElement("input");
+
+input.type="text";
+
+input.placeholder=placeholder;
+
+input.className="dynamic-input";
+
+return input;
 
 }
 
-loadResume();
+function createTextarea(placeholder){
 
-updateVisibility();
-/*=====================================
-DYNAMIC SECTION HELPERS
-======================================*/
+const area=document.createElement("textarea");
 
-function createInput(type, placeholder, className = "") {
-    const input = document.createElement("input");
-    input.type = type;
-    input.placeholder = placeholder;
-    input.className = className;
-    return input;
+area.placeholder=placeholder;
+
+area.rows=4;
+
+area.className="dynamic-input";
+
+return area;
+
 }
 
-function createTextarea(placeholder) {
-    const textarea = document.createElement("textarea");
-    textarea.placeholder = placeholder;
-    textarea.rows = 4;
-    return textarea;
+function createDelete(){
+
+const btn=document.createElement("button");
+
+btn.type="button";
+
+btn.className="danger-btn";
+
+btn.innerHTML='<i class="fa fa-trash"></i> Remove';
+
+return btn;
+
 }
 
-function createRemoveButton(wrapper) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "remove-btn";
-    btn.innerHTML = '<i class="fa-solid fa-trash"></i> Remove';
-
-    btn.onclick = () => {
-        wrapper.remove();
-        updateAllPreview();
-        saveResume();
-    };
-
-    return btn;
-}
-
-/*=====================================
+/*=========================================================
 SKILLS
-======================================*/
+=========================================================*/
 
-const skillContainer = document.getElementById("skillsContainer");
-const previewSkills = document.getElementById("previewSkills");
+const skillContainer=document.getElementById("skillsContainer");
 
-document.getElementById("addSkill").onclick = () => {
+const previewSkills=document.getElementById("previewSkills");
 
-    const box = document.createElement("div");
-    box.className = "dynamic-box";
+document.getElementById("addSkill").onclick=()=>{
 
-    const input = createInput("text","Skill");
+const box=document.createElement("div");
 
-    input.oninput = () => {
+box.className="dynamic-box";
 
-        updateSkills();
+const input=createInput("Skill");
 
-        saveResume();
+const del=createDelete();
 
-    };
+box.append(input,del);
 
-    box.append(input);
+skillContainer.appendChild(box);
 
-    box.append(createRemoveButton(box));
+input.oninput=updateSkills;
 
-    skillContainer.append(box);
+del.onclick=()=>{
+
+box.remove();
+
+updateSkills();
+
+};
 
 };
 
@@ -383,333 +417,48 @@ function updateSkills(){
 
 previewSkills.innerHTML="";
 
-document.querySelectorAll("#skillsContainer input").forEach(input=>{
+const data=[];
 
-const value=input.value.trim();
+document.querySelectorAll("#skillsContainer input").forEach(i=>{
 
-if(value){
+if(i.value.trim()!=""){
+
+data.push(i.value.trim());
+
+}
+
+});
+
+if(data.length==0){
+
+document.getElementById("skillsSection").style.display="none";
+
+return;
+
+}
+
+document.getElementById("skillsSection").style.display="block";
+
+data.forEach(skill=>{
 
 const li=document.createElement("li");
 
-li.innerText=value;
+li.innerText=skill;
 
-previewSkills.append(li);
-
-}
+previewSkills.appendChild(li);
 
 });
-
-document.getElementById("skillsSection").style.display=
-
-previewSkills.children.length?"block":"none";
-
-}
-
-/*=====================================
-EDUCATION
-======================================*/
-
-const educationContainer=document.getElementById("educationContainer");
-
-const previewEducation=document.getElementById("previewEducation");
-
-document.getElementById("addEducation").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const degree=createInput("text","Degree");
-
-const college=createInput("text","College");
-
-const year=createInput("text","Year");
-
-[degree,college,year].forEach(i=>{
-
-i.oninput=()=>{
-
-updateEducation();
 
 saveResume();
 
-};
-
-box.append(i);
-
-});
-
-box.append(createRemoveButton(box));
-
-educationContainer.append(box);
-
-};
-
-function updateEducation(){
-
-previewEducation.innerHTML="";
-
-document.querySelectorAll("#educationContainer .dynamic-box").forEach(box=>{
-
-const input=box.querySelectorAll("input");
-
-if(input[0].value||input[1].value){
-
-const div=document.createElement("div");
-
-div.className="edu-item";
-
-div.innerHTML=`
-
-<h4>${input[0].value}</h4>
-
-<span>${input[1].value}</span>
-
-<span>${input[2].value}</span>
-
-`;
-
-previewEducation.append(div);
-
 }
 
-});
-
-document.getElementById("educationSection").style.display=
-
-previewEducation.children.length?"block":"none";
-
-}
-
-/*=====================================
-EXPERIENCE
-======================================*/
-
-const experienceContainer=document.getElementById("experienceContainer");
-
-const previewExperience=document.getElementById("previewExperience");
-
-document.getElementById("addExperience").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const company=createInput("text","Company");
-
-const role=createInput("text","Position");
-
-const date=createInput("text","2023 - Present");
-
-const desc=createTextarea("Description");
-
-[company,role,date,desc].forEach(i=>{
-
-i.oninput=()=>{
-
-updateExperience();
-
-saveResume();
-
-};
-
-box.append(i);
-
-});
-
-box.append(createRemoveButton(box));
-
-experienceContainer.append(box);
-
-};
-
-function updateExperience(){
-
-previewExperience.innerHTML="";
-
-document.querySelectorAll("#experienceContainer .dynamic-box").forEach(box=>{
-
-const input=box.querySelectorAll("input");
-
-const desc=box.querySelector("textarea");
-
-if(input[0].value||input[1].value){
-
-const div=document.createElement("div");
-
-div.className="exp-item";
-
-div.innerHTML=`
-
-<div class="exp-title">${input[1].value}</div>
-
-<div class="exp-company">${input[0].value}</div>
-
-<div class="exp-date">${input[2].value}</div>
-
-<div class="exp-desc">${desc.value}</div>
-
-`;
-
-previewExperience.append(div);
-
-}
-
-});
-
-document.getElementById("experienceSection").style.display=
-
-previewExperience.children.length?"block":"none";
-
-}
-
-/*=====================================
-UPDATE ALL
-======================================*/
-
-function updateAllPreview(){
-
-updateSkills();
-
-updateEducation();
-
-updateExperience();
-
-}
-/*=====================================
-PROJECTS
-======================================*/
-
-const projectContainer=document.getElementById("projectContainer");
-const previewProjects=document.getElementById("previewProjects");
-
-document.getElementById("addProject").onclick=()=>{
-
-const box=document.createElement("div");
-box.className="dynamic-box";
-
-const title=createInput("text","Project Name");
-const tech=createInput("text","Technologies Used");
-const github=createInput("url","GitHub Link");
-const live=createInput("url","Live Demo Link");
-const desc=createTextarea("Project Description");
-
-[title,tech,github,live,desc].forEach(el=>{
-el.oninput=()=>{
-updateProjects();
-saveResume();
-};
-box.append(el);
-});
-
-box.append(createRemoveButton(box));
-projectContainer.append(box);
-
-};
-
-function updateProjects(){
-
-previewProjects.innerHTML="";
-
-document.querySelectorAll("#projectContainer .dynamic-box").forEach(box=>{
-
-const input=box.querySelectorAll("input");
-const desc=box.querySelector("textarea");
-
-if(input[0].value.trim()){
-
-const div=document.createElement("div");
-
-div.className="project-item";
-
-div.innerHTML=`
-<h4>${input[0].value}</h4>
-<p><strong>Tech :</strong> ${input[1].value}</p>
-<p>${desc.value}</p>
-${input[2].value?`<p><strong>GitHub :</strong> ${input[2].value}</p>`:""}
-${input[3].value?`<p><strong>Live :</strong> ${input[3].value}</p>`:""}
-`;
-
-previewProjects.append(div);
-
-}
-
-});
-
-document.getElementById("projectsSection").style.display=
-previewProjects.children.length?"block":"none";
-
-}
-
-/*=====================================
-CERTIFICATIONS
-======================================*/
-
-const certificationContainer=document.getElementById("certificationContainer");
-const previewCertifications=document.getElementById("previewCertifications");
-
-document.getElementById("addCertification").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const name=createInput("text","Certificate Name");
-const org=createInput("text","Organization");
-const year=createInput("text","Year");
-
-[name,org,year].forEach(el=>{
-
-el.oninput=()=>{
-
-updateCertification();
-
-saveResume();
-
-};
-
-box.append(el);
-
-});
-
-box.append(createRemoveButton(box));
-
-certificationContainer.append(box);
-
-};
-
-function updateCertification(){
-
-previewCertifications.innerHTML="";
-
-document.querySelectorAll("#certificationContainer .dynamic-box").forEach(box=>{
-
-const input=box.querySelectorAll("input");
-
-if(input[0].value){
-
-const div=document.createElement("div");
-
-div.className="cert-item";
-
-div.innerHTML=`<b>${input[0].value}</b><br>${input[1].value} (${input[2].value})`;
-
-previewCertifications.append(div);
-
-}
-
-});
-
-document.getElementById("certificationsSection").style.display=
-previewCertifications.children.length?"block":"none";
-
-}
-
-/*=====================================
+/*=========================================================
 LANGUAGES
-======================================*/
+=========================================================*/
 
 const languageContainer=document.getElementById("languageContainer");
+
 const previewLanguages=document.getElementById("previewLanguages");
 
 document.getElementById("addLanguage").onclick=()=>{
@@ -718,108 +467,68 @@ const box=document.createElement("div");
 
 box.className="dynamic-box";
 
-const lang=createInput("text","Language");
+const input=createInput("Language");
 
-lang.oninput=()=>{
+const del=createDelete();
 
-updateLanguages();
+box.append(input,del);
 
-saveResume();
+languageContainer.appendChild(box);
+
+input.oninput=updateLanguage;
+
+del.onclick=()=>{
+
+box.remove();
+
+updateLanguage();
 
 };
 
-box.append(lang);
-
-box.append(createRemoveButton(box));
-
-languageContainer.append(box);
-
 };
 
-function updateLanguages(){
+function updateLanguage(){
 
 previewLanguages.innerHTML="";
 
-document.querySelectorAll("#languageContainer input").forEach(input=>{
+const arr=[];
 
-if(input.value.trim()){
+document.querySelectorAll("#languageContainer input").forEach(i=>{
+
+if(i.value.trim()!="") arr.push(i.value.trim());
+
+});
+
+if(arr.length==0){
+
+languagesSection.style.display="none";
+
+return;
+
+}
+
+languagesSection.style.display="block";
+
+arr.forEach(item=>{
 
 const li=document.createElement("li");
 
-li.textContent=input.value;
+li.innerText=item;
 
-previewLanguages.append(li);
-
-}
+previewLanguages.appendChild(li);
 
 });
-
-document.getElementById("languagesSection").style.display=
-previewLanguages.children.length?"block":"none";
-
-}
-
-/*=====================================
-ACHIEVEMENTS
-======================================*/
-
-const achievementContainer=document.getElementById("achievementContainer");
-const previewAchievements=document.getElementById("previewAchievements");
-
-document.getElementById("addAchievement").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const input=createInput("text","Achievement");
-
-input.oninput=()=>{
-
-updateAchievements();
 
 saveResume();
 
-};
-
-box.append(input);
-
-box.append(createRemoveButton(box));
-
-achievementContainer.append(box);
-
-};
-
-function updateAchievements(){
-
-previewAchievements.innerHTML="";
-
-document.querySelectorAll("#achievementContainer input").forEach(input=>{
-
-if(input.value.trim()){
-
-const div=document.createElement("div");
-
-div.className="achievement-item";
-
-div.textContent="• "+input.value;
-
-previewAchievements.append(div);
-
 }
 
-});
-
-document.getElementById("achievementsSection").style.display=
-previewAchievements.children.length?"block":"none";
-
-}
-
-/*=====================================
+/*=========================================================
 INTERESTS
-======================================*/
+=========================================================*/
 
 const interestContainer=document.getElementById("interestContainer");
+
 const previewInterests=document.getElementById("previewInterests");
 
 document.getElementById("addInterest").onclick=()=>{
@@ -828,700 +537,299 @@ const box=document.createElement("div");
 
 box.className="dynamic-box";
 
-const input=createInput("text","Interest");
+const input=createInput("Interest");
 
-input.oninput=()=>{
+const del=createDelete();
 
-updateInterests();
+box.append(input,del);
 
-saveResume();
+interestContainer.appendChild(box);
+
+input.oninput=updateInterest;
+
+del.onclick=()=>{
+
+box.remove();
+
+updateInterest();
 
 };
 
-box.append(input);
-
-box.append(createRemoveButton(box));
-
-interestContainer.append(box);
-
 };
 
-function updateInterests(){
+function updateInterest(){
 
 previewInterests.innerHTML="";
 
-document.querySelectorAll("#interestContainer input").forEach(input=>{
+const arr=[];
 
-if(input.value.trim()){
+document.querySelectorAll("#interestContainer input").forEach(i=>{
 
-const li=document.createElement("li");
-
-li.textContent=input.value;
-
-previewInterests.append(li);
-
-}
+if(i.value.trim()!="") arr.push(i.value.trim());
 
 });
 
-document.getElementById("interestsSection").style.display=
-previewInterests.children.length?"block":"none";
+if(arr.length==0){
+
+interestsSection.style.display="none";
+
+return;
 
 }
 
-/*=====================================
-REFERENCES
-======================================*/
+interestsSection.style.display="block";
 
-const referenceContainer=document.getElementById("referenceContainer");
-const previewReferences=document.getElementById("previewReferences");
+arr.forEach(item=>{
 
-document.getElementById("addReference").onclick=()=>{
+const li=document.createElement("li");
+
+li.innerText=item;
+
+previewInterests.appendChild(li);
+
+});
+
+saveResume();
+
+}
+
+/*=========================================================
+ACHIEVEMENTS
+=========================================================*/
+
+const achievementContainer=document.getElementById("achievementContainer");
+
+const previewAchievements=document.getElementById("previewAchievements");
+
+document.getElementById("addAchievement").onclick=()=>{
 
 const box=document.createElement("div");
 
 box.className="dynamic-box";
 
-const name=createInput("text","Reference Name");
-const company=createInput("text","Company");
-const phone=createInput("text","Phone");
+const input=createInput("Achievement");
 
-[name,company,phone].forEach(el=>{
+const del=createDelete();
 
-el.oninput=()=>{
+box.append(input,del);
 
-updateReferences();
+achievementContainer.appendChild(box);
 
-saveResume();
+input.oninput=updateAchievement;
 
-};
+del.onclick=()=>{
 
-box.append(el);
+box.remove();
 
-});
-
-box.append(createRemoveButton(box));
-
-referenceContainer.append(box);
+updateAchievement();
 
 };
 
-function updateReferences(){
+};
 
-previewReferences.innerHTML="";
+function updateAchievement(){
 
-document.querySelectorAll("#referenceContainer .dynamic-box").forEach(box=>{
+previewAchievements.innerHTML="";
 
-const input=box.querySelectorAll("input");
+const arr=[];
 
-if(input[0].value){
+document.querySelectorAll("#achievementContainer input").forEach(i=>{
 
-const div=document.createElement("div");
-
-div.className="reference-item";
-
-div.innerHTML=`
-<b>${input[0].value}</b><br>
-${input[1].value}<br>
-${input[2].value}
-`;
-
-previewReferences.append(div);
-
-}
+if(i.value.trim()!="") arr.push(i.value.trim());
 
 });
 
-document.getElementById("referencesSection").style.display=
-previewReferences.children.length?"block":"none";
+if(arr.length==0){
 
-}
-
-/*=====================================
-UPDATE ALL
-======================================*/
-
-function updateAllPreview(){
-
-updateSkills();
-updateEducation();
-updateExperience();
-updateProjects();
-updateCertification();
-updateLanguages();
-updateAchievements();
-updateInterests();
-updateReferences();
-
-}
-
-updateAllPreview();
-/*=====================================
-PDF DOWNLOAD (BLANK FIX)
-======================================*/
-
-const pdfBtn = document.getElementById("downloadResumePDF");
-
-if(pdfBtn){
-
-pdfBtn.addEventListener("click", async ()=>{
-
-const element=document.getElementById("resumePaper");
-
-if(!element){
-
-alert("Resume not found.");
+achievementsSection.style.display="none";
 
 return;
 
 }
 
-showToast("Preparing PDF...");
+achievementsSection.style.display="block";
 
-const options={
-
-margin:0,
-
-filename:
-
-(document.getElementById("name").value||"Resume")+".pdf",
-
-image:{
-
-type:"jpeg",
-
-quality:1
-
-},
-
-html2canvas:{
-
-scale:3,
-
-useCORS:true,
-
-backgroundColor:"#ffffff",
-
-scrollY:0
-
-},
-
-jsPDF:{
-
-unit:"mm",
-
-format:"a4",
-
-orientation:"portrait"
-
-},
-
-pagebreak:{
-
-mode:["avoid-all","css","legacy"]
-
-}
-
-};
-
-await html2pdf()
-
-.set(options)
-
-.from(element)
-
-.save();
-
-showToast("PDF Downloaded");
-
-});
-
-}
-
-/*=====================================
-PRINT
-======================================*/
-
-const printBtn=document.getElementById("printResume");
-
-if(printBtn){
-
-printBtn.onclick=()=>{
-
-window.print();
-
-};
-
-}
-
-/*=====================================
-RESET
-======================================*/
-
-const resetBtn=document.getElementById("resetResume");
-
-if(resetBtn){
-
-resetBtn.onclick=()=>{
-
-if(confirm("Reset Resume?")){
-
-localStorage.removeItem("resumeCraft");
-
-location.reload();
-
-}
-
-};
-
-}
-
-/*=====================================
-PNG EXPORT
-======================================*/
-
-const pngBtn=document.getElementById("downloadPNG");
-
-if(pngBtn){
-
-pngBtn.onclick=()=>{
-
-html2canvas(document.getElementById("resumePaper"),{
-
-scale:3,
-
-useCORS:true,
-
-backgroundColor:"#ffffff"
-
-}).then(canvas=>{
-
-const link=document.createElement("a");
-
-link.download="Resume.png";
-
-link.href=canvas.toDataURL("image/png");
-
-link.click();
-
-showToast("PNG Downloaded");
-
-});
-
-};
-
-}
-
-/*=====================================
-ATS SCORE
-======================================*/
-
-function calculateATS(){
-
-let score=0;
-
-const tips=[];
-
-const name=document.getElementById("name").value.trim();
-
-const email=document.getElementById("email").value.trim();
-
-const phone=document.getElementById("phone").value.trim();
-
-const summary=document.getElementById("summary").value.trim();
-
-const skills=document.querySelectorAll("#skillsContainer input");
-
-const experience=document.querySelectorAll("#experienceContainer .dynamic-box");
-
-const education=document.querySelectorAll("#educationContainer .dynamic-box");
-
-if(name)score+=10;
-else tips.push("Add Full Name");
-
-if(email)score+=10;
-else tips.push("Add Email");
-
-if(phone)score+=10;
-else tips.push("Add Phone Number");
-
-if(summary.length>80)score+=20;
-else tips.push("Write a stronger summary");
-
-if(skills.length>=5)score+=20;
-else tips.push("Add at least 5 skills");
-
-if(experience.length>0)score+=15;
-else tips.push("Add Work Experience");
-
-if(education.length>0)score+=15;
-else tips.push("Add Education");
-
-document.getElementById("atsScore").innerText=score+"%";
-
-document.getElementById("progressBar").style.width=score+"%";
-
-const list=document.getElementById("atsTips");
-
-list.innerHTML="";
-
-tips.forEach(t=>{
+arr.forEach(item=>{
 
 const li=document.createElement("li");
 
-li.innerText=t;
+li.innerText=item;
 
-list.append(li);
-
-});
-
-}
-
-setInterval(calculateATS,1000);
-
-/*=====================================
-THEME COLORS
-======================================*/
-
-document.querySelectorAll(".theme-color").forEach(btn=>{
-
-btn.onclick=()=>{
-
-document.querySelectorAll(".theme-color")
-
-.forEach(b=>b.classList.remove("active"));
-
-btn.classList.add("active");
-
-const color=btn.dataset.color;
-
-document.documentElement
-
-.style
-
-.setProperty("--primary",color);
-
-localStorage.setItem(
-
-"themeColor",
-
-color
-
-);
-
-};
+previewAchievements.appendChild(li);
 
 });
-
-const savedColor=
-
-localStorage.getItem("themeColor");
-
-if(savedColor){
-
-document.documentElement
-
-.style
-
-.setProperty("--primary",savedColor);
-
-}
-
-/*=====================================
-TEMPLATE SWITCHER
-======================================*/
-
-document.querySelectorAll(".template-item")
-
-.forEach(card=>{
-
-card.onclick=()=>{
-
-document.querySelectorAll(".template-item")
-
-.forEach(c=>c.classList.remove("active"));
-
-card.classList.add("active");
-
-resumePaper.className="resume-paper";
-
-resumePaper.classList.add(
-
-card.dataset.template
-
-);
-
-showToast(
-
-card.dataset.template.toUpperCase()
-
-+" Template Selected"
-
-);
-
-};
-
-});
-
-/*=====================================
-AUTO SAVE
-======================================*/
-
-setInterval(saveResume,3000);
-
-showToast("ResumeCraft Ready 🚀");
-/*=====================================
-DOCX EXPORT
-======================================*/
-
-const docxBtn = document.getElementById("downloadDOCX");
-
-if(docxBtn){
-
-docxBtn.addEventListener("click",()=>{
-
-alert("DOCX Export backend integration ready.");
-
-});
-
-}
-
-/*=====================================
-FONT FAMILY
-======================================*/
-
-const fontFamily=document.getElementById("fontFamily");
-
-if(fontFamily){
-
-fontFamily.addEventListener("change",()=>{
-
-resumePaper.style.fontFamily=fontFamily.value;
-
-});
-
-}
-
-/*=====================================
-FONT SIZE
-======================================*/
-
-const fontSize=document.getElementById("fontSize");
-
-const fontSizeValue=document.getElementById("fontSizeValue");
-
-if(fontSize){
-
-fontSize.addEventListener("input",()=>{
-
-resumePaper.style.fontSize=fontSize.value+"px";
-
-fontSizeValue.innerText=fontSize.value+"px";
-
-});
-
-}
-
-/*=====================================
-LINE SPACING
-======================================*/
-
-const lineSpacing=document.getElementById("lineSpacing");
-
-const lineSpacingValue=document.getElementById("lineSpacingValue");
-
-if(lineSpacing){
-
-lineSpacing.addEventListener("input",()=>{
-
-resumePaper.style.lineHeight=lineSpacing.value;
-
-lineSpacingValue.innerText=lineSpacing.value;
-
-});
-
-}
-
-/*=====================================
-SHOW / HIDE SECTIONS
-======================================*/
-
-document
-
-.querySelectorAll(".toggle-list input[type='checkbox']")
-
-.forEach(box=>{
-
-box.addEventListener("change",()=>{
-
-const section=
-
-document.getElementById(
-
-box.dataset.section+"Section"
-
-);
-
-if(section){
-
-section.style.display=
-
-box.checked?"block":"none";
-
-}
-
-});
-
-});
-
-/*=====================================
-DRAG & DROP
-======================================*/
-
-if(window.Sortable){
-
-document.querySelectorAll(
-
-"#skillsContainer,#educationContainer,#experienceContainer,#projectContainer,#certificationContainer,#languageContainer,#achievementContainer,#interestContainer,#referenceContainer"
-
-)
-
-.forEach(el=>{
-
-Sortable.create(el,{
-
-animation:150,
-
-onEnd(){
-
-updateAllPreview();
 
 saveResume();
 
 }
+/*=========================================================
+SCRIPT.JS PART-3A
+EDUCATION
+=========================================================*/
+
+const educationContainer = document.getElementById("educationContainer");
+const previewEducation = document.getElementById("previewEducation");
+const educationSection = document.getElementById("educationSection");
+
+document.getElementById("addEducation").addEventListener("click", addEducation);
+
+function addEducation(data = {}) {
+
+const card = document.createElement("div");
+card.className = "dynamic-card";
+
+card.innerHTML = `
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Degree</label>
+<input type="text" class="degree" placeholder="B.Tech" value="${data.degree || ""}">
+</div>
+
+<div class="form-group">
+<label>College</label>
+<input type="text" class="college" placeholder="ABC College" value="${data.college || ""}">
+</div>
+
+<div class="form-group">
+<label>University</label>
+<input type="text" class="university" placeholder="XYZ University" value="${data.university || ""}">
+</div>
+
+<div class="form-group">
+<label>Percentage / CGPA</label>
+<input type="text" class="cgpa" placeholder="8.5 CGPA" value="${data.cgpa || ""}">
+</div>
+
+<div class="form-group">
+<label>Start Year</label>
+<input type="text" class="startYear" placeholder="2022" value="${data.startYear || ""}">
+</div>
+
+<div class="form-group">
+<label>End Year</label>
+<input type="text" class="endYear" placeholder="2026" value="${data.endYear || ""}">
+</div>
+
+</div>
+
+<button type="button" class="danger-btn removeEducation">
+
+<i class="fa-solid fa-trash"></i>
+
+Remove
+
+</button>
+
+`;
+
+educationContainer.appendChild(card);
+
+card.querySelectorAll("input").forEach(input => {
+
+input.addEventListener("input", updateEducation);
 
 });
 
-});
+card.querySelector(".removeEducation").onclick = () => {
 
-}
+card.remove();
 
-/*=====================================
-AI BUTTONS
-======================================*/
-
-const aiOutput=document.getElementById("aiOutput");
-
-function aiMessage(msg){
-
-if(aiOutput){
-
-aiOutput.innerHTML=msg;
-
-}
-
-}
-
-const generateSummary=document.getElementById("generateSummary");
-
-if(generateSummary){
-
-generateSummary.onclick=()=>{
-
-aiMessage(
-
-"AI Summary feature will be connected with Gemini/OpenAI."
-
-);
+updateEducation();
 
 };
 
-}
-
-const optimizeATS=document.getElementById("optimizeATS");
-
-if(optimizeATS){
-
-optimizeATS.onclick=()=>{
-
-calculateATS();
-
-aiMessage(
-
-"ATS optimization completed."
-
-);
-
-};
+updateEducation();
 
 }
 
-const suggestKeywords=document.getElementById("suggestKeywords");
+/*=========================================================
+UPDATE EDUCATION
+=========================================================*/
 
-if(suggestKeywords){
+function updateEducation(){
 
-suggestKeywords.onclick=()=>{
+previewEducation.innerHTML = "";
 
-aiMessage(
+const cards = educationContainer.querySelectorAll(".dynamic-card");
 
-"Suggested Keywords:<br><br>Leadership<br>Problem Solving<br>Communication<br>Teamwork<br>Project Management"
+let count = 0;
 
-);
+cards.forEach(card=>{
 
-};
+const degree = card.querySelector(".degree").value.trim();
+const college = card.querySelector(".college").value.trim();
+const university = card.querySelector(".university").value.trim();
+const cgpa = card.querySelector(".cgpa").value.trim();
+const startYear = card.querySelector(".startYear").value.trim();
+const endYear = card.querySelector(".endYear").value.trim();
 
-}
+if(
 
-const generateBullet=document.getElementById("generateBullet");
+degree==="" &&
+college==="" &&
+university==="" &&
+cgpa==="" &&
+startYear==="" &&
+endYear===""
 
-if(generateBullet){
-
-generateBullet.onclick=()=>{
-
-aiMessage(
-
-"• Improved workflow by 35%<br>• Reduced project delivery time<br>• Collaborated with cross-functional teams"
-
-);
-
-};
-
-}
-
-const tailorResume=document.getElementById("tailorResume");
-
-if(tailorResume){
-
-tailorResume.onclick=()=>{
-
-const role=document.getElementById("targetRole").value;
-
-if(role.trim()==""){
-
-alert("Enter Target Role");
+){
 
 return;
 
 }
 
-aiMessage(
+count++;
 
-"Resume tailored for:<br><b>"+role+"</b>"
+const item=document.createElement("div");
 
-);
+item.className="education-item";
 
-};
+item.innerHTML=`
+
+<h4>${degree}</h4>
+
+<p>
+
+${college}
+
+${university ? " • "+university : ""}
+
+</p>
+
+<p>
+
+${cgpa}
+
+${cgpa && (startYear || endYear) ? " | " : ""}
+
+${startYear}
+
+${startYear && endYear ? " - " : ""}
+
+${endYear}
+
+</p>
+
+`;
+
+previewEducation.appendChild(item);
+
+});
+
+educationSection.style.display = count ? "block" : "none";
+
+saveResume();
 
 }
 
-/*=====================================
-INITIALIZE
-======================================*/
+/*=========================================================
+INITIAL
+=========================================================*/
 
-calculateATS();
+if(educationContainer.children.length===0){
 
-updateAllPreview();
+addEducation();
 
-updateVisibility();
-
-showToast("ResumeCraft AI Loaded Successfully");
+}

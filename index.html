@@ -5,78 +5,95 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-ResumeCraft AI Pro
+<meta name="description"
+content="ResumeCraft AI - Professional Resume Builder">
 
-</title>
+<meta name="keywords"
+content="Resume Builder, ATS Resume, AI Resume">
 
-<meta
-name="description"
-content="Professional ATS Friendly Resume Builder">
+<meta name="author"
+content="ResumeCraft AI">
 
-<link
-rel="preconnect"
+<title>ResumeCraft AI</title>
+
+<!-- Google Font -->
+
+<link rel="preconnect"
 href="https://fonts.googleapis.com">
 
-<link
-rel="preconnect"
+<link rel="preconnect"
 href="https://fonts.gstatic.com"
 crossorigin>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
 rel="stylesheet">
 
-<link
-rel="stylesheet"
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<link
-rel="stylesheet"
+<!-- AOS Animation -->
+
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css"
+rel="stylesheet">
+
+<!-- CSS -->
+
+<link rel="stylesheet"
 href="style.css">
 
 </head>
 
 <body>
 
-<!-- Loader -->
+<!--========================
+LOADER
+=========================-->
 
 <div id="loader">
 
-<div class="loader-circle"></div>
+<div class="spinner"></div>
 
 </div>
 
-<!-- Toast -->
+<!--========================
+SCROLL BUTTON
+=========================-->
 
-<div id="toast">
+<button id="scrollTop">
 
-Saved Successfully
+<i class="fa-solid fa-arrow-up"></i>
 
-</div>
+</button>
 
-<!-- ================= NAVBAR ================= -->
+<!--========================
+NAVBAR
+=========================-->
 
 <header>
 
 <nav class="navbar">
 
-<div class="logo">
+<div class="container">
+
+<a href="#"
+class="logo">
 
 <i class="fa-solid fa-file-lines"></i>
 
-<span>
+<span>ResumeCraft AI</span>
 
-ResumeCraft AI
-
-</span>
-
-</div>
+</a>
 
 <ul class="nav-links">
 
@@ -122,6 +139,16 @@ Builder
 
 <li>
 
+<a href="#pricing">
+
+Pricing
+
+</a>
+
+</li>
+
+<li>
+
 <a href="#faq">
 
 FAQ
@@ -142,77 +169,96 @@ Contact
 
 </ul>
 
-<div class="nav-actions">
+<div class="nav-right">
 
-<button
-id="themeToggle"
-class="icon-btn">
+<button id="themeToggle">
 
 <i class="fa-solid fa-moon"></i>
 
 </button>
 
-<button
-class="premium-btn">
+<button id="loginBtn"
+class="login-btn">
 
-Go Premium
+Login
 
 </button>
+
+<button id="startBtn"
+class="primary-btn">
+
+Get Started
+
+</button>
+
+</div>
+
+<div id="menuBtn">
+
+<i class="fa-solid fa-bars"></i>
+
+</div>
 
 </div>
 
 </nav>
 
 </header>
+<!-- =====================================================
+HERO SECTION
+===================================================== -->
 
-<!-- ================= HERO ================= -->
+<section class="hero" id="home">
 
-<section
-id="home"
-class="hero">
+<div class="container hero-container">
 
-<div class="hero-left">
+<div class="hero-left" data-aos="fade-right">
 
-<div class="hero-tag">
+<div class="hero-badge">
 
-✨ ATS Resume Builder
+<i class="fa-solid fa-bolt"></i>
+
+<span>AI Powered Resume Builder</span>
 
 </div>
 
 <h1>
 
-Create a
+Build a
 
-<span>
+<span>Professional ATS Resume</span>
 
-Professional Resume
-
-</span>
-
-in Minutes
+in Minutes.
 
 </h1>
 
 <p>
 
-Build modern ATS-friendly resumes with live preview,
-multiple templates, AI-ready features and one-click export.
+Create beautiful resumes with live preview,
+
+10 professional templates,
+
+ATS optimization,
+
+AI assistance,
+
+and one-click export to PDF, DOCX and PNG.
 
 </p>
 
 <div class="hero-buttons">
 
-<button
-class="primary-btn"
-id="startBuilder">
+<button class="primary-btn">
 
-Build Resume
+<i class="fa-solid fa-rocket"></i>
+
+Start Building
 
 </button>
 
-<button
-class="secondary-btn"
-id="viewTemplates">
+<button class="secondary-btn">
+
+<i class="fa-solid fa-layer-group"></i>
 
 View Templates
 
@@ -222,51 +268,27 @@ View Templates
 
 <div class="hero-stats">
 
-<div>
+<div class="stat-box">
 
-<h2>
+<h2>100K+</h2>
 
-50K+
-
-</h2>
-
-<p>
-
-Users
-
-</p>
+<p>Resumes Created</p>
 
 </div>
 
-<div>
+<div class="stat-box">
 
-<h2>
+<h2>50K+</h2>
 
-100K+
-
-</h2>
-
-<p>
-
-Downloads
-
-</p>
+<p>Happy Users</p>
 
 </div>
 
-<div>
+<div class="stat-box">
 
-<h2>
+<h2>98%</h2>
 
-98%
-
-</h2>
-
-<p>
-
-ATS Success
-
-</p>
+<p>ATS Success</p>
 
 </div>
 
@@ -274,55 +296,43 @@ ATS Success
 
 </div>
 
-<div class="hero-right">
+<div class="hero-right" data-aos="fade-left">
 
-<div class="hero-card">
+<div class="resume-mockup">
 
-<div class="badge">
+<img
 
-PRO
+src="assets/images/hero-resume.png"
+
+alt="Resume Preview"
+
+>
+
+<div class="floating-card card-1">
+
+<i class="fa-solid fa-circle-check"></i>
+
+<span>ATS Score 96%</span>
 
 </div>
 
-<h3>
+<div class="floating-card card-2">
 
-Why ResumeCraft?
+<i class="fa-solid fa-file-pdf"></i>
 
-</h3>
+<span>PDF Export</span>
 
-<ul>
+</div>
 
-<li>
+<div class="floating-card card-3">
 
-✔ Live Preview
+<i class="fa-solid fa-wand-magic-sparkles"></i>
 
-</li>
+<span>AI Optimized</span>
 
-<li>
+</div>
 
-✔ ATS Optimized
-
-</li>
-
-<li>
-
-✔ Premium Templates
-
-</li>
-
-<li>
-
-✔ PDF Export
-
-</li>
-
-<li>
-
-✔ AI Ready
-
-</li>
-
-</ul>
+</div>
 
 </div>
 
@@ -330,22 +340,111 @@ Why ResumeCraft?
 
 </section>
 
-<!-- ================= FEATURES ================= -->
+<!-- =====================================================
+TRUSTED BY
+===================================================== -->
 
-<section
-id="features"
-class="features">
+<section class="trusted">
 
-<h2 class="section-title">
+<div class="container">
 
-Everything You Need
+<p class="trusted-title">
+
+Trusted by students & professionals worldwide
+
+</p>
+
+<div class="trusted-logos">
+
+<div class="brand">
+
+<img src="assets/logo/google.png" alt="Google">
+
+</div>
+
+<div class="brand">
+
+<img src="assets/logo/microsoft.png" alt="Microsoft">
+
+</div>
+
+<div class="brand">
+
+<img src="assets/logo/amazon.png" alt="Amazon">
+
+</div>
+
+<div class="brand">
+
+<img src="assets/logo/tcs.png" alt="TCS">
+
+</div>
+
+<div class="brand">
+
+<img src="assets/logo/infosys.png" alt="Infosys">
+
+</div>
+
+<div class="brand">
+
+<img src="assets/logo/accenture.png" alt="Accenture">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+FEATURES
+===================================================== -->
+
+<section id="features" class="features">
+
+<div class="container">
+
+<div class="section-header">
+
+<h2>
+
+Why Choose ResumeCraft AI?
 
 </h2>
 
-<div class="feature-grid">
-  <div class="feature-card">
+<p>
 
-<i class="fa-solid fa-eye"></i>
+Everything you need to build an interview-winning resume.
+
+</p>
+
+</div>
+
+<div class="features-grid">
+
+<div class="feature-card">
+
+<i class="fa-solid fa-file-lines"></i>
+
+<h3>
+
+Professional Templates
+
+</h3>
+
+<p>
+
+Choose from multiple ATS-friendly resume templates.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-bolt"></i>
 
 <h3>
 
@@ -355,7 +454,7 @@ Live Preview
 
 <p>
 
-See every change instantly while editing your resume.
+See every change instantly while editing.
 
 </p>
 
@@ -363,17 +462,17 @@ See every change instantly while editing your resume.
 
 <div class="feature-card">
 
-<i class="fa-solid fa-file-pdf"></i>
+<i class="fa-solid fa-robot"></i>
 
 <h3>
 
-PDF Export
+AI Assistant
 
 </h3>
 
 <p>
 
-Download high-quality ATS friendly PDF in one click.
+Generate summaries and improve resume content.
 
 </p>
 
@@ -381,17 +480,17 @@ Download high-quality ATS friendly PDF in one click.
 
 <div class="feature-card">
 
-<i class="fa-solid fa-wand-magic-sparkles"></i>
+<i class="fa-solid fa-magnifying-glass-chart"></i>
 
 <h3>
 
-AI Ready
+ATS Optimization
 
 </h3>
 
 <p>
 
-Generate summaries, experience and projects using AI.
+Improve your ATS score with keyword analysis.
 
 </p>
 
@@ -399,35 +498,17 @@ Generate summaries, experience and projects using AI.
 
 <div class="feature-card">
 
-<i class="fa-solid fa-ranking-star"></i>
+<i class="fa-solid fa-cloud-arrow-down"></i>
 
 <h3>
 
-ATS Score
+Export Options
 
 </h3>
 
 <p>
 
-Check resume score and improve recruiter compatibility.
-
-</p>
-
-</div>
-
-<div class="feature-card">
-
-<i class="fa-solid fa-palette"></i>
-
-<h3>
-
-Customization
-
-</h3>
-
-<p>
-
-Change fonts, colors, spacing and templates easily.
+Download PDF, DOCX, PNG or Print instantly.
 
 </p>
 
@@ -439,7 +520,7 @@ Change fonts, colors, spacing and templates easily.
 
 <h3>
 
-Responsive
+Fully Responsive
 
 </h3>
 
@@ -453,165 +534,291 @@ Works perfectly on desktop, tablet and mobile.
 
 </div>
 
+</div>
+
 </section>
+<!-- ======================================================
+TEMPLATES SECTION
+====================================================== -->
 
-<!-- ================= TEMPLATE SECTION ================= -->
+<section class="templates" id="templates">
 
-<section
-id="templates"
-class="templates">
+<div class="container">
 
-<h2 class="section-title">
+<div class="section-header">
 
-Choose Resume Template
+<span class="section-tag">
+
+Professional Resume Templates
+
+</span>
+
+<h2>
+
+Choose Your Resume Style
 
 </h2>
 
-<p class="section-subtitle">
+<p>
 
-Select any professional ATS-friendly template.
+Switch between ATS Friendly, Modern, Executive,
+Creative and Professional templates instantly.
 
 </p>
 
-<div class="template-gallery">
+</div>
 
-<div
-class="template-item active"
-data-template="modern">
+<div class="template-grid">
 
-<div class="template-thumb modern-thumb"></div>
+<div class="template-card active" data-template="modern">
 
-<h3>
+<div class="template-image">
 
-Modern
-
-</h3>
+<img src="assets/templates/modern.png"
+alt="Modern Resume">
 
 </div>
 
-<div
-class="template-item"
-data-template="minimal">
+<div class="template-info">
 
-<div class="template-thumb minimal-thumb"></div>
+<h3>Modern</h3>
 
-<h3>
+<p>Clean & Professional</p>
 
-Minimal
+<button class="use-template">
 
-</h3>
+Use Template
 
-</div>
-
-<div
-class="template-item"
-data-template="executive">
-
-<div class="template-thumb executive-thumb"></div>
-
-<h3>
-
-Executive
-
-</h3>
+</button>
 
 </div>
 
-<div
-class="template-item"
-data-template="creative">
+</div>
 
-<div class="template-thumb creative-thumb"></div>
+<div class="template-card" data-template="minimal">
 
-<h3>
+<div class="template-image">
 
-Creative
-
-</h3>
+<img src="assets/templates/minimal.png"
+alt="Minimal Resume">
 
 </div>
 
-<div
-class="template-item"
-data-template="ats">
+<div class="template-info">
 
-<div class="template-thumb ats-thumb"></div>
+<h3>Minimal</h3>
 
-<h3>
+<p>Simple Layout</p>
 
-ATS Friendly
+<button class="use-template">
 
-</h3>
+Use Template
 
-</div>
-
-<div
-class="template-item"
-data-template="student">
-
-<div class="template-thumb student-thumb"></div>
-
-<h3>
-
-Student
-
-</h3>
+</button>
 
 </div>
 
-<div
-class="template-item"
-data-template="developer">
+</div>
 
-<div class="template-thumb developer-thumb"></div>
+<div class="template-card" data-template="executive">
 
-<h3>
+<div class="template-image">
 
-Software Engineer
-
-</h3>
+<img src="assets/templates/executive.png"
+alt="Executive Resume">
 
 </div>
 
-<div
-class="template-item"
-data-template="designer">
+<div class="template-info">
 
-<div class="template-thumb designer-thumb"></div>
+<h3>Executive</h3>
 
-<h3>
+<p>Senior Professionals</p>
 
-Designer
+<button class="use-template">
 
-</h3>
+Use Template
 
-</div>
-
-<div
-class="template-item"
-data-template="corporate">
-
-<div class="template-thumb corporate-thumb"></div>
-
-<h3>
-
-Corporate
-
-</h3>
+</button>
 
 </div>
 
-<div
-class="template-item"
-data-template="professional">
+</div>
 
-<div class="template-thumb professional-thumb"></div>
+<div class="template-card" data-template="creative">
 
-<h3>
+<div class="template-image">
 
-Professional
+<img src="assets/templates/creative.png"
+alt="Creative Resume">
 
-</h3>
+</div>
+
+<div class="template-info">
+
+<h3>Creative</h3>
+
+<p>Designer Friendly</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="ats">
+
+<div class="template-image">
+
+<img src="assets/templates/ats.png"
+alt="ATS Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>ATS Friendly</h3>
+
+<p>Highest ATS Score</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="student">
+
+<div class="template-image">
+
+<img src="assets/templates/student.png"
+alt="Student Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>Student</h3>
+
+<p>Freshers</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="software">
+
+<div class="template-image">
+
+<img src="assets/templates/software.png"
+alt="Software Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>Software Engineer</h3>
+
+<p>IT Jobs</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="designer">
+
+<div class="template-image">
+
+<img src="assets/templates/designer.png"
+alt="Designer Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>Designer</h3>
+
+<p>Creative Portfolio</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="corporate">
+
+<div class="template-image">
+
+<img src="assets/templates/corporate.png"
+alt="Corporate Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>Corporate</h3>
+
+<p>Business Resume</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
+
+<div class="template-card" data-template="professional">
+
+<div class="template-image">
+
+<img src="assets/templates/professional.png"
+alt="Professional Resume">
+
+</div>
+
+<div class="template-info">
+
+<h3>Professional</h3>
+
+<p>Universal Template</p>
+
+<button class="use-template">
+
+Use Template
+
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -619,249 +826,921 @@ Professional
 
 </section>
 
-<!-- ================= BUILDER ================= -->
+<!-- ======================================================
+BUILDER INTRO
+====================================================== -->
 
-<section
-id="builder"
-class="builder">
+<section class="builder-intro">
 
-<h2 class="section-title">
+<div class="container">
+
+<div class="builder-box">
+
+<div class="builder-left">
+
+<span class="section-tag">
 
 Resume Builder
 
+</span>
+
+<h2>
+
+Build Your Resume Step by Step
+
 </h2>
 
-<p class="section-subtitle">
+<p>
 
-Fill only the information you want to show.
-Empty fields will never appear in your resume.
+Fill your details once and watch your professional
+resume update instantly with live preview.
 
 </p>
 
-<div class="builder-container">
+<ul>
 
-<!-- LEFT PANEL -->
+<li>
 
-<div class="form-panel">
+<i class="fa-solid fa-circle-check"></i>
+
+Live Preview
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+ATS Friendly
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+AI Assistance
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Multiple Templates
+
+</li>
+
+<li>
+
+<i class="fa-solid fa-circle-check"></i>
+
+PDF / DOCX / PNG Export
+
+</li>
+
+</ul>
+
+<button class="primary-btn">
+
+Start Resume Builder
+
+</button>
+
+</div>
+
+<div class="builder-right">
+
+<img
+
+src="assets/images/builder-preview.png"
+
+alt="Resume Builder">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!-- ======================================================
+RESUME BUILDER
+====================================================== -->
+
+<section class="builder" id="builder">
+
+<div class="container">
+
+<div class="section-header">
+
+<span class="section-tag">
+
+Resume Builder
+
+</span>
+
+<h2>
+
+Build Your Professional Resume
+
+</h2>
+
+<p>
+
+Fill your details and watch your resume update in real time.
+
+</p>
+
+</div>
+
+<div class="builder-wrapper">
+
+<!-- ===================================
+LEFT SIDE FORM
+=================================== -->
+
+<div class="builder-form">
+
+<!-- PERSONAL INFORMATION -->
+
+<div class="form-card">
 
 <h3>
+
+<i class="fa-solid fa-user"></i>
 
 Personal Information
 
 </h3>
 
-<label>
+<div class="form-grid">
 
-Profile Photo (Optional)
+<div class="form-group">
 
-</label>
+<label>Profile Photo (Optional)</label>
 
 <input
 type="file"
 id="photo"
 accept="image/*">
 
-<label>
+</div>
 
-Full Name
+<div class="form-group">
 
-</label>
+<label>Full Name</label>
 
 <input
 type="text"
-id="name"
+id="fullName"
 placeholder="John Doe">
 
-<label>
+</div>
 
-Professional Title
+<div class="form-group">
 
-</label>
+<label>Professional Title</label>
 
 <input
 type="text"
 id="jobTitle"
 placeholder="Software Engineer">
 
-<label>
+</div>
 
-Email
+<div class="form-group">
 
-</label>
+<label>Email</label>
 
 <input
 type="email"
 id="email"
-placeholder="john@gmail.com">
+placeholder="example@gmail.com">
 
-<label>
+</div>
 
-Phone
+<div class="form-group">
 
-</label>
+<label>Phone</label>
 
 <input
 type="text"
 id="phone"
 placeholder="+91 9876543210">
 
-<label>
+</div>
 
-Address
+<div class="form-group">
 
-</label>
+<label>Address</label>
 
 <input
 type="text"
 id="address"
-placeholder="New Delhi, India">
+placeholder="City, State">
 
-<label>
+</div>
 
-LinkedIn
+<div class="form-group">
 
-</label>
+<label>LinkedIn</label>
 
 <input
-type="text"
+type="url"
 id="linkedin"
-placeholder="linkedin.com/in/john">
+placeholder="https://linkedin.com/in/...">
 
-<label>
+</div>
 
-Github
+<div class="form-group">
 
-</label>
+<label>GitHub</label>
 
 <input
-type="text"
+type="url"
 id="github"
-placeholder="github.com/john">
+placeholder="https://github.com/...">
 
-<label>
+</div>
 
-Portfolio
+<div class="form-group">
 
-</label>
+<label>Portfolio</label>
 
 <input
-type="text"
+type="url"
 id="portfolio"
-placeholder="portfolio.com">
+placeholder="https://yourportfolio.com">
 
-<label>
+</div>
 
-Website
+<div class="form-group">
 
-</label>
+<label>Website</label>
 
 <input
-type="text"
+type="url"
 id="website"
-placeholder="www.example.com">
+placeholder="https://yourwebsite.com">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PROFESSIONAL SUMMARY -->
+
+<div class="form-card">
 
 <h3>
+
+<i class="fa-solid fa-file-lines"></i>
 
 Professional Summary
 
 </h3>
 
 <textarea
+
 id="summary"
-rows="6"
-placeholder="Write your professional summary...">
+
+rows="7"
+
+maxlength="500"
+
+placeholder="Write a professional summary...">
 
 </textarea>
 
-<div class="counter">
+<div class="summary-tools">
 
 <span>
 
-Characters
+Characters :
 
-</span>
-
-<span id="summaryCount">
+<b id="summaryCount">
 
 0
 
+</b>
+
+/500
+
 </span>
 
-</div>
+<div>
 
 <button
 type="button"
-id="generateSummary"
-class="ai-btn">
+id="aiSummary"
+class="mini-btn">
 
-✨ Generate AI Summary
+AI Summary
 
 </button>
-<!-- ================= AI TARGET ROLE ================= -->
+
+<button
+type="button"
+id="rewriteSummary"
+class="mini-btn">
+
+Rewrite
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SOCIAL LINKS -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-share-nodes"></i>
+
+Professional Links
+
+</h3>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Twitter / X</label>
+
+<input
+type="url"
+id="twitter">
+
+</div>
+
+<div class="form-group">
+
+<label>Behance</label>
+
+<input
+type="url"
+id="behance">
+
+</div>
+
+<div class="form-group">
+
+<label>Dribbble</label>
+
+<input
+type="url"
+id="dribbble">
+
+</div>
+
+<div class="form-group">
+
+<label>Stack Overflow</label>
+
+<input
+type="url"
+id="stackoverflow">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SECTION CONTROL -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-eye"></i>
+
+Show / Hide Resume Sections
+
+</h3>
+
+<div class="toggle-grid">
 
 <label>
 
-Target Role / Job Description
+<input
+type="checkbox"
+checked
+data-section="summary">
+
+Summary
 
 </label>
 
-<textarea
-id="targetRole"
-rows="5"
-placeholder="Paste Job Description here...">
+<label>
 
-</textarea>
+<input
+type="checkbox"
+checked
+data-section="education">
 
-<div class="inline-buttons">
+Education
 
-<button
-type="button"
-id="tailorResume"
-class="mini-btn">
+</label>
 
-🎯 Tailor Resume
+<label>
 
-</button>
+<input
+type="checkbox"
+checked
+data-section="skills">
 
-<button
-type="button"
-id="optimizeATS"
-class="mini-btn">
+Skills
 
-🚀 Optimize ATS
+</label>
 
-</button>
+<label>
 
-<button
-type="button"
-id="suggestKeywords"
-class="mini-btn">
+<input
+type="checkbox"
+checked
+data-section="experience">
 
-🔍 Keywords
+Experience
 
-</button>
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="projects">
+
+Projects
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="certifications">
+
+Certifications
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="languages">
+
+Languages
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="achievements">
+
+Achievements
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="interests">
+
+Interests
+
+</label>
+
+<label>
+
+<input
+type="checkbox"
+checked
+data-section="references">
+
+References
+
+</label>
 
 </div>
 
-<div
-id="aiOutput"
-class="ai-output">
-
-AI suggestions will appear here...
+</div>
 
 </div>
 
-<!-- ================= ATS ================= -->
+<!-- ===================================
+RIGHT SIDE (Preview Placeholder)
+=================================== -->
+
+<div class="resume-preview">
+
+<div class="resume-paper" id="resumePaper">
+
+<h2 id="previewName">
+
+Your Name
+
+</h2>
+
+<p id="previewTitle">
+
+Professional Title
+
+</p>
+
+<p id="previewEmail">
+
+example@email.com
+
+</p>
+
+<p id="previewPhone">
+
++91 9876543210
+
+</p>
+
+<hr>
+
+<p>
+
+Live Resume Preview will continue here...
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!-- ======================================================
+SKILLS
+====================================================== -->
+
+<div class="form-card">
 
 <h3>
+
+<i class="fa-solid fa-code"></i>
+
+Skills
+
+</h3>
+
+<div id="skillsContainer"></div>
+
+<button
+type="button"
+id="addSkill"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Skill
+
+</button>
+
+</div>
+
+<!-- ======================================================
+EDUCATION
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-graduation-cap"></i>
+
+Education
+
+</h3>
+
+<div id="educationContainer"></div>
+
+<button
+type="button"
+id="addEducation"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Education
+
+</button>
+
+</div>
+
+<!-- ======================================================
+WORK EXPERIENCE
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-briefcase"></i>
+
+Work Experience
+
+</h3>
+
+<div id="experienceContainer"></div>
+
+<button
+type="button"
+id="addExperience"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Experience
+
+</button>
+
+</div>
+
+<!-- ======================================================
+PROJECTS
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-diagram-project"></i>
+
+Projects
+
+</h3>
+
+<div id="projectContainer"></div>
+
+<button
+type="button"
+id="addProject"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Project
+
+</button>
+
+</div>
+
+<!-- ======================================================
+CERTIFICATIONS
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-certificate"></i>
+
+Certifications
+
+</h3>
+
+<div id="certificationContainer"></div>
+
+<button
+type="button"
+id="addCertification"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Certification
+
+</button>
+
+</div>
+
+<!-- ======================================================
+LANGUAGES
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-language"></i>
+
+Languages
+
+</h3>
+
+<div id="languageContainer"></div>
+
+<button
+type="button"
+id="addLanguage"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Language
+
+</button>
+
+</div>
+
+<!-- ======================================================
+ACHIEVEMENTS
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-trophy"></i>
+
+Achievements
+
+</h3>
+
+<div id="achievementContainer"></div>
+
+<button
+type="button"
+id="addAchievement"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Achievement
+
+</button>
+
+</div>
+
+<!-- ======================================================
+INTERESTS
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-heart"></i>
+
+Interests / Hobbies
+
+</h3>
+
+<div id="interestContainer"></div>
+
+<button
+type="button"
+id="addInterest"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Interest
+
+</button>
+
+</div>
+
+<!-- ======================================================
+REFERENCES
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-user-group"></i>
+
+References (Optional)
+
+</h3>
+
+<div id="referenceContainer"></div>
+
+<button
+type="button"
+id="addReference"
+class="add-btn">
+
+<i class="fa-solid fa-plus"></i>
+
+Add Reference
+
+</button>
+
+</div>
+
+<!-- ======================================================
+EXPORT OPTIONS
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-download"></i>
+
+Export Resume
+
+</h3>
+
+<div class="export-buttons">
+
+<button
+id="downloadResumePDF"
+class="primary-btn">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Download PDF
+
+</button>
+
+<button
+id="downloadDOCX"
+class="secondary-btn">
+
+<i class="fa-solid fa-file-word"></i>
+
+Download DOCX
+
+</button>
+
+<button
+id="downloadPNG"
+class="secondary-btn">
+
+<i class="fa-solid fa-image"></i>
+
+Download PNG
+
+</button>
+
+<button
+id="printResume"
+class="secondary-btn">
+
+<i class="fa-solid fa-print"></i>
+
+Print
+
+</button>
+
+<button
+id="resetResume"
+class="danger-btn">
+
+<i class="fa-solid fa-trash"></i>
+
+Reset
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ======================================================
+ATS PANEL
+====================================================== -->
+
+<div class="form-card">
+
+<h3>
+
+<i class="fa-solid fa-chart-column"></i>
 
 ATS Resume Score
 
 </h3>
 
-<div class="ats-box">
+<div class="ats-score-box">
 
-<div class="progress">
+<div class="progress-bar">
 
 <div id="progressBar"></div>
 
@@ -875,380 +1754,109 @@ ATS Resume Score
 
 <div id="atsStats"></div>
 
-<ul id="atsTips"></ul>
+<ul id="atsTips">
+
+<li>
+
+Resume analysis will appear here.
+
+</li>
+
+</ul>
 
 </div>
 
-<!-- ================= CUSTOMIZATION ================= -->
+</div>
+
+<!-- ======================================================
+AI PANEL
+====================================================== -->
+
+<div class="form-card">
 
 <h3>
 
-Resume Customization
+<i class="fa-solid fa-robot"></i>
+
+AI Resume Assistant
 
 </h3>
 
-<label>
+<div class="ai-buttons">
 
-Font Family
+<button id="generateSummary">
 
-</label>
-
-<select id="fontFamily">
-
-<option value="Poppins">
-
-Poppins
-
-</option>
-
-<option value="Inter">
-
-Inter
-
-</option>
-
-<option value="Roboto">
-
-Roboto
-
-</option>
-
-<option value="Georgia">
-
-Georgia
-
-</option>
-
-</select>
-
-<label>
-
-Font Size
-
-</label>
-
-<input
-type="range"
-id="fontSize"
-min="14"
-max="20"
-value="15">
-
-<label>
-
-Line Spacing
-
-</label>
-
-<input
-type="range"
-id="lineSpacing"
-min="1"
-max="2"
-step="0.1"
-value="1.4">
-
-<h3>
-
-Theme Colors
-
-</h3>
-
-<div class="color-picker">
-
-<button
-class="theme-color active"
-data-color="#2563eb"
-style="background:#2563eb">
+AI Summary
 
 </button>
 
-<button
-class="theme-color"
-data-color="#059669"
-style="background:#059669">
+<button id="rewriteSummary">
+
+Rewrite
 
 </button>
 
-<button
-class="theme-color"
-data-color="#dc2626"
-style="background:#dc2626">
+<button id="optimizeATS">
+
+Optimize ATS
 
 </button>
 
-<button
-class="theme-color"
-data-color="#7c3aed"
-style="background:#7c3aed">
+<button id="generateBullet">
+
+Generate Bullet Points
 
 </button>
 
-<button
-class="theme-color"
-data-color="#ea580c"
-style="background:#ea580c">
+<button id="suggestKeywords">
+
+Suggest Keywords
+
+</button>
+
+<button id="tailorResume">
+
+Tailor Resume
 
 </button>
 
 </div>
 
-<!-- ================= EDUCATION ================= -->
+<textarea
 
-<h3>
+id="targetRole"
 
-Education
+rows="4"
 
-</h3>
+placeholder="Paste Job Description Here...">
 
-<div id="educationContainer">
+</textarea>
 
-</div>
+<div id="aiOutput">
 
-<button
-type="button"
-id="addEducation"
-class="add-btn">
-
-+ Add Education
-
-</button>
-
-<!-- ================= EXPERIENCE ================= -->
-
-<h3>
-
-Work Experience
-
-</h3>
-
-<div id="experienceContainer">
-
-</div>
-
-<button
-type="button"
-id="addExperience"
-class="add-btn">
-
-+ Add Experience
-
-</button>
-
-<!-- ================= SKILLS ================= -->
-
-<h3>
-
-Skills
-
-</h3>
-
-<div id="skillsContainer">
-
-</div>
-
-<button
-type="button"
-id="addSkill"
-class="add-btn">
-
-+ Add Skill
-
-</button>
-
-<!-- ================= PROJECTS ================= -->
-
-<h3>
-
-Projects
-
-</h3>
-
-<div id="projectContainer">
-
-</div>
-
-<button
-type="button"
-id="addProject"
-class="add-btn">
-
-+ Add Project
-
-</button>
-
-<!-- ================= CERTIFICATIONS ================= -->
-
-<h3>
-
-Certifications
-
-</h3>
-
-<div id="certificationContainer">
-
-</div>
-
-<button
-type="button"
-id="addCertification"
-class="add-btn">
-
-+ Add Certification
-
-</button>
-
-<!-- ================= LANGUAGES ================= -->
-
-<h3>
-
-Languages
-
-</h3>
-
-<div id="languageContainer">
-
-</div>
-
-<button
-type="button"
-id="addLanguage"
-class="add-btn">
-
-+ Add Language
-
-</button>
-
-<!-- ================= ACHIEVEMENTS ================= -->
-
-<h3>
-
-Achievements
-
-</h3>
-
-<div id="achievementContainer">
-
-</div>
-
-<button
-type="button"
-id="addAchievement"
-class="add-btn">
-
-+ Add Achievement
-
-</button>
-
-<!-- ================= INTERESTS ================= -->
-
-<h3>
-
-Interests
-
-</h3>
-
-<div id="interestContainer">
-
-</div>
-
-<button
-type="button"
-id="addInterest"
-class="add-btn">
-
-+ Add Interest
-
-</button>
-
-<!-- ================= REFERENCES ================= -->
-
-<h3>
-
-References (Optional)
-
-</h3>
-
-<div id="referenceContainer">
-
-</div>
-
-<button
-type="button"
-id="addReference"
-class="add-btn">
-
-+ Add Reference
-
-</button>
-
-<!-- ================= EXPORT ================= -->
-
-<div class="action-buttons">
-
-<button id="downloadResumePDF">
-
-<i class="fa-solid fa-file-pdf"></i>
-
-Download PDF
-
-</button>
-
-<button id="downloadDOCX">
-
-<i class="fa-solid fa-file-word"></i>
-
-Download DOCX
-
-</button>
-
-<button id="downloadPNG">
-
-<i class="fa-solid fa-image"></i>
-
-Download PNG
-
-</button>
-
-<button id="printResume">
-
-<i class="fa-solid fa-print"></i>
-
-Print Resume
-
-</button>
-
-<button id="resetResume">
-
-<i class="fa-solid fa-rotate-left"></i>
-
-Reset
-
-</button>
+AI Suggestions will appear here...
 
 </div>
 
 </div>
+<!-- ======================================================
+LIVE RESUME PREVIEW
+====================================================== -->
 
-<!-- ================= RIGHT PANEL START ================= -->
+<div class="resume-preview">
 
-<div class="resume-panel">
+<div class="resume-paper" id="resumePaper">
 
-<div
-id="resumePaper"
-class="resume-paper modern">
-<!-- ================= RESUME HEADER ================= -->
+<!-- HEADER -->
 
 <div class="resume-header">
 
-<div
-class="resume-photo"
-id="photoSection">
+<div class="resume-photo">
 
 <img
 id="previewPhoto"
-src=""
-alt="Profile Photo">
+src="assets/images/default-avatar.png"
+alt="Profile">
 
 </div>
 
@@ -1268,66 +1876,35 @@ Professional Title
 
 <div class="resume-contact">
 
-<div
-id="emailBlock">
+<span id="previewEmail">
 
-<i class="fa-solid fa-envelope"></i>
+example@gmail.com
 
-<span id="previewEmail"></span>
+</span>
 
-</div>
+<span id="previewPhone">
 
-<div
-id="phoneBlock">
++91 9876543210
 
-<i class="fa-solid fa-phone"></i>
+</span>
 
-<span id="previewPhone"></span>
+<span id="previewAddress">
 
-</div>
+Your Address
 
-<div
-id="addressBlock">
-
-<i class="fa-solid fa-location-dot"></i>
-
-<span id="previewAddress"></span>
+</span>
 
 </div>
 
-<div
-id="linkedinBlock">
+<div class="resume-links">
 
-<i class="fa-brands fa-linkedin"></i>
+<a id="previewLinkedin" target="_blank"></a>
 
-<span id="previewLinkedin"></span>
+<a id="previewGithub" target="_blank"></a>
 
-</div>
+<a id="previewPortfolio" target="_blank"></a>
 
-<div
-id="githubBlock">
-
-<i class="fa-brands fa-github"></i>
-
-<span id="previewGithub"></span>
-
-</div>
-
-<div
-id="portfolioBlock">
-
-<i class="fa-solid fa-globe"></i>
-
-<span id="previewPortfolio"></span>
-
-</div>
-
-<div
-id="websiteBlock">
-
-<i class="fa-solid fa-earth-americas"></i>
-
-<span id="previewWebsite"></span>
+<a id="previewWebsite" target="_blank"></a>
 
 </div>
 
@@ -1335,15 +1912,7 @@ id="websiteBlock">
 
 </div>
 
-</div>
-
-<!-- ================= RESUME BODY ================= -->
-
-<div class="resume-body">
-
-<!-- LEFT COLUMN -->
-
-<div class="resume-left">
+<!-- SUMMARY -->
 
 <section
 class="resume-section"
@@ -1357,11 +1926,13 @@ Professional Summary
 
 <p id="previewSummary">
 
-Write your professional summary here.
+Professional Summary
 
 </p>
 
 </section>
+
+<!-- SKILLS -->
 
 <section
 class="resume-section"
@@ -1373,81 +1944,11 @@ Skills
 
 </h2>
 
-<ul id="previewSkills">
-
-</ul>
+<ul id="previewSkills"></ul>
 
 </section>
 
-<section
-class="resume-section"
-id="languagesSection">
-
-<h2>
-
-Languages
-
-</h2>
-
-<ul id="previewLanguages">
-
-</ul>
-
-</section>
-
-<section
-class="resume-section"
-id="interestsSection">
-
-<h2>
-
-Interests
-
-</h2>
-
-<ul id="previewInterests">
-
-</ul>
-
-</section>
-
-<section
-class="resume-section"
-id="referencesSection">
-
-<h2>
-
-References
-
-</h2>
-
-<ul id="previewReferences">
-
-</ul>
-
-</section>
-
-</div>
-
-<!-- RIGHT COLUMN -->
-
-<div class="resume-right">
-
-<section
-class="resume-section"
-id="experienceSection">
-
-<h2>
-
-Work Experience
-
-</h2>
-
-<div id="previewExperience">
-
-</div>
-
-</section>
+<!-- EDUCATION -->
 
 <section
 class="resume-section"
@@ -1459,11 +1960,27 @@ Education
 
 </h2>
 
-<div id="previewEducation">
-
-</div>
+<div id="previewEducation"></div>
 
 </section>
+
+<!-- EXPERIENCE -->
+
+<section
+class="resume-section"
+id="experienceSection">
+
+<h2>
+
+Experience
+
+</h2>
+
+<div id="previewExperience"></div>
+
+</section>
+
+<!-- PROJECTS -->
 
 <section
 class="resume-section"
@@ -1475,11 +1992,11 @@ Projects
 
 </h2>
 
-<div id="previewProjects">
-
-</div>
+<div id="previewProjects"></div>
 
 </section>
+
+<!-- CERTIFICATIONS -->
 
 <section
 class="resume-section"
@@ -1491,11 +2008,27 @@ Certifications
 
 </h2>
 
-<div id="previewCertifications">
-
-</div>
+<ul id="previewCertifications"></ul>
 
 </section>
+
+<!-- LANGUAGES -->
+
+<section
+class="resume-section"
+id="languagesSection">
+
+<h2>
+
+Languages
+
+</h2>
+
+<ul id="previewLanguages"></ul>
+
+</section>
+
+<!-- ACHIEVEMENTS -->
 
 <section
 class="resume-section"
@@ -1507,264 +2040,61 @@ Achievements
 
 </h2>
 
-<div id="previewAchievements">
-
-</div>
+<ul id="previewAchievements"></ul>
 
 </section>
 
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-<!-- ================= FAQ ================= -->
+<!-- INTERESTS -->
 
 <section
-id="faq"
-class="faq">
-
-<h2 class="section-title">
-
-Frequently Asked Questions
-
-</h2>
-
-<div class="faq-container">
-
-<div class="faq-item">
-
-<h3>
-
-Is ResumeCraft AI Free?
-
-</h3>
-
-<p>
-
-Yes. You can build professional resumes for free.
-Premium templates and AI tools will be optional.
-
-</p>
-
-</div>
-
-<div class="faq-item">
-
-<h3>
-
-Is it ATS Friendly?
-
-</h3>
-
-<p>
-
-Yes.
-All templates are designed to pass Applicant Tracking Systems.
-
-</p>
-
-</div>
-
-<div class="faq-item">
-
-<h3>
-
-Can I download PDF?
-
-</h3>
-
-<p>
-
-Yes.
-You can export PDF, DOCX, PNG and Print.
-
-</p>
-
-</div>
-
-<div class="faq-item">
-
-<h3>
-
-Can I edit later?
-
-</h3>
-
-<p>
-
-Yes.
-Your resume is automatically saved locally.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ================= FOOTER ================= -->
-
-<footer
-id="contact">
-
-<div class="footer-container">
-
-<div class="footer-logo">
+class="resume-section"
+id="interestsSection">
 
 <h2>
 
-ResumeCraft AI
+Interests
 
 </h2>
 
-<p>
+<ul id="previewInterests"></ul>
 
-Build beautiful ATS Friendly resumes in minutes.
+</section>
 
-</p>
+<!-- REFERENCES -->
 
-</div>
+<section
+class="resume-section"
+id="referencesSection">
 
-<div class="footer-links">
+<h2>
 
-<h3>
+References
 
-Quick Links
+</h2>
 
-</h3>
+<div id="previewReferences"></div>
 
-<a href="#home">
-
-Home
-
-</a>
-
-<a href="#features">
-
-Features
-
-</a>
-
-<a href="#templates">
-
-Templates
-
-</a>
-
-<a href="#builder">
-
-Builder
-
-</a>
-
-<a href="#faq">
-
-FAQ
-
-</a>
-
-</div>
-
-<div class="footer-links">
-
-<h3>
-
-Tools
-
-</h3>
-
-<a href="#">
-
-Resume Builder
-
-</a>
-
-<a href="#">
-
-Cover Letter
-
-</a>
-
-<a href="#">
-
-ATS Checker
-
-</a>
-
-<a href="#">
-
-Interview AI
-
-</a>
-
-</div>
-
-<div class="footer-links">
-
-<h3>
-
-Support
-
-</h3>
-
-<a href="#">
-
-Privacy Policy
-
-</a>
-
-<a href="#">
-
-Terms
-
-</a>
-
-<a href="#">
-
-Contact
-
-</a>
-
-<a href="#">
-
-Help Center
-
-</a>
+</section>
 
 </div>
 
 </div>
 
-<hr>
+</div>
 
-<p class="copyright">
+</div>
 
-© 2026 ResumeCraft AI.
-All Rights Reserved.
+</section>
 
-</p>
+<!-- ======================================================
+LOGIN MODAL
+====================================================== -->
 
-</footer>
+<div class="modal" id="loginModal">
 
-<!-- ================= LOGIN MODAL ================= -->
+<div class="modal-box">
 
-<div
-id="loginModal"
-class="modal">
-
-<div class="modal-content">
-
-<span class="close-modal">
-
-&times;
-
-</span>
+<span class="close-modal">&times;</span>
 
 <h2>
 
@@ -1780,29 +2110,38 @@ placeholder="Email">
 type="password"
 placeholder="Password">
 
-<button>
+<button class="primary-btn">
 
 Login
 
 </button>
 
-</div>
+<p>
+
+Don't have an account?
+
+<a href="#"
+id="openRegister">
+
+Register
+
+</a>
+
+</p>
 
 </div>
 
-<!-- ================= REGISTER MODAL ================= -->
+</div>
 
-<div
-id="registerModal"
-class="modal">
+<!-- ======================================================
+REGISTER MODAL
+====================================================== -->
 
-<div class="modal-content">
+<div class="modal" id="registerModal">
 
-<span class="close-modal">
+<div class="modal-box">
 
-&times;
-
-</span>
+<span class="close-modal">&times;</span>
 
 <h2>
 
@@ -1822,64 +2161,200 @@ placeholder="Email">
 type="password"
 placeholder="Password">
 
-<button>
+<button class="primary-btn">
 
-Register
+Create Account
 
 </button>
 
-</div>
-
-</div>
-
-<!-- ================= AI LOADING ================= -->
-
-<div
-id="aiLoader"
-class="ai-loader">
-
-<div class="spinner"></div>
-
 <p>
 
-AI is generating your content...
+Already have an account?
+
+<a href="#"
+id="openLogin">
+
+Login
+
+</a>
 
 </p>
 
 </div>
 
-<!-- ================= TEMPLATE PREVIEW ================= -->
+</div>
 
-<div
-id="templateModal"
-class="template-modal">
+<!-- ======================================================
+PRICING
+====================================================== -->
 
-<div class="template-modal-content">
+<section
+class="pricing"
+id="pricing">
 
-<span id="closeTemplate">
+<div class="container">
 
-&times;
+<h2>
 
-</span>
+Pricing
 
-<img
-id="templatePreviewImage"
-src=""
-alt="Template Preview">
+</h2>
+
+<p>
+
+Free Forever Plan Available
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+FAQ
+====================================================== -->
+
+<section
+class="faq"
+id="faq">
+
+<div class="container">
+
+<h2>
+
+Frequently Asked Questions
+
+</h2>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+CONTACT
+====================================================== -->
+
+<section
+class="contact"
+id="contact">
+
+<div class="container">
+
+<h2>
+
+Contact Us
+
+</h2>
+
+<p>
+
+support@resumecraftai.com
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ======================================================
+FOOTER
+====================================================== -->
+
+<footer class="footer">
+
+<div class="container footer-grid">
+
+<div>
+
+<h2>
+
+ResumeCraft AI
+
+</h2>
+
+<p>
+
+Create ATS Friendly Professional Resume Easily.
+
+</p>
+
+</div>
+
+<div>
+
+<h3>
+
+Quick Links
+
+</h3>
+
+<a href="#home">Home</a>
+
+<a href="#features">Features</a>
+
+<a href="#templates">Templates</a>
+
+<a href="#builder">Builder</a>
+
+</div>
+
+<div>
+
+<h3>
+
+Support
+
+</h3>
+
+<a href="#faq">
+
+FAQ
+
+</a>
+
+<a href="#contact">
+
+Contact
+
+</a>
 
 </div>
 
 </div>
 
-<!-- ================= LIBRARIES ================= -->
+<div class="footer-bottom">
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<p>
+
+© 2026 ResumeCraft AI. All Rights Reserved.
+
+</p>
+
+</div>
+
+</footer>
+
+<!-- ======================================================
+SCRIPTS
+====================================================== -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/9.5.1/docx.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+
+AOS.init({
+
+duration:800,
+
+once:true
+
+});
+
+</script>
 
 <script src="script.js"></script>
 
