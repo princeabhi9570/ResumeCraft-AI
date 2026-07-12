@@ -1,899 +1,449 @@
-/*==========================================
-ResumeCraft AI v5
-==========================================*/
+﻿const storageKey = 'resumeCraftData';
+const loader = document.getElementById('loader');
+const toast = document.getElementById('toast');
+const resumePaper = document.getElementById('resumePaper');
+const themeToggle = document.getElementById('themeToggle');
+const summaryInput = document.getElementById('summary');
+const summaryCount = document.getElementById('summaryCount');
+const targetRoleInput = document.getElementById('targetRole');
+const aiOutput = document.getElementById('aiOutput');
+const atsScoreEl = document.getElementById('atsScore');
+const atsStatsEl = document.getElementById('atsStats');
+const atsTipsEl = document.getElementById('atsTips');
+const progressBar = document.getElementById('progressBar');
+const fontFamily = document.getElementById('fontFamily');
+const fontSize = document.getElementById('fontSize');
+const fontSizeValue = document.getElementById('fontSizeValue');
+const lineSpacing = document.getElementById('lineSpacing');
+const lineSpacingValue = document.getElementById('lineSpacingValue');
+const swatches = document.querySelectorAll('.swatch');
+const templateItems = document.querySelectorAll('.template-item');
 
-/* ========= ELEMENTS ========= */
+const fieldMap = [
+  ['name', 'previewName', 'Your Name'],
+  ['jobTitle', 'previewJobTitle', 'Professional Title'],
+  ['email', 'previewEmail', 'example@email.com'],
+  ['phone', 'previewPhone', '+91 9876543210'],
+  ['address', 'previewAddress', 'Your Address'],
+  ['linkedin', 'previewLinkedin', 'linkedin.com/in/username'],
+  ['github', 'previewGithub', 'github.com/username'],
+  ['portfolio', 'previewPortfolio', 'portfolio.com'],
+  ['website', 'previewWebsite', 'yourwebsite.com'],
+  ['summary', 'previewSummary', 'Write a sharp, results-focused summary that highlights your strengths, achievements, and domain expertise.']
+];
 
-const resume = document.getElementById("resumePaper");
+const listSections = [
+  { containerId: 'skillsContainer', previewId: 'previewSkills', placeholder: 'Enter a skill', defaultValue: '' },
+  { containerId: 'educationContainer', previewId: 'previewEducation', placeholder: 'Enter education', defaultValue: '' },
+  { containerId: 'experienceContainer', previewId: 'previewExperience', placeholder: 'Enter experience', defaultValue: '' },
+  { containerId: 'projectContainer', previewId: 'previewProjects', placeholder: 'Enter project', defaultValue: '' },
+  { containerId: 'certificationContainer', previewId: 'previewCertifications', placeholder: 'Enter certification', defaultValue: '' },
+  { containerId: 'languageContainer', previewId: 'previewLanguages', placeholder: 'Enter language', defaultValue: '' },
+  { containerId: 'achievementContainer', previewId: 'previewAchievements', placeholder: 'Enter achievement', defaultValue: '' },
+  { containerId: 'interestContainer', previewId: 'previewInterests', placeholder: 'Enter interest', defaultValue: '' },
+  { containerId: 'referenceContainer', previewId: 'previewReferences', placeholder: 'Enter reference', defaultValue: '' }
+];
 
-const photo = document.getElementById("photo");
-
-const previewPhoto = document.getElementById("previewPhoto");
-
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
-const phoneInput = document.getElementById("phone");
-const addressInput = document.getElementById("address");
-
-const linkedinInput = document.getElementById("linkedin");
-const githubInput = document.getElementById("github");
-const portfolioInput = document.getElementById("portfolio");
-
-const summaryInput = document.getElementById("summary");
-
-const previewName = document.getElementById("previewName");
-const previewEmail = document.getElementById("previewEmail");
-const previewPhone = document.getElementById("previewPhone");
-const previewAddress = document.getElementById("previewAddress");
-
-const previewLinkedin = document.getElementById("previewLinkedin");
-const previewGithub = document.getElementById("previewGithub");
-const previewPortfolio = document.getElementById("previewPortfolio");
-
-const previewSummary = document.getElementById("previewSummary");
-
-const toast = document.getElementById("toast");
-
-const loader = document.getElementById("loader");
-
-/* ========= LOADER ========= */
-
-window.addEventListener("load", () => {
-
-setTimeout(() => {
-
-loader.style.display = "none";
-
-},800);
-
+window.addEventListener('load', () => {
+  setTimeout(() => { loader.style.display = 'none'; }, 700);
+  initializeLists();
+  bindInputs();
+  bindSectionToggles();
+  bindActions();
+  loadData();
+  updateResumeDisplay();
+  calculateATS();
+  applyTheme();
 });
 
-/* ========= TOAST ========= */
-
-function showToast(message){
-
-toast.innerText = message;
-
-toast.classList.add("show");
-
-setTimeout(()=>{
-
-toast.classList.remove("show");
-
-},2500);
-
+function showToast(message) {
+  toast.innerText = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-/* ========= LIVE PREVIEW ========= */
-
-nameInput.addEventListener("input",()=>{
-
-previewName.textContent =
-nameInput.value || "Your Name";
-
-saveData();
-
-});
-
-emailInput.addEventListener("input",()=>{
-
-previewEmail.textContent =
-emailInput.value || "example@email.com";
-
-saveData();
-
-});
-
-phoneInput.addEventListener("input",()=>{
-
-previewPhone.textContent =
-phoneInput.value || "+91 9876543210";
-
-saveData();
-
-});
-
-addressInput.addEventListener("input",()=>{
-
-previewAddress.textContent =
-addressInput.value || "Your Address";
-
-saveData();
-
-});
-
-linkedinInput.addEventListener("input",()=>{
-
-previewLinkedin.textContent =
-linkedinInput.value || "linkedin.com/in/username";
-
-saveData();
-
-});
-
-githubInput.addEventListener("input",()=>{
-
-previewGithub.textContent =
-githubInput.value || "github.com/username";
-
-saveData();
-
-});
-
-portfolioInput.addEventListener("input",()=>{
-
-previewPortfolio.textContent =
-portfolioInput.value || "portfolio.com";
-
-saveData();
-
-});
-
-summaryInput.addEventListener("input",()=>{
-
-previewSummary.textContent =
-summaryInput.value || "Write your objective here...";
-
-saveData();
-
-});
-
-/* ========= PHOTO ========= */
-
-photo.addEventListener("change",(e)=>{
-
-const file=e.target.files[0];
-
-if(!file) return;
-
-const reader=new FileReader();
-
-reader.onload=function(){
-
-previewPhoto.src=reader.result;
-
-saveData();
-
-};
-
-reader.readAsDataURL(file);
-
-});
-/*==========================================
-DYNAMIC LISTS
-==========================================*/
-
-const educationContainer=document.getElementById("educationContainer");
-const skillsContainer=document.getElementById("skillsContainer");
-const experienceContainer=document.getElementById("experienceContainer");
-const projectContainer=document.getElementById("projectContainer");
-
-const previewEducation=document.getElementById("previewEducation");
-const previewSkills=document.getElementById("previewSkills");
-const previewExperience=document.getElementById("previewExperience");
-const previewProjects=document.getElementById("previewProjects");
-
-/*==========================================
-CREATE INPUT
-==========================================*/
-
-function createInput(container,preview,type){
-
-const row=document.createElement("div");
-
-row.className="dynamic-row";
-
-const input=document.createElement("input");
-
-input.type="text";
-
-input.placeholder="Enter "+type;
-
-const remove=document.createElement("button");
-
-remove.type="button";
-
-remove.className="remove-btn";
-
-remove.innerHTML="❌";
-
-row.appendChild(input);
-
-row.appendChild(remove);
-
-container.appendChild(row);
-
-function update(){
-
-preview.innerHTML="";
-
-const inputs=container.querySelectorAll("input");
-
-inputs.forEach(item=>{
-
-if(item.value.trim()!=""){
-
-if(preview.tagName==="UL"){
-
-const li=document.createElement("li");
-
-li.textContent=item.value;
-
-preview.appendChild(li);
-
-}else{
-
-const div=document.createElement("div");
-
-div.className="project-card";
-
-div.innerHTML=`<p>${item.value}</p>`;
-
-preview.appendChild(div);
-
+function saveData() {
+  const data = {
+    fields: {},
+    lists: {},
+    toggles: {},
+    theme: document.body.classList.contains('dark'),
+    template: resumePaper.classList.contains('modern') ? 'modern' : resumePaper.className.split(' ').find(c => ['modern','ats','corporate','creative','minimal'].includes(c)) || 'modern',
+    fontFamily: fontFamily.value,
+    fontSize: fontSize.value,
+    lineSpacing: lineSpacing.value,
+    accentColor: document.querySelector('.swatch.active')?.dataset.color || '#2563eb'
+  };
+
+  fieldMap.forEach(([id, previewId, fallback]) => {
+    const input = document.getElementById(id);
+    if (input) {
+      data.fields[id] = input.value;
+    }
+  });
+
+  listSections.forEach(section => {
+    const container = document.getElementById(section.containerId);
+    const values = Array.from(container.querySelectorAll('input'))
+      .map(item => item.value.trim())
+      .filter(Boolean);
+    data.lists[section.containerId] = values;
+  });
+
+  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
+    data.toggles[box.dataset.section] = box.checked;
+  });
+
+  localStorage.setItem(storageKey, JSON.stringify(data));
 }
 
+function loadData() {
+  const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+  if (!saved) return;
+
+  fieldMap.forEach(([id]) => {
+    const input = document.getElementById(id);
+    if (input && saved.fields?.[id] !== undefined) {
+      input.value = saved.fields[id];
+    }
+  });
+
+  listSections.forEach(section => {
+    const container = document.getElementById(section.containerId);
+    const preview = document.getElementById(section.previewId);
+    const values = saved.lists?.[section.containerId] || [];
+    renderList(container, preview, section.placeholder, values);
+  });
+
+  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
+    const checked = saved.toggles?.[box.dataset.section];
+    box.checked = checked !== undefined ? checked : true;
+    const section = document.getElementById(`${box.dataset.section}Section`);
+    if (section) section.style.display = box.checked ? '' : 'none';
+  });
+
+  if (saved.theme) document.body.classList.add('dark');
+  if (saved.template) setTemplate(saved.template);
+  if (saved.fontFamily) fontFamily.value = saved.fontFamily;
+  if (saved.fontSize) { fontSize.value = saved.fontSize; fontSizeValue.textContent = `${saved.fontSize}px`; }
+  if (saved.lineSpacing) { lineSpacing.value = saved.lineSpacing; lineSpacingValue.textContent = saved.lineSpacing; }
+  if (saved.accentColor) {
+    document.documentElement.style.setProperty('--primary', saved.accentColor);
+    document.documentElement.style.setProperty('--secondary', saved.accentColor);
+    document.querySelectorAll('.swatch').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.color === saved.accentColor);
+    });
+  }
+
+  updateResumeDisplay();
+  calculateATS();
 }
 
-});
+function bindInputs() {
+  fieldMap.forEach(([id, previewId, fallback]) => {
+    const input = document.getElementById(id);
+    const preview = document.getElementById(previewId);
+    if (!input || !preview) return;
+    input.addEventListener('input', () => {
+      if (id === 'summary') {
+        preview.textContent = input.value.trim() || fallback;
+        summaryCount.textContent = input.value.length;
+      } else {
+        preview.textContent = input.value.trim() || fallback;
+      }
+      saveData();
+      calculateATS();
+      updateResumeDisplay();
+    });
+  });
 
-calculateATS();
+  const photoInput = document.getElementById('photo');
+  const previewPhoto = document.getElementById('previewPhoto');
+  photoInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      previewPhoto.src = reader.result;
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
 
-saveData();
-
+  fontFamily.addEventListener('change', () => {
+    resumePaper.style.fontFamily = fontFamily.value;
+    saveData();
+  });
+  fontSize.addEventListener('input', () => {
+    fontSizeValue.textContent = `${fontSize.value}px`;
+    resumePaper.style.fontSize = `${fontSize.value}px`;
+    saveData();
+  });
+  lineSpacing.addEventListener('input', () => {
+    lineSpacingValue.textContent = lineSpacing.value;
+    resumePaper.style.lineHeight = lineSpacing.value;
+    saveData();
+  });
+  swatches.forEach(btn => {
+    btn.addEventListener('click', () => {
+      swatches.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const color = btn.dataset.color;
+      document.documentElement.style.setProperty('--primary', color);
+      document.documentElement.style.setProperty('--secondary', color);
+      saveData();
+    });
+  });
 }
 
-input.addEventListener("input",update);
-
-remove.addEventListener("click",()=>{
-
-row.remove();
-
-update();
-
-});
-
+function initializeLists() {
+  listSections.forEach(section => {
+    const container = document.getElementById(section.containerId);
+    const preview = document.getElementById(section.previewId);
+    renderList(container, preview, section.placeholder, []);
+  });
 }
 
-/*==========================================
-ADD BUTTONS
-==========================================*/
-
-document
-.getElementById("addEducation")
-.addEventListener("click",()=>{
-
-createInput(
-educationContainer,
-previewEducation,
-"Education"
-);
-
-});
-
-document
-.getElementById("addSkill")
-.addEventListener("click",()=>{
-
-createInput(
-skillsContainer,
-previewSkills,
-"Skill"
-);
-
-});
-
-document
-.getElementById("addExperience")
-.addEventListener("click",()=>{
-
-createInput(
-experienceContainer,
-previewExperience,
-"Experience"
-);
-
-});
-
-document
-.getElementById("addProject")
-.addEventListener("click",()=>{
-
-createInput(
-projectContainer,
-previewProjects,
-"Project"
-);
-
-});
-
-/*==========================================
-DEFAULT INPUTS
-==========================================*/
-
-createInput(
-educationContainer,
-previewEducation,
-"Education"
-);
-
-createInput(
-skillsContainer,
-previewSkills,
-"Skill"
-);
-
-createInput(
-experienceContainer,
-previewExperience,
-"Experience"
-);
-
-createInput(
-projectContainer,
-previewProjects,
-"Project"
-);
-/*==========================================
-CERTIFICATIONS
-LANGUAGES
-INTERESTS
-==========================================*/
-
-const certificationContainer =
-document.getElementById("certificationContainer");
-
-const languageContainer =
-document.getElementById("languageContainer");
-
-const interestContainer =
-document.getElementById("interestContainer");
-
-const previewCertifications =
-document.getElementById("previewCertifications");
-
-const previewLanguages =
-document.getElementById("previewLanguages");
-
-const previewInterests =
-document.getElementById("previewInterests");
-
-/*========== CERTIFICATION ==========*/
-
-document
-.getElementById("addCertification")
-.addEventListener("click",()=>{
-
-createInput(
-
-certificationContainer,
-
-previewCertifications,
-
-"Certification"
-
-);
-
-});
-
-/*========== LANGUAGE ==========*/
-
-document
-.getElementById("addLanguage")
-.addEventListener("click",()=>{
-
-createInput(
-
-languageContainer,
-
-previewLanguages,
-
-"Language"
-
-);
-
-});
-
-/*========== INTEREST ==========*/
-
-document
-.getElementById("addInterest")
-.addEventListener("click",()=>{
-
-createInput(
-
-interestContainer,
-
-previewInterests,
-
-"Interest"
-
-);
-
-});
-
-/*========== DEFAULT ==========*/
-
-createInput(
-
-certificationContainer,
-
-previewCertifications,
-
-"Certification"
-
-);
-
-createInput(
-
-languageContainer,
-
-previewLanguages,
-
-"Language"
-
-);
-
-createInput(
-
-interestContainer,
-
-previewInterests,
-
-"Interest"
-
-);
-
-/*==========================================
-ATS SCORE
-==========================================*/
-
-const atsScore =
-document.getElementById("atsScore");
-
-const progressBar =
-document.getElementById("progressBar");
-
-function calculateATS(){
-
-let score=20;
-
-if(nameInput.value.trim()) score+=10;
-
-if(emailInput.value.trim()) score+=10;
-
-if(phoneInput.value.trim()) score+=10;
-
-if(summaryInput.value.trim()) score+=10;
-
-if(educationContainer.querySelectorAll("input").length>0)
-score+=10;
-
-if(skillsContainer.querySelectorAll("input").length>0)
-score+=10;
-
-if(experienceContainer.querySelectorAll("input").length>0)
-score+=10;
-
-if(projectContainer.querySelectorAll("input").length>0)
-score+=10;
-
-if(score>100){
-
-score=100;
-
+function renderList(container, preview, placeholder, values = []) {
+  container.innerHTML = '';
+  preview.innerHTML = '';
+  const items = values.length ? values : [''];
+  items.forEach((value, index) => {
+    const row = document.createElement('div');
+    row.className = 'dynamic-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = placeholder;
+    input.value = value;
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'remove-btn';
+    remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    row.append(input, remove);
+    container.appendChild(row);
+
+    input.addEventListener('input', () => {
+      renderList(container, preview, placeholder, getValues(container));
+      saveData();
+      calculateATS();
+    });
+    remove.addEventListener('click', () => {
+      row.remove();
+      renderList(container, preview, placeholder, getValues(container));
+      saveData();
+      calculateATS();
+    });
+  });
+  updatePreviewList(preview, getValues(container));
 }
 
-atsScore.innerHTML=score+"%";
-
-progressBar.style.width=score+"%";
-
+function getValues(container) {
+  return Array.from(container.querySelectorAll('input')).map(item => item.value.trim()).filter(Boolean);
 }
 
-/*==========================================
-TEMPLATE SWITCH
-==========================================*/
-
-const templates=
-
-document.querySelectorAll(".template-item");
-
-templates.forEach(card=>{
-
-card.addEventListener("click",()=>{
-
-templates.forEach(t=>{
-
-t.classList.remove("active");
-
-});
-
-card.classList.add("active");
-
-resume.className="resume-paper";
-
-resume.classList.add(
-
-card.dataset.template
-
-);
-
-showToast(
-
-card.dataset.template+
-
-" Template Selected"
-
-);
-
-});
-
-});
-
-calculateATS();
-/*==========================================
-AUTO SAVE
-==========================================*/
-
-function saveData(){
-
-const data={
-
-name:nameInput.value,
-
-email:emailInput.value,
-
-phone:phoneInput.value,
-
-address:addressInput.value,
-
-linkedin:linkedinInput.value,
-
-github:githubInput.value,
-
-portfolio:portfolioInput.value,
-
-summary:summaryInput.value,
-
-photo:previewPhoto.src,
-
-theme:document.body.classList.contains("dark")
-
-};
-
-localStorage.setItem(
-
-"resumeCraftData",
-
-JSON.stringify(data)
-
-);
-
+function updatePreviewList(preview, values) {
+  preview.innerHTML = '';
+  if (!values.length) return;
+  const list = document.createElement('ul');
+  values.forEach(value => {
+    const item = document.createElement('li');
+    item.className = 'preview-item';
+    item.textContent = value;
+    list.appendChild(item);
+  });
+  preview.appendChild(list);
 }
 
-/*==========================================
-LOAD DATA
-==========================================*/
-
-window.addEventListener("DOMContentLoaded",()=>{
-
-const data=JSON.parse(
-
-localStorage.getItem("resumeCraftData")
-
-);
-
-if(!data) return;
-
-nameInput.value=data.name||"";
-emailInput.value=data.email||"";
-phoneInput.value=data.phone||"";
-addressInput.value=data.address||"";
-
-linkedinInput.value=data.linkedin||"";
-githubInput.value=data.github||"";
-portfolioInput.value=data.portfolio||"";
-
-summaryInput.value=data.summary||"";
-
-previewName.innerHTML=data.name||"Your Name";
-previewEmail.innerHTML=data.email||"example@email.com";
-previewPhone.innerHTML=data.phone||"+91 9876543210";
-previewAddress.innerHTML=data.address||"Your Address";
-
-previewLinkedin.innerHTML=data.linkedin||"";
-previewGithub.innerHTML=data.github||"";
-previewPortfolio.innerHTML=data.portfolio||"";
-
-previewSummary.innerHTML=data.summary||"";
-
-if(data.photo){
-
-previewPhoto.src=data.photo;
-
+function bindSectionToggles() {
+  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(box => {
+    box.addEventListener('change', () => {
+      const section = document.getElementById(`${box.dataset.section}Section`);
+      if (section) section.style.display = box.checked ? '' : 'none';
+      saveData();
+    });
+  });
 }
 
-if(data.theme){
+function bindActions() {
+  document.getElementById('addSkill').addEventListener('click', () => addListItem('skillsContainer', 'previewSkills', 'Enter a skill'));
+  document.getElementById('addEducation').addEventListener('click', () => addListItem('educationContainer', 'previewEducation', 'Enter education'));
+  document.getElementById('addExperience').addEventListener('click', () => addListItem('experienceContainer', 'previewExperience', 'Enter experience'));
+  document.getElementById('addProject').addEventListener('click', () => addListItem('projectContainer', 'previewProjects', 'Enter project'));
+  document.getElementById('addCertification').addEventListener('click', () => addListItem('certificationContainer', 'previewCertifications', 'Enter certification'));
+  document.getElementById('addLanguage').addEventListener('click', () => addListItem('languageContainer', 'previewLanguages', 'Enter language'));
+  document.getElementById('addAchievement').addEventListener('click', () => addListItem('achievementContainer', 'previewAchievements', 'Enter achievement'));
+  document.getElementById('addInterest').addEventListener('click', () => addListItem('interestContainer', 'previewInterests', 'Enter interest'));
+  document.getElementById('addReference').addEventListener('click', () => addListItem('referenceContainer', 'previewReferences', 'Enter reference'));
 
-document.body.classList.add("dark");
+  document.getElementById('generateSummary').addEventListener('click', () => {
+    const role = targetRoleInput.value.trim();
+    const text = role ? `Results-focused ${role} professional with strong execution, stakeholder communication, and delivery discipline.` : 'Results-focused professional with strong execution, stakeholder communication, and delivery discipline.';
+    summaryInput.value = text;
+    document.getElementById('previewSummary').textContent = text;
+    summaryCount.textContent = text.length;
+    saveData();
+    calculateATS();
+  });
 
+  document.getElementById('tailorResume').addEventListener('click', () => {
+    const role = targetRoleInput.value.trim() || 'target role';
+    const text = `Tailored for ${role}: emphasizing delivery, collaboration, measurable impact, and domain-relevant achievements.`;
+    summaryInput.value = text;
+    document.getElementById('previewSummary').textContent = text;
+    summaryCount.textContent = text.length;
+    saveData();
+    calculateATS();
+  });
+
+  document.getElementById('optimizeATS').addEventListener('click', () => {
+    const role = targetRoleInput.value.trim() || 'your target role';
+    const skills = getSuggestedKeywords();
+    const currentSummary = summaryInput.value.trim();
+    const optimizedSummary = currentSummary.length > 40
+      ? `${currentSummary} Experienced in ${skills.slice(0, 3).join(', ')} with a strong record of delivering measurable outcomes.`
+      : `Results-driven ${role} professional with experience in ${skills.slice(0, 3).join(', ')} and a strong record of delivering measurable outcomes.`;
+    summaryInput.value = optimizedSummary;
+    document.getElementById('previewSummary').textContent = optimizedSummary;
+    summaryCount.textContent = optimizedSummary.length;
+    saveData();
+    calculateATS();
+    aiOutput.textContent = `ATS-ready summary generated for ${role}.`;
+  });
+  document.getElementById('generateBullet').addEventListener('click', () => {
+    const role = targetRoleInput.value.trim() || 'professional';
+    const skills = getSuggestedKeywords();
+    const bullet = `Delivered measurable impact in ${role} by combining ${skills.slice(0, 3).join(', ')} with strong execution and stakeholder communication.`;
+    aiOutput.textContent = `Suggested bullet: ${bullet}`;
+  });
+  document.getElementById('suggestKeywords').addEventListener('click', () => {
+    const keywords = getSuggestedKeywords();
+    aiOutput.textContent = `Suggested keywords: ${keywords.join(', ')}.`;
+  });
+
+  document.getElementById('downloadResumePDF').addEventListener('click', () => {
+    const opt = { margin: 0.2, filename: 'resume.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+    html2pdf().set(opt).from(resumePaper).save();
+    showToast('PDF download started');
+  });
+
+  document.getElementById('printResume').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('resetResume').addEventListener('click', () => {
+    if (confirm('Reset all resume fields?')) {
+      localStorage.removeItem(storageKey);
+      location.reload();
+    }
+  });
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    saveData();
+  });
+
+  templateItems.forEach(item => {
+    item.addEventListener('click', () => {
+      templateItems.forEach(t => t.classList.remove('active'));
+      item.classList.add('active');
+      setTemplate(item.dataset.template);
+      saveData();
+    });
+  });
 }
 
-calculateATS();
-
-});
-
-/*==========================================
-DARK MODE
-==========================================*/
-
-const themeToggle=
-
-document.getElementById("themeToggle");
-
-if(themeToggle){
-
-themeToggle.addEventListener("click",()=>{
-
-document.body.classList.toggle("dark");
-
-saveData();
-
-});
-
+function addListItem(containerId, previewId, placeholder) {
+  const container = document.getElementById(containerId);
+  const preview = document.getElementById(previewId);
+  const row = document.createElement('div');
+  row.className = 'dynamic-row';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'remove-btn';
+  remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+  row.append(input, remove);
+  container.appendChild(row);
+  input.addEventListener('input', () => {
+    updatePreviewList(preview, getValues(container));
+    saveData();
+    calculateATS();
+  });
+  remove.addEventListener('click', () => {
+    row.remove();
+    updatePreviewList(preview, getValues(container));
+    saveData();
+    calculateATS();
+  });
+  updatePreviewList(preview, getValues(container));
 }
 
-/*==========================================
-RESET
-==========================================*/
-
-document
-
-.getElementById("resetResume")
-
-.addEventListener("click",()=>{
-
-if(confirm("Reset Resume?")){
-
-localStorage.clear();
-
-location.reload();
-
+function setTemplate(template) {
+  resumePaper.className = `resume-paper ${template}`;
+  templateItems.forEach(item => item.classList.toggle('active', item.dataset.template === template));
 }
 
-});
-
-/*==========================================
-PRINT
-==========================================*/
-
-document
-
-.getElementById("printResume")
-
-.addEventListener("click",()=>{
-
-window.print();
-
-});
-
-/*==========================================
-PDF DOWNLOAD
-==========================================*/
-
-document
-
-.getElementById("downloadResumePDF")
-
-.addEventListener("click",()=>{
-
-const element=document.getElementById("resumePaper");
-
-const opt={
-
-margin:0,
-
-filename:"Resume.pdf",
-
-image:{
-
-type:"jpeg",
-
-quality:1
-
-},
-
-html2canvas:{
-
-scale:3,
-
-useCORS:true,
-
-scrollY:0
-
-},
-
-jsPDF:{
-
-unit:"mm",
-
-format:"a4",
-
-orientation:"portrait"
-
+function getSuggestedKeywords() {
+  const roleText = targetRoleInput.value.toLowerCase();
+  const skillText = Array.from(document.querySelectorAll('#skillsContainer input'))
+    .map(input => input.value.toLowerCase())
+    .join(' ');
+  const text = `${roleText} ${skillText}`;
+  const keywordPool = ['leadership', 'strategy', 'execution', 'analytics', 'collaboration', 'communication', 'problem solving', 'stakeholder management', 'delivery', 'product', 'design', 'development'];
+  const matched = keywordPool.filter(keyword => text.includes(keyword));
+  return matched.length ? matched : ['leadership', 'strategy', 'execution', 'collaboration'];
 }
 
-};
+function calculateATS() {
+  let score = 20;
+  const text = [
+    summaryInput.value,
+    targetRoleInput.value,
+    document.getElementById('name').value,
+    document.getElementById('email').value,
+    document.getElementById('phone').value,
+    document.getElementById('address').value
+  ].join(' ').toLowerCase();
 
-html2pdf()
+  if (text.includes('react') || text.includes('javascript') || text.includes('node') || text.includes('python')) score += 12;
+  if (summaryInput.value.trim().length > 60) score += 12;
+  if (document.getElementById('skillsContainer').querySelectorAll('input').length >= 2) score += 10;
+  if (document.getElementById('experienceContainer').querySelectorAll('input').length >= 1) score += 10;
+  if (document.getElementById('educationContainer').querySelectorAll('input').length >= 1) score += 8;
+  if (document.getElementById('projectContainer').querySelectorAll('input').length >= 1) score += 8;
+  if (document.getElementById('certificationContainer').querySelectorAll('input').length >= 1) score += 6;
+  if (document.getElementById('targetRole').value.trim()) score += 6;
+  score = Math.min(100, score);
 
-.set(opt)
+  atsScoreEl.textContent = `${score}%`;
+  progressBar.style.width = `${score}%`;
+  atsStatsEl.innerHTML = `Strong structure • ${score >= 80 ? 'Excellent' : 'Needs refinement'} • Tailor keywords to the role`;
 
-.from(element)
-
-.save();
-
-showToast("Resume Downloaded");
-
-});
-/*==========================================
-RESUME COMPLETION
-==========================================*/
-
-function updateCompletion(){
-
-let total=10;
-
-let completed=0;
-
-if(nameInput.value.trim()) completed++;
-
-if(emailInput.value.trim()) completed++;
-
-if(phoneInput.value.trim()) completed++;
-
-if(addressInput.value.trim()) completed++;
-
-if(summaryInput.value.trim()) completed++;
-
-if(previewEducation.children.length) completed++;
-
-if(previewSkills.children.length) completed++;
-
-if(previewExperience.children.length) completed++;
-
-if(previewProjects.children.length) completed++;
-
-if(previewPhoto.src && !previewPhoto.src.endsWith("/")) completed++;
-
-let percent=Math.round((completed/total)*100);
-
-atsScore.innerHTML=percent+"%";
-
-progressBar.style.width=percent+"%";
-
+  const tips = [];
+  if (!summaryInput.value.trim()) tips.push('Add a concise professional summary.');
+  if (!targetRoleInput.value.trim()) tips.push('Mention a target role to tailor the resume.');
+  if (document.getElementById('skillsContainer').querySelectorAll('input').length < 3) tips.push('Add more skills for stronger keyword coverage.');
+  if (document.getElementById('experienceContainer').querySelectorAll('input').length < 1) tips.push('Include at least one relevant experience entry.');
+  if (document.getElementById('projectContainer').querySelectorAll('input').length < 1) tips.push('Show projects to reinforce hands-on experience.');
+  if (score < 80) tips.push('Use measurable achievements and role-specific keywords.');
+  if (tips.length === 0) tips.push('Your resume is looking ATS-ready.');
+  atsTipsEl.innerHTML = tips.map(tip => `<li>${tip}</li>`).join('');
 }
 
-setInterval(updateCompletion,500);
-
-/*==========================================
-KEYBOARD SHORTCUTS
-==========================================*/
-
-document.addEventListener("keydown",(e)=>{
-
-if(e.ctrlKey && e.key==="p"){
-
-e.preventDefault();
-
-window.print();
-
+function updateResumeDisplay() {
+  const photoInput = document.getElementById('photo');
+  const previewPhoto = document.getElementById('previewPhoto');
+  if (photoInput.files && photoInput.files[0]) {
+    previewPhoto.src = previewPhoto.src || '';
+  }
 }
 
-if(e.ctrlKey && e.key==="s"){
-
-e.preventDefault();
-
-document
-
-.getElementById("downloadResumePDF")
-
-.click();
-
+function applyTheme() {
+  if (document.body.classList.contains('dark')) {
+    themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+  } else {
+    themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+  }
 }
-
-});
-
-/*==========================================
-SMOOTH SCROLL
-==========================================*/
-
-document
-
-.querySelectorAll('a[href^="#"]')
-
-.forEach(link=>{
-
-link.addEventListener("click",function(e){
-
-e.preventDefault();
-
-const target=document.querySelector(
-
-this.getAttribute("href")
-
-);
-
-if(target){
-
-target.scrollIntoView({
-
-behavior:"smooth"
-
-});
-
-}
-
-});
-
-});
-
-/*==========================================
-START BUTTON
-==========================================*/
-
-const startBtn=document.querySelector(".primary-btn");
-
-if(startBtn){
-
-startBtn.addEventListener("click",()=>{
-
-document
-
-.getElementById("builder")
-
-.scrollIntoView({
-
-behavior:"smooth"
-
-});
-
-});
-
-}
-
-/*==========================================
-VIEW TEMPLATE BUTTON
-==========================================*/
-
-const viewBtn=document.querySelector(".secondary-btn");
-
-if(viewBtn){
-
-viewBtn.addEventListener("click",()=>{
-
-document
-
-.getElementById("templates")
-
-.scrollIntoView({
-
-behavior:"smooth"
-
-});
-
-});
-
-}
-
-/*==========================================
-AUTO ATS UPDATE
-==========================================*/
-
-setInterval(calculateATS,1000);
-
-/*==========================================
-END
-==========================================*/
-
-console.log("ResumeCraft AI v5 Loaded Successfully");
