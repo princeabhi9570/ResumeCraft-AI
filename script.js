@@ -1,169 +1,106 @@
-﻿/*=========================================================
+/*=========================================================
 ResumeCraft AI
-SCRIPT.JS PART-1
+SCRIPT.JS
+PART-1
 =========================================================*/
 
 "use strict";
 
-/*=========================================================
-ELEMENTS
-=========================================================*/
+/*=========================
+DOM
+=========================*/
 
-const $ = (id) => document.getElementById(id);
+const form = document.getElementById("resumeForm");
 
-const resumePaper = $("resumePaper");
+const resumePaper = document.getElementById("resumePaper");
 
-const fullName = $("fullName");
-const jobTitle = $("jobTitle");
-const email = $("email");
-const phone = $("phone");
-const address = $("address");
+const previewPhoto = document.getElementById("previewPhoto");
 
-const linkedin = $("linkedin");
-const github = $("github");
-const portfolio = $("portfolio");
-const website = $("website");
+const summaryCount = document.getElementById("summaryCount");
 
-const summary = $("summary");
+const atsScore = document.getElementById("atsScore");
 
-const photo = $("photo");
+const progressBar = document.getElementById("progressBar");
 
-const previewName = $("previewName");
-const previewJobTitle = $("previewJobTitle");
-const previewEmail = $("previewEmail");
-const previewPhone = $("previewPhone");
-const previewAddress = $("previewAddress");
+/*=========================
+TEXT FIELDS
+=========================*/
 
-const previewSummary = $("previewSummary");
+const fieldMap = [
 
-const previewLinkedin = $("previewLinkedin");
-const previewGithub = $("previewGithub");
-const previewPortfolio = $("previewPortfolio");
-const previewWebsite = $("previewWebsite");
+["fullName","previewName","Your Name"],
 
-const previewPhoto = $("previewPhoto");
+["jobTitle","previewJobTitle","Professional Title"],
 
-const summaryCount = $("summaryCount");
+["email","previewEmail",""],
 
-const themeToggle = $("themeToggle");
+["phone","previewPhone",""],
 
-/*=========================================================
-SAFE FUNCTION
-=========================================================*/
+["address","previewAddress",""],
 
-function setText(el, value, fallback = "") {
+["linkedin","previewLinkedIn",""],
 
-if (!el) return;
+["github","previewGithub",""],
 
-el.textContent = value.trim() || fallback;
+["portfolio","previewPortfolio",""],
 
-}
+["website","previewWebsite",""],
 
-function setLink(el, value) {
+["summary","previewSummary",""]
 
-if (!el) return;
+];
 
-if (value.trim() === "") {
+/*=========================
+LIVE UPDATE
+=========================*/
 
-el.style.display = "none";
+fieldMap.forEach(item=>{
 
-return;
+const input=document.getElementById(item[0]);
 
-}
+const output=document.getElementById(item[1]);
 
-el.style.display = "inline-block";
+if(!input || !output) return;
 
-el.href = value;
+input.addEventListener("input",()=>{
 
-el.innerText = value;
-
-}
-
-/*=========================================================
-LIVE INPUT
-=========================================================*/
-
-function updatePreview() {
-
-setText(previewName, fullName.value, "Your Name");
-
-setText(previewJobTitle, jobTitle.value, "Professional Title");
-
-setText(previewEmail, email.value, "");
-
-setText(previewPhone, phone.value, "");
-
-setText(previewAddress, address.value, "");
-
-setText(previewSummary, summary.value, "");
-
-setLink(previewLinkedin, linkedin.value);
-
-setLink(previewGithub, github.value);
-
-setLink(previewPortfolio, portfolio.value);
-
-setLink(previewWebsite, website.value);
-
-summaryCount.innerText = summary.value.length;
+output.textContent=input.value.trim() || item[2];
 
 saveResume();
 
-}
-
-/*=========================================================
-INPUT LISTENER
-=========================================================*/
-
-[
-fullName,
-jobTitle,
-email,
-phone,
-address,
-linkedin,
-github,
-portfolio,
-website,
-summary
-
-].forEach(input => {
-
-if (!input) return;
-
-input.addEventListener("input", updatePreview);
+updateATS();
 
 });
 
-/*=========================================================
+});
+
+/*=========================
 PHOTO
-=========================================================*/
+=========================*/
 
-if (photo) {
+const photo=document.getElementById("photo");
 
-photo.addEventListener("change", function () {
+if(photo){
 
-const file = this.files[0];
+photo.addEventListener("change",(e)=>{
 
-if (!file) {
+const file=e.target.files[0];
 
-previewPhoto.style.display = "none";
+if(!file){
 
-previewPhoto.src = "";
-
-saveResume();
+previewPhoto.style.display="none";
 
 return;
 
 }
 
-const reader = new FileReader();
+const reader=new FileReader();
 
-reader.onload = function (e) {
+reader.onload=function(ev){
 
-previewPhoto.src = e.target.result;
+previewPhoto.src=ev.target.result;
 
-previewPhoto.style.display = "block";
+previewPhoto.style.display="block";
 
 saveResume();
 
@@ -175,13 +112,31 @@ reader.readAsDataURL(file);
 
 }
 
-/*=========================================================
+/*=========================
+SUMMARY COUNTER
+=========================*/
+
+const summary=document.getElementById("summary");
+
+if(summary){
+
+summary.addEventListener("input",()=>{
+
+summaryCount.textContent=summary.value.length;
+
+});
+
+}
+
+/*=========================
 THEME
-=========================================================*/
+=========================*/
 
-if (themeToggle) {
+const themeBtn=document.getElementById("themeToggle");
 
-themeToggle.addEventListener("click", () => {
+if(themeBtn){
+
+themeBtn.onclick=()=>{
 
 document.body.classList.toggle("dark");
 
@@ -193,97 +148,829 @@ document.body.classList.contains("dark")
 
 );
 
-});
+};
 
 }
 
-if (localStorage.getItem("theme") === "true") {
+/*=========================
+LOAD THEME
+=========================*/
+
+if(localStorage.getItem("theme")==="true"){
 
 document.body.classList.add("dark");
 
 }
 
-/*=========================================================
-AUTO SAVE
-=========================================================*/
+/*=========================
+TOAST
+=========================*/
 
-function saveResume() {
+function toast(message){
 
-const data = {
+const t=document.getElementById("toast");
 
-fullName: fullName.value,
+if(!t) return;
 
-jobTitle: jobTitle.value,
+t.innerText=message;
 
-email: email.value,
+t.classList.add("show");
 
-phone: phone.value,
+setTimeout(()=>{
 
-address: address.value,
+t.classList.remove("show");
 
-linkedin: linkedin.value,
-
-github: github.value,
-
-portfolio: portfolio.value,
-
-website: website.value,
-
-summary: summary.value,
-
-photo: previewPhoto.src
-
-};
-
-localStorage.setItem(
-
-"ResumeCraftAI",
-
-JSON.stringify(data)
-
-);
+},2500);
 
 }
 
-/*=========================================================
-LOAD
+/*=========================
+LOADER
+=========================*/
+
+window.addEventListener("load",()=>{
+
+const loader=document.getElementById("loader");
+
+if(loader){
+
+loader.style.display="none";
+
+}
+
+});/*=========================================================
+PART-2
+DYNAMIC SECTION ENGINE
 =========================================================*/
 
-function loadResume() {
+function createElement(tag, className = "") {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    return el;
+}
 
-const data = JSON.parse(
+function removeItem(btn) {
+    btn.closest(".dynamic-item")?.remove();
+    updatePreview();
+    saveResume();
+    updateATS();
+}/*=========================================================
+SKILLS
+=========================================================*/
+
+const skillContainer = document.getElementById("skillsContainer");
+const previewSkills = document.getElementById("previewSkills");
+
+function addSkill(value = "") {
+
+    const item = createElement("div", "skill-item dynamic-item");
+
+    item.innerHTML = `
+
+<input type="text"
+class="skill-name"
+placeholder="Skill"
+value="${value}">
+
+<button
+type="button"
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+    skillContainer.appendChild(item);
+
+    item.querySelector("input").addEventListener("input", updatePreview);
+
+    item.querySelector(".delete-btn").onclick = function () {
+        removeItem(this);
+    };
+
+    updatePreview();
+}
+
+document.getElementById("addSkill")?.addEventListener("click", () => addSkill());
+/*=========================================================
+EDUCATION
+=========================================================*/
+
+const educationContainer =
+document.getElementById("educationContainer");
+
+function addEducation(){
+
+const item=createElement("div","education-item dynamic-item");
+
+item.innerHTML=`
+
+<input
+type="text"
+class="edu-degree"
+placeholder="Degree">
+
+<input
+type="text"
+class="edu-college"
+placeholder="College">
+
+<input
+type="text"
+class="edu-year"
+placeholder="Year">
+
+<button
+type="button"
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+educationContainer.appendChild(item);
+
+item.querySelectorAll("input").forEach(input=>{
+
+input.addEventListener("input",updatePreview);
+
+});
+
+item.querySelector(".delete-btn").onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addEducation")
+?.addEventListener("click",addEducation);
+/*=========================================================
+EXPERIENCE
+=========================================================*/
+
+const experienceContainer =
+document.getElementById("experienceContainer");
+
+function addExperience(){
+
+const item=createElement("div","experience-item dynamic-item");
+
+item.innerHTML=`
+
+<input
+type="text"
+class="exp-company"
+placeholder="Company">
+
+<input
+type="text"
+class="exp-position"
+placeholder="Position">
+
+<textarea
+class="exp-description"
+placeholder="Description"></textarea>
+
+<button
+type="button"
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+experienceContainer.appendChild(item);
+
+item
+.querySelectorAll("input,textarea")
+.forEach(input=>{
+
+input.addEventListener("input",updatePreview);
+
+});
+
+item.querySelector(".delete-btn").onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addExperience")
+?.addEventListener("click",addExperience);
+/*=========================================================
+UPDATE PREVIEW
+=========================================================*/
+
+function updatePreview(){
+
+/*========== Skills ==========*/
+
+previewSkills.innerHTML="";
+
+document
+.querySelectorAll(".skill-name")
+.forEach(skill=>{
+
+if(skill.value.trim()){
+
+const li=document.createElement("li");
+
+li.textContent=skill.value;
+
+previewSkills.appendChild(li);
+
+}
+
+});
+
+/*========== Education ==========*/
+
+const previewEducation=document.getElementById("previewEducation");
+
+previewEducation.innerHTML="";
+
+document
+.querySelectorAll(".education-item")
+.forEach(item=>{
+
+const degree=item.querySelector(".edu-degree").value;
+
+const college=item.querySelector(".edu-college").value;
+
+const year=item.querySelector(".edu-year").value;
+
+if(degree||college){
+
+previewEducation.innerHTML+=`
+
+<div class="edu-card">
+
+<h3>${degree}</h3>
+
+<p>${college}</p>
+
+<span>${year}</span>
+
+</div>
+
+`;
+
+}
+
+});
+
+/*========== Experience ==========*/
+
+const previewExperience=
+document.getElementById("previewExperience");
+
+previewExperience.innerHTML="";
+
+document
+.querySelectorAll(".experience-item")
+.forEach(item=>{
+
+const company=item.querySelector(".exp-company").value;
+
+const position=item.querySelector(".exp-position").value;
+
+const desc=item.querySelector(".exp-description").value;
+
+if(company||position){
+
+previewExperience.innerHTML+=`
+
+<div class="exp-card">
+
+<h3>${position}</h3>
+
+<h4>${company}</h4>
+
+<p>${desc}</p>
+
+</div>
+
+`;
+
+}
+
+});
+
+autoHideSections();
+
+saveResume();
+
+updateATS();
+
+}
+/*=========================================================
+AUTO HIDE
+=========================================================*/
+
+function autoHideSections(){
+
+const sections=[
+
+["skillsSection",previewSkills],
+
+["educationSection",
+document.getElementById("previewEducation")],
+
+["experienceSection",
+document.getElementById("previewExperience")]
+
+];
+
+sections.forEach(sec=>{
+
+const section=document.getElementById(sec[0]);
+
+if(!section) return;
+
+section.style.display=
+
+sec[1].innerHTML.trim()===""
+
+?
+
+"none"
+
+:
+
+"block";
+
+});
+
+}
+updatePreview();
+/*=========================================================
+PROJECTS
+=========================================================*/
+
+const projectContainer =
+document.getElementById("projectContainer");
+
+function addProject(data={}){
+
+const card=document.createElement("div");
+
+card.className="project-item dynamic-item";
+
+card.innerHTML=`
+
+<input
+class="project-name"
+type="text"
+placeholder="Project Name"
+value="${data.name||""}">
+
+<textarea
+class="project-description"
+placeholder="Project Description">${data.description||""}</textarea>
+
+<input
+class="project-tech"
+type="text"
+placeholder="Technologies Used"
+value="${data.tech||""}">
+
+<input
+class="project-link"
+type="text"
+placeholder="GitHub / Live URL"
+value="${data.link||""}">
+
+<button
+type="button"
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+projectContainer.appendChild(card);
+
+card.querySelectorAll("input,textarea")
+.forEach(i=>{
+
+i.addEventListener("input",updatePreview);
+
+});
+
+card.querySelector(".delete-btn").onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addProject")
+.onclick=()=>addProject();
+/*=========================================================
+CERTIFICATIONS
+=========================================================*/
+
+const certificationContainer=
+document.getElementById("certificationContainer");
+
+function addCertification(value=""){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="cert-name"
+
+placeholder="Certification"
+
+value="${value}">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+certificationContainer.appendChild(div);
+
+div.querySelector("input")
+.addEventListener("input",updatePreview);
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addCertification")
+.onclick=()=>addCertification();
+/*=========================================================
+LANGUAGES
+=========================================================*/
+
+const languageContainer=
+document.getElementById("languageContainer");
+
+function addLanguage(value=""){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="language-name"
+
+placeholder="Language"
+
+value="${value}">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+languageContainer.appendChild(div);
+
+div.querySelector("input")
+.addEventListener("input",updatePreview);
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addLanguage")
+.onclick=()=>addLanguage();
+/*=========================================================
+ACHIEVEMENTS
+=========================================================*/
+
+const achievementContainer=
+document.getElementById("achievementContainer");
+
+function addAchievement(value=""){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="achievement-name"
+
+placeholder="Achievement"
+
+value="${value}">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+achievementContainer.appendChild(div);
+
+div.querySelector("input")
+.addEventListener("input",updatePreview);
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addAchievement")
+.onclick=()=>addAchievement();
+/*=========================================================
+INTERESTS
+=========================================================*/
+
+const interestContainer=
+document.getElementById("interestContainer");
+
+function addInterest(value=""){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="interest-name"
+
+placeholder="Interest"
+
+value="${value}">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+interestContainer.appendChild(div);
+
+div.querySelector("input")
+.addEventListener("input",updatePreview);
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addInterest")
+.onclick=()=>addInterest();
+/*=========================================================
+REFERENCES
+=========================================================*/
+
+const referenceContainer=
+document.getElementById("referenceContainer");
+
+function addReference(){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="reference-name"
+
+placeholder="Reference Name">
+
+<input
+
+class="reference-company"
+
+placeholder="Company">
+
+<input
+
+class="reference-phone"
+
+placeholder="Phone">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+referenceContainer.appendChild(div);
+
+div.querySelectorAll("input")
+.forEach(i=>{
+
+i.addEventListener("input",updatePreview);
+
+});
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addReference")
+.onclick=addReference;
+/*=========================================================
+REFERENCES
+=========================================================*/
+
+const referenceContainer=
+document.getElementById("referenceContainer");
+
+function addReference(){
+
+const div=document.createElement("div");
+
+div.className="dynamic-item";
+
+div.innerHTML=`
+
+<input
+
+class="reference-name"
+
+placeholder="Reference Name">
+
+<input
+
+class="reference-company"
+
+placeholder="Company">
+
+<input
+
+class="reference-phone"
+
+placeholder="Phone">
+
+<button
+type="button"
+
+class="delete-btn">
+
+Delete
+
+</button>
+
+`;
+
+referenceContainer.appendChild(div);
+
+div.querySelectorAll("input")
+.forEach(i=>{
+
+i.addEventListener("input",updatePreview);
+
+});
+
+div.querySelector(".delete-btn")
+.onclick=function(){
+
+removeItem(this);
+
+};
+
+updatePreview();
+
+}
+
+document
+.getElementById("addReference")
+.onclick=addReference;
+/*=========================================================
+LOAD RESUME
+=========================================================*/
+
+function loadResume(){
+
+const data=
+
+JSON.parse(
 
 localStorage.getItem("ResumeCraftAI")
 
 );
 
-if (!data) return;
+if(!data) return;
 
-fullName.value = data.fullName || "";
+document
+.querySelectorAll("input,textarea,select")
+.forEach(input=>{
 
-jobTitle.value = data.jobTitle || "";
+if(input.type==="file") return;
 
-email.value = data.email || "";
+const key=input.id || input.className;
 
-phone.value = data.phone || "";
+if(data[key]!==undefined){
 
-address.value = data.address || "";
+input.value=data[key];
 
-linkedin.value = data.linkedin || "";
+}
 
-github.value = data.github || "";
+});
 
-portfolio.value = data.portfolio || "";
+if(data.photo){
 
-website.value = data.website || "";
+previewPhoto.src=data.photo;
 
-summary.value = data.summary || "";
-
-if (data.photo) {
-
-previewPhoto.src = data.photo;
-
-previewPhoto.style.display = "block";
+previewPhoto.style.display="block";
 
 }
 
@@ -291,545 +978,785 @@ updatePreview();
 
 }
 
-window.addEventListener("load", loadResume);
+window.addEventListener(
 
+"DOMContentLoaded",
+
+loadResume
+
+);
 /*=========================================================
-LOADER
+RESET
 =========================================================*/
 
-window.addEventListener("load", () => {
+document
+.getElementById("resetResume")
+.onclick=function(){
 
-const loader = document.getElementById("loader");
+if(!confirm(
 
-if (loader) {
+"Reset Resume?"
 
-loader.style.opacity = "0";
-
-setTimeout(() => {
-
-loader.style.display = "none";
-
-}, 500);
-
-}
-
-});
-/*=========================================================
-SCRIPT.JS PART-2
-Dynamic Resume Sections
-=========================================================*/
-
-const sections = {
-
-skills: [],
-education: [],
-experience: [],
-projects: [],
-certifications: [],
-languages: [],
-achievements: [],
-interests: [],
-references: []
-
-};
-
-/*=========================================================
-HELPER
-=========================================================*/
-
-function createInput(placeholder){
-
-const input=document.createElement("input");
-
-input.type="text";
-
-input.placeholder=placeholder;
-
-input.className="dynamic-input";
-
-return input;
-
-}
-
-function createTextarea(placeholder){
-
-const area=document.createElement("textarea");
-
-area.placeholder=placeholder;
-
-area.rows=4;
-
-area.className="dynamic-input";
-
-return area;
-
-}
-
-function createDelete(){
-
-const btn=document.createElement("button");
-
-btn.type="button";
-
-btn.className="danger-btn";
-
-btn.innerHTML='<i class="fa fa-trash"></i> Remove';
-
-return btn;
-
-}
-
-/*=========================================================
-SKILLS
-=========================================================*/
-
-const skillContainer=document.getElementById("skillsContainer");
-
-const previewSkills=document.getElementById("previewSkills");
-
-document.getElementById("addSkill").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const input=createInput("Skill");
-
-const del=createDelete();
-
-box.append(input,del);
-
-skillContainer.appendChild(box);
-
-input.oninput=updateSkills;
-
-del.onclick=()=>{
-
-box.remove();
-
-updateSkills();
-
-};
-
-};
-
-function updateSkills(){
-
-previewSkills.innerHTML="";
-
-const data=[];
-
-document.querySelectorAll("#skillsContainer input").forEach(i=>{
-
-if(i.value.trim()!=""){
-
-data.push(i.value.trim());
-
-}
-
-});
-
-if(data.length==0){
-
-document.getElementById("skillsSection").style.display="none";
+))
 
 return;
 
-}
+localStorage.removeItem(
 
-document.getElementById("skillsSection").style.display="block";
+"ResumeCraftAI"
 
-data.forEach(skill=>{
+);
 
-const li=document.createElement("li");
+location.reload();
 
-li.innerText=skill;
-
-previewSkills.appendChild(li);
-
-});
-
-saveResume();
-
-}
-
+};
 /*=========================================================
-LANGUAGES
+PRINT
 =========================================================*/
 
-const languageContainer=document.getElementById("languageContainer");
+document
+.getElementById("printResume")
+.onclick=function(){
 
-const previewLanguages=document.getElementById("previewLanguages");
-
-document.getElementById("addLanguage").onclick=()=>{
-
-const box=document.createElement("div");
-
-box.className="dynamic-box";
-
-const input=createInput("Language");
-
-const del=createDelete();
-
-box.append(input,del);
-
-languageContainer.appendChild(box);
-
-input.oninput=updateLanguage;
-
-del.onclick=()=>{
-
-box.remove();
-
-updateLanguage();
+window.print();
 
 };
-
-};
-
-function updateLanguage(){
-
-previewLanguages.innerHTML="";
-
-const arr=[];
-
-document.querySelectorAll("#languageContainer input").forEach(i=>{
-
-if(i.value.trim()!="") arr.push(i.value.trim());
-
-});
-
-if(arr.length==0){
-
-languagesSection.style.display="none";
-
-return;
-
-}
-
-languagesSection.style.display="block";
-
-arr.forEach(item=>{
-
-const li=document.createElement("li");
-
-li.innerText=item;
-
-previewLanguages.appendChild(li);
-
-});
-
-saveResume();
-
-}
-
 /*=========================================================
-INTERESTS
+PDF EXPORT
 =========================================================*/
 
-const interestContainer=document.getElementById("interestContainer");
+document
+.getElementById("downloadResumePDF")
+.onclick=function(){
 
-const previewInterests=document.getElementById("previewInterests");
+const element=
 
-document.getElementById("addInterest").onclick=()=>{
+document.getElementById(
 
-const box=document.createElement("div");
+"resumePaper"
 
-box.className="dynamic-box";
+);
 
-const input=createInput("Interest");
+html2pdf()
 
-const del=createDelete();
+.set({
 
-box.append(input,del);
+margin:0,
 
-interestContainer.appendChild(box);
+filename:"Resume.pdf",
 
-input.oninput=updateInterest;
+image:{
 
-del.onclick=()=>{
+type:"jpeg",
 
-box.remove();
+quality:.98
 
-updateInterest();
+},
 
-};
+html2canvas:{
 
-};
+scale:2
 
-function updateInterest(){
+},
 
-previewInterests.innerHTML="";
+jsPDF:{
 
-const arr=[];
+unit:"mm",
 
-document.querySelectorAll("#interestContainer input").forEach(i=>{
+format:"a4",
 
-if(i.value.trim()!="") arr.push(i.value.trim());
-
-});
-
-if(arr.length==0){
-
-interestsSection.style.display="none";
-
-return;
+orientation:"portrait"
 
 }
 
-interestsSection.style.display="block";
+})
 
-arr.forEach(item=>{
+.from(element)
 
-const li=document.createElement("li");
+.save();
 
-li.innerText=item;
-
-previewInterests.appendChild(li);
-
-});
-
-saveResume();
-
-}
-
+};
 /*=========================================================
-ACHIEVEMENTS
+ATS SCORE
 =========================================================*/
 
-const achievementContainer=document.getElementById("achievementContainer");
+function updateATS(){
 
-const previewAchievements=document.getElementById("previewAchievements");
+let score=0;
 
-document.getElementById("addAchievement").onclick=()=>{
+const tips=[];
 
-const box=document.createElement("div");
+const fields=[
 
-box.className="dynamic-box";
+"fullName",
 
-const input=createInput("Achievement");
+"email",
 
-const del=createDelete();
+"phone",
 
-box.append(input,del);
+"summary",
 
-achievementContainer.appendChild(box);
+"jobTitle"
 
-input.oninput=updateAchievement;
+];
 
-del.onclick=()=>{
+fields.forEach(id=>{
 
-box.remove();
+const input=document.getElementById(id);
 
-updateAchievement();
+if(input && input.value.trim()){
 
-};
+score+=15;
 
-};
+}else{
 
-function updateAchievement(){
+tips.push(
 
-previewAchievements.innerHTML="";
+id+" is missing"
 
-const arr=[];
-
-document.querySelectorAll("#achievementContainer input").forEach(i=>{
-
-if(i.value.trim()!="") arr.push(i.value.trim());
-
-});
-
-if(arr.length==0){
-
-achievementsSection.style.display="none";
-
-return;
+);
 
 }
 
-achievementsSection.style.display="block";
+});
 
-arr.forEach(item=>{
+const skillCount=
 
-const li=document.createElement("li");
+document.querySelectorAll(".skill-name").length;
 
-li.innerText=item;
+if(skillCount>=5){
 
-previewAchievements.appendChild(li);
+score+=15;
+
+}else{
+
+tips.push(
+
+"Add at least 5 Skills"
+
+);
+
+}
+
+const expCount=
+
+document.querySelectorAll(".experience-item").length;
+
+if(expCount>0){
+
+score+=10;
+
+}else{
+
+tips.push(
+
+"Experience Missing"
+
+);
+
+}
+
+if(score>100){
+
+score=100;
+
+}
+
+atsScore.innerText=
+
+score+"%";
+
+progressBar.style.width=
+
+score+"%";
+
+const list=
+
+document.getElementById(
+
+"atsTips"
+
+);
+
+if(list){
+
+list.innerHTML="";
+
+tips.forEach(t=>{
+
+list.innerHTML+=
+
+"<li>"+t+"</li>";
 
 });
 
-saveResume();
+}
 
 }
 /*=========================================================
-SCRIPT.JS PART-3A
-EDUCATION
+AUTO SAVE
 =========================================================*/
 
-const educationContainer = document.getElementById("educationContainer");
-const previewEducation = document.getElementById("previewEducation");
-const educationSection = document.getElementById("educationSection");
+document
 
-document.getElementById("addEducation").addEventListener("click", addEducation);
+.querySelectorAll(
 
-function addEducation(data = {}) {
+"input,textarea,select"
 
-const card = document.createElement("div");
-card.className = "dynamic-card";
+)
 
-card.innerHTML = `
+.forEach(input=>{
 
-<div class="form-grid">
+input.addEventListener(
 
-<div class="form-group">
-<label>Degree</label>
-<input type="text" class="degree" placeholder="B.Tech" value="${data.degree || ""}">
-</div>
+"input",
 
-<div class="form-group">
-<label>College</label>
-<input type="text" class="college" placeholder="ABC College" value="${data.college || ""}">
-</div>
+()=>{
 
-<div class="form-group">
-<label>University</label>
-<input type="text" class="university" placeholder="XYZ University" value="${data.university || ""}">
-</div>
+saveResume();
 
-<div class="form-group">
-<label>Percentage / CGPA</label>
-<input type="text" class="cgpa" placeholder="8.5 CGPA" value="${data.cgpa || ""}">
-</div>
+updateATS();
 
-<div class="form-group">
-<label>Start Year</label>
-<input type="text" class="startYear" placeholder="2022" value="${data.startYear || ""}">
-</div>
+}
 
-<div class="form-group">
-<label>End Year</label>
-<input type="text" class="endYear" placeholder="2026" value="${data.endYear || ""}">
-</div>
+);
 
-</div>
+});
+/*=========================================================
+SECTION HIDE
+=========================================================*/
 
-<button type="button" class="danger-btn removeEducation">
+document
 
-<i class="fa-solid fa-trash"></i>
+.querySelectorAll(
 
-Remove
+".sectionToggle"
 
-</button>
+)
+
+.forEach(box=>{
+
+box.addEventListener(
+
+"change",
+
+()=>{
+
+const id=
+
+box.dataset.section;
+
+const section=
+
+document.getElementById(id);
+
+if(section){
+
+section.style.display=
+
+box.checked
+
+?
+
+"block"
+
+:
+
+"none";
+
+}
+
+}
+
+);
+
+});
+updateATS();
+/*=========================================================
+THEME ENGINE
+=========================================================*/
+
+const swatches = document.querySelectorAll(".swatch");
+
+swatches.forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        swatches.forEach(s => s.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        const color = btn.dataset.color;
+
+        document.documentElement.style.setProperty("--primary", color);
+
+        localStorage.setItem("themeColor", color);
+
+    });
+
+});
+
+const savedColor = localStorage.getItem("themeColor");
+
+if(savedColor){
+
+    document.documentElement.style.setProperty("--primary", savedColor);
+
+}
+/*=========================================================
+TEMPLATE
+=========================================================*/
+
+const templates = document.querySelectorAll(".template-item");
+
+templates.forEach(card=>{
+
+card.onclick=()=>{
+
+templates.forEach(c=>c.classList.remove("active"));
+
+card.classList.add("active");
+
+resumePaper.className="resume-paper";
+
+resumePaper.classList.add(card.dataset.template);
+
+localStorage.setItem(
+
+"resumeTemplate",
+
+card.dataset.template
+
+);
+
+};
+
+});
+
+const savedTemplate=
+
+localStorage.getItem(
+
+"resumeTemplate"
+
+);
+
+if(savedTemplate){
+
+resumePaper.className=
+
+"resume-paper "+savedTemplate;
+
+}
+/*=========================================================
+AI SUMMARY
+=========================================================*/
+
+document
+
+.getElementById("generateSummary")
+
+.onclick=function(){
+
+const role=
+
+document
+
+.getElementById("jobTitle")
+
+.value;
+
+const summary=
+
+document
+
+.getElementById("summary");
+
+summary.value=
+
+`Results-driven ${role} with strong communication, problem-solving, teamwork and leadership skills. Passionate about delivering high-quality work and continuously learning modern technologies.`;
+
+summary.dispatchEvent(
+
+new Event("input")
+
+);
+
+toast("Summary Generated");
+
+};
+/*=========================================================
+KEYWORDS
+=========================================================*/
+
+document
+
+.getElementById("suggestKeywords")
+
+.onclick=function(){
+
+const keywords=[
+
+"Leadership",
+
+"Communication",
+
+"Problem Solving",
+
+"Teamwork",
+
+"Critical Thinking",
+
+"Time Management",
+
+"Project Management",
+
+"Adaptability",
+
+"Creativity",
+
+"Analytical Skills"
+
+];
+
+document
+
+.getElementById("aiOutput")
+
+.innerHTML=
+
+keywords.join(" • ");
+
+};
+/*=========================================================
+BULLETS
+=========================================================*/
+
+document
+
+.getElementById("generateBullet")
+
+.onclick=function(){
+
+document
+
+.getElementById("aiOutput")
+
+.innerHTML=
+
+`
+
+✔ Improved workflow efficiency by 35%.
+
+<br><br>
+
+✔ Collaborated with cross-functional teams.
+
+<br><br>
+
+✔ Delivered projects before deadlines.
 
 `;
 
-educationContainer.appendChild(card);
-
-card.querySelectorAll("input").forEach(input => {
-
-input.addEventListener("input", updateEducation);
-
-});
-
-card.querySelector(".removeEducation").onclick = () => {
-
-card.remove();
-
-updateEducation();
-
 };
-
-updateEducation();
-
-}
-
 /*=========================================================
-UPDATE EDUCATION
+ATS
 =========================================================*/
 
-function updateEducation(){
+document
 
-previewEducation.innerHTML = "";
+.getElementById("optimizeATS")
 
-const cards = educationContainer.querySelectorAll(".dynamic-card");
+.onclick=function(){
 
-let count = 0;
+document
 
-cards.forEach(card=>{
+.getElementById("aiOutput")
 
-const degree = card.querySelector(".degree").value.trim();
-const college = card.querySelector(".college").value.trim();
-const university = card.querySelector(".university").value.trim();
-const cgpa = card.querySelector(".cgpa").value.trim();
-const startYear = card.querySelector(".startYear").value.trim();
-const endYear = card.querySelector(".endYear").value.trim();
+.innerHTML=
 
-if(
+`
 
-degree==="" &&
-college==="" &&
-university==="" &&
-cgpa==="" &&
-startYear==="" &&
-endYear===""
+✔ Add measurable achievements.
 
-){
+<br>
+
+✔ Add 5-10 technical skills.
+
+<br>
+
+✔ Include action verbs.
+
+<br>
+
+✔ Keep resume under 2 pages.
+
+<br>
+
+✔ Match job description keywords.
+
+`;
+
+};
+/*=========================================================
+TAILOR
+=========================================================*/
+
+document
+
+.getElementById("tailorResume")
+
+.onclick=function(){
+
+const role=
+
+document
+
+.getElementById("targetRole")
+
+.value;
+
+if(!role){
+
+toast("Enter target role");
 
 return;
 
 }
 
-count++;
+document
 
-const item=document.createElement("div");
+.getElementById("summary")
 
-item.className="education-item";
+.value+=
 
-item.innerHTML=`
+`
 
-<h4>${degree}</h4>
-
-<p>
-
-${college}
-
-${university ? " • "+university : ""}
-
-</p>
-
-<p>
-
-${cgpa}
-
-${cgpa && (startYear || endYear) ? " | " : ""}
-
-${startYear}
-
-${startYear && endYear ? " - " : ""}
-
-${endYear}
-
-</p>
+ Looking to contribute as ${role}.
 
 `;
 
-previewEducation.appendChild(item);
+updatePreview();
+
+};
+/*=========================================================
+DRAG & DROP
+=========================================================*/
+
+const previewContainer=document.getElementById("resumePaper");
+
+let dragItem=null;
+
+previewContainer.querySelectorAll(".resume-section").forEach(section=>{
+
+section.draggable=true;
+
+section.addEventListener("dragstart",()=>{
+
+dragItem=section;
+
+section.classList.add("dragging");
 
 });
 
-educationSection.style.display = count ? "block" : "none";
+section.addEventListener("dragend",()=>{
+
+section.classList.remove("dragging");
+
+});
+
+section.addEventListener("dragover",(e)=>{
+
+e.preventDefault();
+
+});
+
+section.addEventListener("drop",()=>{
+
+if(dragItem && dragItem!==section){
+
+previewContainer.insertBefore(dragItem,section);
 
 saveResume();
 
 }
 
+});
+
+});
 /*=========================================================
-INITIAL
+PNG EXPORT
 =========================================================*/
 
-if(educationContainer.children.length===0){
+const pngBtn=document.getElementById("downloadPNG");
 
-addEducation();
+if(pngBtn){
+
+pngBtn.onclick=()=>{
+
+html2canvas(resumePaper,{
+
+scale:3
+
+}).then(canvas=>{
+
+const a=document.createElement("a");
+
+a.download="Resume.png";
+
+a.href=canvas.toDataURL();
+
+a.click();
+
+});
+
+};
 
 }
+/*=========================================================
+DOCX
+=========================================================*/
+
+const docBtn=document.getElementById("downloadDOCX");
+
+if(docBtn){
+
+docBtn.onclick=()=>{
+
+toast("DOCX Export requires docx library.");
+
+};
+
+}
+/*=========================================================
+SEARCH
+=========================================================*/
+
+const search=document.getElementById("searchSkill");
+
+if(search){
+
+search.addEventListener("input",()=>{
+
+const keyword=search.value.toLowerCase();
+
+document.querySelectorAll(".skill-item").forEach(item=>{
+
+const text=item.innerText.toLowerCase();
+
+item.style.display=
+
+text.includes(keyword)
+
+?
+
+"block"
+
+:
+
+"none";
+
+});
+
+});
+
+}
+/*=========================================================
+AUTO YEAR
+=========================================================*/
+
+document.querySelectorAll(".currentYear")
+
+.forEach(el=>{
+
+el.innerText=new Date().getFullYear();
+
+});
+/*=========================================================
+SCROLL
+=========================================================*/
+
+document
+
+.querySelectorAll('a[href^="#"]')
+
+.forEach(anchor=>{
+
+anchor.onclick=function(e){
+
+e.preventDefault();
+
+document
+
+.querySelector(this.getAttribute("href"))
+
+.scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+};
+
+});
+/*=========================================================
+VALIDATION
+=========================================================*/
+
+function validateResume(){
+
+let valid=true;
+
+["fullName","email","phone"]
+
+.forEach(id=>{
+
+const field=document.getElementById(id);
+
+if(field && field.value.trim()===""){
+
+field.style.borderColor="red";
+
+valid=false;
+
+}else if(field){
+
+field.style.borderColor="#ddd";
+
+}
+
+});
+
+return valid;
+
+}
+const pdfButton=document.getElementById("downloadResumePDF");
+
+if(pdfButton){
+
+pdfButton.addEventListener("click",(e)=>{
+
+if(!validateResume()){
+
+e.preventDefault();
+
+toast("Please complete required fields.");
+
+}
+
+});
+
+}
+/*=========================================================
+INIT
+=========================================================*/
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+loadResume();
+
+updatePreview();
+
+updateATS();
+
+});
